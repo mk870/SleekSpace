@@ -5,23 +5,26 @@
 
 const tintColorLight = "#0a7ea4";
 const tintColorDark = "#fff";
-const white = "aliceblue";
 const black = "#0F0F10";
 
 const Colors = {
   red: "#FF2700",
   primary: "#4D09CD",
+  white:"aliceblue",
+  pureWhite:"#fff",
   lightPrimary: "rgba(77, 9, 205,0.5)",
   light: {
     text: black,
-    background: "#fff",
+    background: "#eaeaea",
     tint: tintColorLight,
     icon: "#687076",
     tabIconDefault: "#687076",
     tabIconSelected: tintColorLight,
+    darkGray: "#c6c7c7"
   },
   dark: {
-    text: white,
+    darkGray: "#1B1B1C",
+    text: "aliceblue",
     background: black,
     lightBackGround: "#1B1B1C",
     tint: tintColorDark,
@@ -31,4 +34,4 @@ const Colors = {
   },
 };
 
-export const { dark, light, primary, lightPrimary, red } = Colors;
+export const { dark, light, primary, lightPrimary, red, white, pureWhite } = Colors;

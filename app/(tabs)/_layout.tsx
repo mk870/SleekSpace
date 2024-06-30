@@ -9,7 +9,7 @@ const TabsLayout = () => {
       <Tabs.Screen name="search" />
       <Tabs.Screen name="postproperty" />
       <Tabs.Screen name="favorites" />
-      <Tabs.Screen name="profile" />
+      <Tabs.Screen name="account" />
     </Tabs>
   );
 };

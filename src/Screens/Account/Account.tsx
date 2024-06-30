@@ -3,14 +3,14 @@ import React from 'react'
 
 type Props = {}
 
-const Profile = (props: Props) => {
+const Account = (props: Props) => {
   return (
     <View>
-      <Text>Profile</Text>
+      <Text>Account</Text>
     </View>
   )
 }
 
-export default Profile
+export default Account
 
 const styles = StyleSheet.create({})
