@@ -5,7 +5,7 @@
 
 const tintColorLight = "#0a7ea4";
 const tintColorDark = "#fff";
-const black = "#0F0F10";
+const black = "black";
 
 const Colors = {
   red: "#FF2700",

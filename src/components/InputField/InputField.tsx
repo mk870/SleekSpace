@@ -26,6 +26,7 @@ type Props = {
   label?: string;
   isFocused?: boolean;
   backgroundColor?: string;
+  borderColor?: string;
 };
 
 const InputField: React.FC<Props> = ({
@@ -40,6 +41,7 @@ const InputField: React.FC<Props> = ({
   isFocused,
   backgroundColor,
   handleOnEnter,
+  borderColor,
 }) => {
   const [ispassWordHidden, setIsPassWordHidden] = useState<boolean>(true);
   const iconSize = 20;
@@ -121,7 +123,7 @@ const InputField: React.FC<Props> = ({
         )}
         <TextInput
           style={[
-            styles(width, height, theme).input,
+            styles(width, height, theme, borderColor).input,
             {
               backgroundColor: backgroundColor
                 ? backgroundColor
@@ -154,7 +156,8 @@ export default InputField;
 const styles = (
   width: DimensionValue,
   height: DimensionValue,
-  theme: ColorSchemeName
+  theme: ColorSchemeName,
+  borderColor?: string
 ) =>
   StyleSheet.create({
     container: {
@@ -184,5 +187,11 @@ const styles = (
       position: "relative",
       borderRadius: 7,
       color: theme === "dark" ? dark.text : light.text,
+      borderColor: borderColor
+        ? borderColor
+        : theme === "dark"
+        ? dark.background
+        : light.background,
+      borderWidth: 1,
     },
   });

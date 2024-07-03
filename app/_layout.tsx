@@ -1,4 +1,5 @@
 import { store } from "@/src/Redux/Store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
@@ -17,20 +18,22 @@ export default function RootLayout() {
     };
     prepare();
   }, []);
-
+  const queryClient = new QueryClient();
   if (!fontsLoaded) return undefined;
   else SplashScreen.hideAsync();
   return (
     <Provider store={store}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      </Stack>
+      <QueryClientProvider client={queryClient}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        </Stack>
+      </QueryClientProvider>
     </Provider>
   );
 }

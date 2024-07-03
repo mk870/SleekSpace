@@ -23,10 +23,18 @@ import { IUserLogin, IVoidFunc } from "@/src/GlobalTypes/Types";
 import { useAppDispatch } from "@/src/Redux/Hooks/Config";
 import { updateAccessToken } from "@/src/Redux/Slices/AccessTokenSlice/AccessToken";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
-import { dark, light } from "@/src/Theme/Colors";
+import { dark, light, red } from "@/src/Theme/Colors";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
+import { useMutation } from "@tanstack/react-query";
+import { loginHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import {
+  addEmailAddress,
+  addFamilyName,
+  addGivenName,
+  addUserId,
+} from "@/src/Redux/Slices/UserSlice/User";
 
 const Login = () => {
   const { width } = useWindowDimensions();
@@ -55,22 +63,33 @@ const Login = () => {
     forgotPasswordWrapper,
     forgotPasswordText,
   } = styles;
+
+  const loginMutation = useMutation({
+    mutationFn: loginHttpFunc,
+    onSuccess: (data) => {
+      dispatch(updateAccessToken(data.data.accessToken));
+      dispatch(addEmailAddress(data.data.email));
+      dispatch(addFamilyName(data.data.familyName));
+      dispatch(addGivenName(data.data.givenName));
+      dispatch(addUserId(data.data.id));
+      router.dismissAll();
+      router.replace("/home");
+    },
+    onError(error: any) {
+      if (error.response?.data?.error !== "") {
+        setLoginError(error.response?.data?.error);
+      } else setLoginError("Something went wrong");
+    },
+    onSettled: () => {
+      setIsLoading(false);
+      setLoginUserData({ ...loginUserData, email: "", password: "" });
+    },
+  });
   const handlePost: IVoidFunc = () => {
     if (!isEmailValidationError && !isPasswordValidationError) {
       setIsLoading(true);
       if (loginUserData.email !== "" && loginUserData.password !== "") {
-        // loginRequest(
-        //   {
-        //     Email: loginUserData.email,
-        //     Password: loginUserData.password,
-        //   },
-        //   setIsLoading,
-        //   setLoginError,
-        //   () => router.replace("/home"),
-        //   (accessToken: string) => dispatch(updateAccessToken(accessToken))
-        // );
-        console.log("loggedIn");
-        setLoginUserData({ ...loginUserData, email: "", password: "" });
+        loginMutation.mutate(loginUserData);
       } else if (loginUserData.email === "" && loginUserData.password !== "") {
         setIsEmailValidationError(true);
         setIsLoading(false);
@@ -123,6 +142,7 @@ const Login = () => {
             contentType="emailAddress"
             type="emailAddress"
             label="Email"
+            borderColor={isEmailValidationError ? red : undefined}
           />
           {isEmailValidationError && (
             <View style={errorContainer}>
@@ -140,6 +160,7 @@ const Login = () => {
             contentType="password"
             type="password"
             label="Password"
+            borderColor={isPasswordValidationError ? red : undefined}
           />
           <View style={forgotPasswordWrapper}>
             <TouchableOpacity onPress={() => router.push("/forgotPassword")}>
@@ -163,6 +184,7 @@ const Login = () => {
               </ThemedText>
               <TouchableOpacity
                 onPress={() => router.push("/register")}
+                disabled={isLoading}
                 style={[
                   styles.linkContainer,
                   {
@@ -177,12 +199,12 @@ const Login = () => {
             <CustomButton
               title={isLoading ? "loading" : "Login"}
               onPressFunc={handlePost}
-              isDisabled={isLoading ? true : false}
+              isDisabled={isLoading}
             />
             <AuthDivider />
             <View style={styles.socialsWrapper}>
-              <GoogleButton type="sign_in" />
-              <FacebookButton type="sign_in" />
+              <GoogleButton type="sign_in" disabled={isLoading} />
+              <FacebookButton type="sign_in" disabled={isLoading} />
             </View>
           </View>
         </View>

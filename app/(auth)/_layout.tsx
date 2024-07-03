@@ -46,7 +46,7 @@ const AuthStack = () => {
         }}
       />
       <Stack.Screen
-        name="verification"
+        name="verification/[id]"
         options={{
           title: "",
           animation: stackAnimation,
@@ -68,7 +68,7 @@ const AuthStack = () => {
         }}
       />
       <Stack.Screen
-        name="resetPassword"
+        name="resetPassword/[id]"
         options={{
           title: "",
           animation: stackAnimation,

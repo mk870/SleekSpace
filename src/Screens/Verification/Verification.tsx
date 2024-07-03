@@ -8,38 +8,45 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
 
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import InputField from "@/src/Components/InputField/InputField";
-import { IStringOrNull } from "@/src/GlobalTypes/Types";
+import { INoPropsReactComponent, IStringOrNull } from "@/src/GlobalTypes/Types";
 import ServerError from "@/src/HttpServices/ServerError/ServerError";
 import { family, small } from "@/src/Theme/Font";
 import { red, dark, light } from "@/src/Theme/Colors";
 import ButtonSpinner from "@/src/Components/Spinners/ButtonSpinner";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
-import { router } from "expo-router";
+import { resendVerificationCodeHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
 
-type Props = {};
-
-const Verification = (props: Props) => {
+const Verification: INoPropsReactComponent = () => {
+  const { id } = useLocalSearchParams();
   const [verificationCode, setVerificationCode] = useState<string>("");
   const [isVerificationLoading, setIsVerificationLoading] =
     useState<boolean>(false);
   const [isResendLoading, setIsResendLoading] = useState<boolean>(false);
   const [typingError, setTypingError] = useState<IStringOrNull>(null);
-  const [verificationError, setVerificationError] = useState<string>("");
+  const [httpError, setHttpError] = useState<string>("");
   const theme = useColorScheme();
-  const {width} = useWindowDimensions()
+  const { width } = useWindowDimensions();
   useEffect(() => {
     if (verificationCode && verificationCode.length < 6)
       setTypingError("verification code should be 6 digits");
     else setTypingError(null);
   }, [verificationCode]);
+  const resendCodeMutation = useMutation({
+    mutationFn: resendVerificationCodeHttpFunc,
+    onError: () => {
+      setHttpError("oops something went wrong");
+    },
+  });
   const handleVerification = () => {};
   const handleAlertCancel = () => {};
   const handleResendCode = () => {
-   router.push("/resetPassword")
+    router.push("/resetPassword");
   };
   return (
     <Screen>
@@ -50,8 +57,8 @@ const Verification = (props: Props) => {
           justifyContent: "flex-start",
         }}
       >
-        <View style={[styles.container,{ width: width > 700 ? 600 : "100%" }]}>
-        <ThemedText type="header" styles={{textAlign:"center"}}>
+        <View style={[styles.container, { width: width > 700 ? 600 : "100%" }]}>
+          <ThemedText type="header" styles={{ textAlign: "center" }}>
             Code Verification
           </ThemedText>
           <ThemedText type="regular">
@@ -67,10 +74,12 @@ const Verification = (props: Props) => {
             handleOnEnter={handleVerification}
             contentType="none"
             placeHolder=""
+            borderColor={typingError ? red : undefined}
           />
           {typingError && <Text style={styles.errorText}>{typingError}</Text>}
           <TouchableOpacity
             onPress={handleResendCode}
+            disabled={isVerificationLoading || isResendLoading ? true : false}
             style={[
               styles.linkContainer,
               {
@@ -89,15 +98,17 @@ const Verification = (props: Props) => {
             <CustomButton
               title={isVerificationLoading ? "loading" : "Verify"}
               onPressFunc={handleVerification}
-              isDisabled={isVerificationLoading ? true : false}
+              isDisabled={
+                isVerificationLoading || isResendLoading ? true : false
+              }
             />
           </View>
         </View>
-        {verificationError && (
+        {httpError && (
           <ServerError
             handleCancel={handleAlertCancel}
-            message={verificationError}
-            isModalVisible={verificationError ? true : false}
+            message={httpError}
+            isModalVisible={httpError ? true : false}
           />
         )}
       </ScrollView>
@@ -112,7 +123,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     paddingHorizontal: 15,
-    paddingBottom:15,
+    paddingBottom: 15,
     gap: 10,
   },
   errorText: {
@@ -127,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginTop:5
+    marginTop: 5,
   },
   btnWrapper: {
     width: "100%",

@@ -10,8 +10,8 @@ import {
 import React from "react";
 
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import { family, large } from "@/src/Theme/Font";
-import { dark, light, lightPrimary, red } from "@/src/Theme/Colors";
+import { family, large, small } from "@/src/Theme/Font";
+import { dark, light, lightPrimary, red, white } from "@/src/Theme/Colors";
 
 type Props = {
   handleCancel: () => void;
@@ -34,14 +34,21 @@ const ServerError: React.FC<Props> = ({
       transparent
       animationType="slide"
     >
-      <View style={container}>
+      <View
+        style={[
+          container,
+          {
+            backgroundColor:
+              theme === "dark" ? dark.lightBackGround : light.background,
+          },
+        ]}
+      >
         <View
           style={[
             errorContainer,
             {
               width: width > 500 ? 420 : 250,
-              backgroundColor:
-                theme === "dark" ? dark.background : light.background,
+              backgroundColor: theme === "dark" ? dark.background : white,
             },
           ]}
         >
@@ -49,7 +56,7 @@ const ServerError: React.FC<Props> = ({
           <ThemedText type="regular">{message}</ThemedText>
           <View style={row}>
             <TouchableOpacity style={btn} onPress={handleCancel}>
-              <ThemedText type="regular">okay</ThemedText>
+              <Text style={styles.regulartext}>okay</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -59,7 +66,6 @@ const ServerError: React.FC<Props> = ({
 };
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: dark.lightBackGround,
     position: "absolute",
     top: 0,
     bottom: 0,
@@ -93,6 +99,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: lightPrimary,
+  },
+  regulartext: {
+    fontFamily: family,
+    fontSize: small,
+    color: white,
   },
 });
 

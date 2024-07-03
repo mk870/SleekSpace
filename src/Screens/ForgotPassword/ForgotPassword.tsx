@@ -16,6 +16,9 @@ import { emailValidator } from "@/src/Utils/Funcs";
 import { red } from "@/src/Theme/Colors";
 import { family, small } from "@/src/Theme/Font";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
+import { useMutation } from "@tanstack/react-query";
+import { changePasswordHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import ServerError from "@/src/HttpServices/ServerError/ServerError";
 
 const ForgotPassword: INoPropsReactComponent = () => {
   const [email, setEmail] = useState<string | undefined>(undefined);
@@ -31,10 +34,26 @@ const ForgotPassword: INoPropsReactComponent = () => {
     }
   }, [email]);
   const { width } = useWindowDimensions();
-  const handlePost = () => {
-    router.push("/verification");
-  };
   const router = useRouter();
+  const forgotPasswordMutation = useMutation({
+    mutationFn: changePasswordHttpFunc,
+    onError(error: any) {
+      if (error.response?.data?.error !== "") {
+        setHttpError(error.response?.data?.error);
+      } else setHttpError("Something went wrong");
+    },
+    onSuccess(data) {
+      router.push(`/verification/${data.data.userId}`);
+    },
+    onSettled: () => {
+      setEmail(undefined);
+      setIsLoading(false);
+    },
+  });
+  const handlePost = () => {
+    setIsLoading(true);
+    forgotPasswordMutation.mutate({ email });
+  };
   return (
     <Screen>
       <ScrollView
@@ -63,6 +82,7 @@ const ForgotPassword: INoPropsReactComponent = () => {
             contentType="emailAddress"
             type="emailAddress"
             label="Email"
+            borderColor={isEmailValidationError ? red : undefined}
           />
           {isEmailValidationError && (
             <View style={styles.errorContainer}>
@@ -79,6 +99,13 @@ const ForgotPassword: INoPropsReactComponent = () => {
             />
           </View>
         </View>
+        {httpError && (
+          <ServerError
+            handleCancel={() => setHttpError("")}
+            message={httpError}
+            isModalVisible={httpError ? true : false}
+          />
+        )}
       </ScrollView>
     </Screen>
   );

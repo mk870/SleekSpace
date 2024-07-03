@@ -3,8 +3,9 @@ import { IUser } from "./Type/Type";
 
 const user: IUser = {
   email: "",
-  firstName: "",
-  lastName: "",
+  givenName: "",
+  familyName: "",
+  id: 0,
 };
 export const userSlice = createSlice({
   name: "user",
@@ -12,10 +13,10 @@ export const userSlice = createSlice({
     value: user,
   },
   reducers: {
-    addFirstName: (state, action) => {
+    addGivenName: (state, action) => {
       state.value = {
         ...state.value,
-        firstName: action.payload,
+        givenName: action.payload,
       };
     },
     addEmailAddress: (state, action) => {
@@ -24,13 +25,20 @@ export const userSlice = createSlice({
         email: action.payload,
       };
     },
-    addLastName: (state, action) => {
+    addFamilyName: (state, action) => {
       state.value = {
         ...state.value,
-        lastName: action.payload,
+        familyName: action.payload,
+      };
+    },
+    addUserId: (state, action) => {
+      state.value = {
+        ...state.value,
+        id: action.payload,
       };
     },
   },
 });
-export const { addFirstName, addEmailAddress } = userSlice.actions;
+export const { addGivenName, addEmailAddress, addFamilyName, addUserId } =
+  userSlice.actions;
 export default userSlice.reducer;
