@@ -5,7 +5,7 @@ import { useRouter, Stack } from "expo-router";
 import { family } from "@/src/Theme/Font";
 import HeaderIcon from "@/src/Components/Navigation/HeaderIcon/HeaderIcon";
 import { stackAnimation } from "@/src/Components/Navigation/Utils/Constants";
-import { dark, light } from "@/src/Theme/Colors";
+import { dark, light, pureWhite } from "@/src/Theme/Colors";
 
 const AuthStack = () => {
   const router = useRouter();
@@ -14,8 +14,7 @@ const AuthStack = () => {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor:
-            colorScheme === "dark" ? dark.background : light.background,
+          backgroundColor: colorScheme === "dark" ? "black" : pureWhite,
         },
         headerTitleStyle: {
           fontFamily: family,
@@ -36,7 +35,7 @@ const AuthStack = () => {
         options={{
           title: "Login",
           animation: stackAnimation,
-          headerLeft:undefined
+          headerLeft: undefined,
         }}
       />
       <Stack.Screen
@@ -47,10 +46,36 @@ const AuthStack = () => {
         }}
       />
       <Stack.Screen
-        name="verification"
+        name="verification/[id]"
         options={{
-          title: "Verification",
+          title: "",
           animation: stackAnimation,
+          headerStyle: {
+            backgroundColor:
+              colorScheme === "dark" ? dark.background : light.background,
+          },
+        }}
+      />
+      <Stack.Screen
+        name="forgotPassword"
+        options={{
+          title: "",
+          animation: stackAnimation,
+          headerStyle: {
+            backgroundColor:
+              colorScheme === "dark" ? dark.background : light.background,
+          },
+        }}
+      />
+      <Stack.Screen
+        name="resetPassword/[id]"
+        options={{
+          title: "",
+          animation: stackAnimation,
+          headerStyle: {
+            backgroundColor:
+              colorScheme === "dark" ? dark.background : light.background,
+          },
         }}
       />
     </Stack>
