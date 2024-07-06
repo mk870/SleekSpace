@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 
 import InputField from "../../Components/InputField/InputField";
@@ -27,7 +28,6 @@ import { dark, light, red } from "@/src/Theme/Colors";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
-import { useMutation } from "@tanstack/react-query";
 import { loginHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
 import {
   addEmailAddress,

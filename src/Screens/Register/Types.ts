@@ -1,6 +1,6 @@
 export type IUserRegistrationData = {
-  givenName: string;
-  familyName: string;
-  email: string;
-  password: string;
+  givenName: string | undefined;
+  familyName: string | undefined;
+  email: string | undefined;
+  password: string | undefined;
 };

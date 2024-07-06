@@ -71,3 +71,9 @@ export const stringToNumber = (value: string) => {
 export const capitalizeFirstLetter = (word: string) => {
   return word.charAt(0).toUpperCase() + word.slice(1);
 };
+
+export const processLocalQueryParam = (
+  queryParam: string | string[] | undefined
+) => {
+  return queryParam ? (Array.isArray(queryParam) ? "" : queryParam) : "";
+};

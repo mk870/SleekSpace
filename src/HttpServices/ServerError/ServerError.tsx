@@ -39,7 +39,7 @@ const ServerError: React.FC<Props> = ({
           container,
           {
             backgroundColor:
-              theme === "dark" ? dark.lightBackGround : light.background,
+              theme === "dark" ? dark.background : light.background,
           },
         ]}
       >
@@ -48,7 +48,7 @@ const ServerError: React.FC<Props> = ({
             errorContainer,
             {
               width: width > 500 ? 420 : 250,
-              backgroundColor: theme === "dark" ? dark.background : white,
+              backgroundColor: theme === "dark" ? dark.lightBackGround : white,
             },
           ]}
         >

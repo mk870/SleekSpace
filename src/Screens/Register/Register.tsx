@@ -7,7 +7,8 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
 
 import {
   emailValidator,
@@ -16,50 +17,46 @@ import {
 } from "../../Utils/Funcs";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import InputField from "@/src/Components/InputField/InputField";
-import { INumberOrNull } from "@/src/GlobalTypes/Types";
 import ServerError from "@/src/HttpServices/ServerError/ServerError";
 import { styles } from "./Styles";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import { dark, light } from "@/src/Theme/Colors";
+import { dark, light, red } from "@/src/Theme/Colors";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
+import { nativeRegisterHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import { IUserRegistrationData } from "./Types";
+
 const Register = () => {
-  const [signUpData, setSignUpData] = useState<{
-    firstName: string | undefined;
-    lastName: string | undefined;
-    email: string | undefined;
-    password: string | undefined;
-  }>({
-    firstName: "",
-    lastName: "",
+  const [signUpData, setSignUpData] = useState<IUserRegistrationData>({
+    givenName: "",
+    familyName: "",
     email: "",
     password: "",
   });
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [registrationError, setRegistrationError] = useState<string>("");
-  const [userId, setUserId] = useState<INumberOrNull>(null);
   const [isPasswordValidationError, setIsPasswordValidationError] =
     useState<boolean>(false);
   const [isEmailValidationError, setIsEmailValidationError] =
     useState<boolean>(false);
-  const [isFirstNameValidationError, setIsFirstNameValidationError] =
+  const [isGivenNameValidationError, setIsGivenNameValidationError] =
     useState<boolean>(false);
-  const [isLastNameValidationError, setIsLastNameValidationError] =
+  const [isFamilyNameValidationError, setIsFamilyNameValidationError] =
     useState<boolean>(false);
   const handleOnChangeFirstName = (value: string | undefined) => {
     setSignUpData({
       ...signUpData,
-      firstName: value,
+      givenName: value,
     });
   };
   const theme = useColorScheme();
   const handleOnChangeLastName = (value: string | undefined) => {
     setSignUpData({
       ...signUpData,
-      lastName: value,
+      familyName: value,
     });
   };
   const handleOnChangePassword = (value: string | undefined) => {
@@ -74,100 +71,102 @@ const Register = () => {
       email: value,
     });
   };
-  const handleNavigate = (userId: number) => {
-    router.push({
-      pathname: "/verification",
-      params: {
-        userId,
-      },
-    });
-  };
+  
+  const registerMutation = useMutation({
+    mutationFn: nativeRegisterHttpFunc,
+    onSuccess(data) {
+      router.push({
+        pathname: `/verification/${data.data.userId}`,
+        params: {
+          isNewUser: "yes",
+        },
+      });
+    },
+    onError(error: any) {
+      if (error.response?.data?.error !== "") {
+        setRegistrationError(error.response?.data?.error);
+      } else setRegistrationError("Something went wrong");
+    },
+    onSettled: () => {
+      setSignUpData({
+        ...signUpData,
+        email: "",
+        password: "",
+        givenName: "",
+        familyName: "",
+      });
+      setIsLoading(false);
+    },
+  });
+
   const handleSignUp = () => {
     if (
       !isEmailValidationError &&
       !isPasswordValidationError &&
-      !isFirstNameValidationError &&
-      !isLastNameValidationError
+      !isGivenNameValidationError &&
+      !isFamilyNameValidationError
     ) {
       setIsLoading(true);
       if (
         signUpData.email !== "" &&
         signUpData.password !== "" &&
-        signUpData.firstName !== "" &&
-        signUpData.lastName !== ""
+        signUpData.givenName !== "" &&
+        signUpData.familyName !== ""
       ) {
-        const userData = {
-          FirstName: signUpData.firstName,
-          LastName: signUpData.lastName,
-          Email: signUpData.email,
-          Password: signUpData.password,
-        };
-        // registrationRequest(
-        //   userData,
-        //   setIsLoading,
-        //   setRegistrationError,
-        //   handleNavigate
-        // );
-        setSignUpData({
-          ...signUpData,
-          email: "",
-          password: "",
-          firstName: "",
-          lastName: "",
-        });
+        registerMutation.mutate(signUpData);
       } else if (
         signUpData.email === "" &&
         signUpData.password !== "" &&
-        signUpData.firstName !== "" &&
-        signUpData.lastName !== ""
+        signUpData.givenName !== "" &&
+        signUpData.familyName !== ""
       ) {
         setIsEmailValidationError(true);
         setIsLoading(false);
       } else if (
         signUpData.email !== "" &&
         signUpData.password === "" &&
-        signUpData.firstName !== "" &&
-        signUpData.lastName !== ""
+        signUpData.givenName !== "" &&
+        signUpData.familyName !== ""
       ) {
         setIsPasswordValidationError(true);
         setIsLoading(false);
       } else if (
         signUpData.email !== "" &&
         signUpData.password !== "" &&
-        signUpData.firstName === "" &&
-        signUpData.lastName !== ""
+        signUpData.givenName === "" &&
+        signUpData.familyName !== ""
       ) {
-        setIsFirstNameValidationError(true);
+        setIsGivenNameValidationError(true);
         setIsLoading(false);
       } else if (
         signUpData.email !== "" &&
         signUpData.password !== "" &&
-        signUpData.firstName !== "" &&
-        signUpData.lastName === ""
+        signUpData.givenName !== "" &&
+        signUpData.familyName === ""
       ) {
-        setIsLastNameValidationError(true);
+        setIsFamilyNameValidationError(true);
         setIsLoading(false);
       } else if (
         signUpData.email === "" &&
         signUpData.password === "" &&
-        signUpData.firstName === "" &&
-        signUpData.lastName === ""
+        signUpData.givenName === "" &&
+        signUpData.familyName === ""
       ) {
         setIsEmailValidationError(true);
         setIsPasswordValidationError(true);
-        setIsLastNameValidationError(true);
-        setIsFirstNameValidationError(true);
+        setIsFamilyNameValidationError(true);
+        setIsGivenNameValidationError(true);
         setIsLoading(false);
       } else if (
         signUpData.email === "" ||
         signUpData.password === "" ||
-        signUpData.firstName === "" ||
-        signUpData.lastName === ""
+        signUpData.givenName === "" ||
+        signUpData.familyName === ""
       ) {
         if (signUpData.email === "") setIsEmailValidationError(true);
         if (signUpData.password === "") setIsPasswordValidationError(true);
-        if (signUpData.firstName === "") setIsFirstNameValidationError(true);
-        if (signUpData.lastName === "") setIsLastNameValidationError(true);
+        if (signUpData.givenName === "") setIsGivenNameValidationError(true);
+        if (signUpData.familyName === "") setIsFamilyNameValidationError(true);
         setIsLoading(false);
       }
     }
@@ -187,27 +186,27 @@ const Register = () => {
     }
   }, [signUpData.email]);
   useEffect(() => {
-    if (signUpData.firstName !== "" || !signUpData.firstName) {
-      if (signUpData.firstName && signUpData.firstName.length < 4) {
-        setIsFirstNameValidationError(true);
+    if (signUpData.givenName !== "" || !signUpData.givenName) {
+      if (signUpData.givenName && signUpData.givenName.length < 4) {
+        setIsGivenNameValidationError(true);
       } else {
-        setIsFirstNameValidationError(false);
+        setIsGivenNameValidationError(false);
       }
     } else {
-      setIsFirstNameValidationError(false);
+      setIsGivenNameValidationError(false);
     }
-  }, [signUpData.firstName]);
+  }, [signUpData.givenName]);
   useEffect(() => {
-    if (signUpData.lastName !== "") {
-      if (signUpData.lastName && signUpData.lastName.length < 4) {
-        setIsLastNameValidationError(true);
+    if (signUpData.familyName !== "") {
+      if (signUpData.familyName && signUpData.familyName.length < 4) {
+        setIsFamilyNameValidationError(true);
       } else {
-        setIsLastNameValidationError(false);
+        setIsFamilyNameValidationError(false);
       }
     } else {
-      setIsLastNameValidationError(false);
+      setIsFamilyNameValidationError(false);
     }
-  }, [signUpData.lastName]);
+  }, [signUpData.familyName]);
   const {
     container,
     inputWrapper,
@@ -232,7 +231,7 @@ const Register = () => {
         <View style={[inputWrapper, { width: width > 700 ? 600 : "95%" }]}>
           <ThemedText type="header">Registration</ThemedText>
           <InputField
-            textValue={signUpData.firstName}
+            textValue={signUpData.givenName}
             placeHolder="given name"
             width={"100%"}
             handleOnChangeText={handleOnChangeFirstName}
@@ -240,14 +239,15 @@ const Register = () => {
             contentType="givenName"
             type="givenName"
             label="Given Name"
+            borderColor={isGivenNameValidationError? red : undefined}
           />
-          {isFirstNameValidationError && (
+          {isGivenNameValidationError && (
             <View style={errorContainer}>
               <Text style={errorText}>please enter atleast 4 characters</Text>
             </View>
           )}
           <InputField
-            textValue={signUpData.lastName}
+            textValue={signUpData.familyName}
             placeHolder="family name"
             width={"100%"}
             handleOnChangeText={handleOnChangeLastName}
@@ -255,8 +255,9 @@ const Register = () => {
             contentType="familyName"
             type="familyName"
             label="Family Name"
+            borderColor={isFamilyNameValidationError? red : undefined}
           />
-          {isLastNameValidationError && (
+          {isFamilyNameValidationError && (
             <View style={errorContainer}>
               <Text style={errorText}>please enter atleast 4 characters</Text>
             </View>
@@ -270,10 +271,11 @@ const Register = () => {
             contentType="emailAddress"
             type="emailAddress"
             label="Email"
+            borderColor={isEmailValidationError? red : undefined}
           />
           {isEmailValidationError && (
             <View style={errorContainer}>
-              <Text style={errorText}>please enter valid email address</Text>
+              <Text style={errorText}>please enter valid a email address</Text>
             </View>
           )}
           <InputField
@@ -285,6 +287,7 @@ const Register = () => {
             contentType="password"
             type="password"
             label="Password"
+            borderColor={isPasswordValidationError? red : undefined}
           />
           {isPasswordValidationError && (
             <View style={errorContainer}>
@@ -321,8 +324,8 @@ const Register = () => {
             />
             <AuthDivider />
             <View style={styles.socialsWrapper}>
-              <GoogleButton type="sign_up" />
-              <FacebookButton type="sign_up" />
+              <GoogleButton type="sign_up" disabled={isLoading} />
+              <FacebookButton type="sign_up" disabled={isLoading} />
             </View>
           </View>
         </View>

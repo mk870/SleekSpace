@@ -6,7 +6,8 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
 
 import { family, medium, small } from "@/src/Theme/Font";
 import { red } from "@/src/Theme/Colors";
@@ -15,8 +16,11 @@ import InputField from "@/src/Components/InputField/InputField";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { passwordGuideLines, passwordValidator } from "@/src/Utils/Funcs";
+import { changePasswordHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import ServerError from "@/src/HttpServices/ServerError/ServerError";
 
 const ResetPassword = () => {
+  const { id } = useLocalSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [resetPassWordError, setResetPassWordError] = useState<string>("");
   const [passwords, setPasswords] = useState<{
@@ -30,6 +34,10 @@ const ResetPassword = () => {
     useState<boolean>(false);
   const [isPasswordValidationError, setIsPasswordValidationError] =
     useState<boolean>(false);
+
+  const { width } = useWindowDimensions();
+  const router = useRouter();
+
   useEffect(() => {
     if (passwords.password !== "") {
       passwordValidator(setIsPasswordValidationError, passwords.password);
@@ -37,6 +45,7 @@ const ResetPassword = () => {
       setIsPasswordValidationError(false);
     }
   }, [passwords.password]);
+
   useEffect(() => {
     if (passwords.confirmPassword && passwords.password) {
       if (passwords.confirmPassword !== passwords.password)
@@ -44,11 +53,43 @@ const ResetPassword = () => {
       else setIsPasswordConfirmationError(false);
     } else setIsPasswordConfirmationError(false);
   }, [passwords.confirmPassword, passwords.password]);
-  const { width } = useWindowDimensions();
-  const router = useRouter()
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: changePasswordHttpFunc,
+    onSuccess(_data) {
+      router.dismissAll();
+      router.push(`/login`);
+    },
+    onError(error: any) {
+      if (error.response?.data?.error !== "") {
+        setResetPassWordError(error.response?.data?.error);
+      } else setResetPassWordError("Something went wrong");
+    },
+    onSettled: () => {
+      setPasswords({
+        ...passwords,
+        password: undefined,
+        confirmPassword: undefined,
+      });
+      setIsLoading(false);
+    },
+  });
+
   const handleReset = () => {
-    router.replace("/login")
+    if (
+      !isPasswordConfirmationError &&
+      !isPasswordValidationError &&
+      passwords.password &&
+      passwords.confirmPassword
+    ) {
+      setIsLoading(true);
+      resetPasswordMutation.mutate({
+        userId: id ? +id : 0,
+        password: passwords.password,
+      });
+    }
   };
+
   return (
     <Screen>
       <ScrollView
@@ -61,7 +102,10 @@ const ResetPassword = () => {
         <View
           style={[styles.subContainer, { width: width > 700 ? 600 : "100%" }]}
         >
-          <ThemedText type="header" styles={{ textAlign: "center" }}>
+          <ThemedText
+            type="header"
+            styles={{ textAlign: "center", marginBottom: 10 }}
+          >
             Reset Password
           </ThemedText>
           <ThemedText type="regular">Enter your new password</ThemedText>
@@ -91,9 +135,7 @@ const ResetPassword = () => {
           />
           {isPasswordConfirmationError && (
             <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>
-                passwords are not the same
-              </Text>
+              <Text style={styles.errorText}>passwords are not the same</Text>
             </View>
           )}
           {isPasswordValidationError && (
@@ -116,6 +158,11 @@ const ResetPassword = () => {
             />
           </View>
         </View>
+        <ServerError
+          isModalVisible={resetPassWordError ? true : false}
+          message={resetPassWordError}
+          handleCancel={() => setResetPassWordError("")}
+        />
       </ScrollView>
     </Screen>
   );

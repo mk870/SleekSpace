@@ -20,10 +20,24 @@ import { family, small } from "@/src/Theme/Font";
 import { red, dark, light } from "@/src/Theme/Colors";
 import ButtonSpinner from "@/src/Components/Spinners/ButtonSpinner";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
-import { resendVerificationCodeHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import {
+  resendVerificationCodeHttpFunc,
+  verificationCodeForSecurityHttpFunc,
+  verifyCodeForNativeUserRegistrationHttpFunc,
+} from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import { processLocalQueryParam } from "@/src/Utils/Funcs";
+import { useAppDispatch } from "@/src/Redux/Hooks/Config";
+import { updateAccessToken } from "@/src/Redux/Slices/AccessTokenSlice/AccessToken";
+import {
+  addEmailAddress,
+  addFamilyName,
+  addGivenName,
+  addUserId,
+} from "@/src/Redux/Slices/UserSlice/User";
 
 const Verification: INoPropsReactComponent = () => {
-  const { id } = useLocalSearchParams();
+  const { id, isNewUser } = useLocalSearchParams();
+  const processedIsNewUser = processLocalQueryParam(isNewUser);
   const [verificationCode, setVerificationCode] = useState<string>("");
   const [isVerificationLoading, setIsVerificationLoading] =
     useState<boolean>(false);
@@ -32,22 +46,93 @@ const Verification: INoPropsReactComponent = () => {
   const [httpError, setHttpError] = useState<string>("");
   const theme = useColorScheme();
   const { width } = useWindowDimensions();
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
     if (verificationCode && verificationCode.length < 6)
       setTypingError("verification code should be 6 digits");
     else setTypingError(null);
   }, [verificationCode]);
-  const resendCodeMutation = useMutation({
-    mutationFn: resendVerificationCodeHttpFunc,
-    onError: () => {
-      setHttpError("oops something went wrong");
+
+  const verifyCodeForSecurityMutation = useMutation({
+    mutationFn: verificationCodeForSecurityHttpFunc,
+    onSuccess(data) {
+      router.push(`/resetPassword/${data.data.userId}`);
+    },
+    onError(error: any) {
+      if (error.response?.data?.error !== "") {
+        setHttpError(error.response?.data?.error);
+      } else setHttpError("Something went wrong");
+    },
+    onSettled: () => {
+      setVerificationCode("");
+      setIsVerificationLoading(false);
     },
   });
-  const handleVerification = () => {};
-  const handleAlertCancel = () => {};
-  const handleResendCode = () => {
-    router.push("/resetPassword");
+
+  const verifyCodeForNativeUserRegistrationMutation = useMutation({
+    mutationFn: verifyCodeForNativeUserRegistrationHttpFunc,
+    onSuccess(data) {
+      dispatch(updateAccessToken(data.data.accessToken));
+      dispatch(addEmailAddress(data.data.email));
+      dispatch(addFamilyName(data.data.familyName));
+      dispatch(addGivenName(data.data.givenName));
+      dispatch(addUserId(data.data.id));
+      router.dismissAll();
+      router.replace("/home");
+    },
+    onError(error: any) {
+      if (error.response?.data?.error !== "") {
+        setHttpError(error.response?.data?.error);
+      } else setHttpError("Something went wrong");
+    },
+    onSettled: () => {
+      setVerificationCode("");
+      setIsVerificationLoading(false);
+    },
+  });
+
+  const handleVerification = () => {
+    if (!typingError && verificationCode) {
+      setIsVerificationLoading(true);
+      if (processedIsNewUser === "no") {
+        verifyCodeForSecurityMutation.mutate({
+          userId: id ? +id : 0,
+          verificationCode: +verificationCode,
+        });
+      } else {
+        verifyCodeForNativeUserRegistrationMutation.mutate({
+          userId: id ? +id : 0,
+          verificationCode: +verificationCode,
+        });
+      }
+    }
   };
+
+  const resendMutation = useMutation({
+    mutationFn: resendVerificationCodeHttpFunc,
+    onSuccess(data) {
+      console.log(data.data);
+    },
+    onError(error: any) {
+      if (error.response?.data?.error !== "") {
+        setHttpError(error.response?.data?.error);
+      } else setHttpError("Something went wrong");
+    },
+    onSettled: () => {
+      setIsResendLoading(false);
+    },
+  });
+
+  const handleResendCode = () => {
+    setIsResendLoading(true);
+    resendMutation.mutate(id ? +id : 0);
+  };
+
+  const handleAlertCancel = () => {
+    setHttpError("");
+  };
+
   return (
     <Screen>
       <ScrollView
@@ -139,6 +224,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 5,
+    alignSelf: "center",
   },
   btnWrapper: {
     width: "100%",

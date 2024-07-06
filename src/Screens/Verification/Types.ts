@@ -3,8 +3,7 @@ export type IUserVerificationData = {
   verificationCode: number;
 };
 
-export type INewPasswordAndVerificationData = {
+export type INewPasswordData = {
   userId: number;
-  verificationCode: number;
   password: string;
 };

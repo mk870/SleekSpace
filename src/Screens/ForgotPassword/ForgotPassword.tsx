@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
 
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
@@ -16,8 +17,9 @@ import { emailValidator } from "@/src/Utils/Funcs";
 import { red } from "@/src/Theme/Colors";
 import { family, small } from "@/src/Theme/Font";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
-import { useMutation } from "@tanstack/react-query";
-import { changePasswordHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import {
+  createVerificationCodeForSecurityHttpFunc,
+} from "@/src/HttpServices/Mutations/AuthHttpFunctions";
 import ServerError from "@/src/HttpServices/ServerError/ServerError";
 
 const ForgotPassword: INoPropsReactComponent = () => {
@@ -35,15 +37,21 @@ const ForgotPassword: INoPropsReactComponent = () => {
   }, [email]);
   const { width } = useWindowDimensions();
   const router = useRouter();
+
   const forgotPasswordMutation = useMutation({
-    mutationFn: changePasswordHttpFunc,
+    mutationFn: createVerificationCodeForSecurityHttpFunc,
+    onSuccess(data) {
+      router.push({
+        pathname: `/verification/${data.data.userId}`,
+        params:{
+          isNewUser: "no"
+        }
+      });
+    },
     onError(error: any) {
       if (error.response?.data?.error !== "") {
         setHttpError(error.response?.data?.error);
       } else setHttpError("Something went wrong");
-    },
-    onSuccess(data) {
-      router.push(`/verification/${data.data.userId}`);
     },
     onSettled: () => {
       setEmail(undefined);
@@ -51,8 +59,10 @@ const ForgotPassword: INoPropsReactComponent = () => {
     },
   });
   const handlePost = () => {
-    setIsLoading(true);
-    forgotPasswordMutation.mutate({ email });
+    if (email && !isEmailValidationError) {
+      setIsLoading(true);
+      forgotPasswordMutation.mutate({ email });
+    }
   };
   return (
     <Screen>
