@@ -15,3 +15,5 @@ export const endpoints = {
   verifyCodeForSecurity: `${backEndUrl}/verification-code/security`,
   resendVerificationCode: `${backEndUrl}/resend-verification-code`,
 };
+
+export const faceBookAuthClientId = process.env.FACEBOOK_AUTH_CLIENT_ID

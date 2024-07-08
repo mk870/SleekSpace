@@ -25,7 +25,7 @@ import {
   verificationCodeForSecurityHttpFunc,
   verifyCodeForNativeUserRegistrationHttpFunc,
 } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
-import { processLocalQueryParam } from "@/src/Utils/Funcs";
+import { processLocalQueryParam, saveSecureValue } from "@/src/Utils/Funcs";
 import { useAppDispatch } from "@/src/Redux/Hooks/Config";
 import { updateAccessToken } from "@/src/Redux/Slices/AccessTokenSlice/AccessToken";
 import {
@@ -34,11 +34,17 @@ import {
   addGivenName,
   addUserId,
 } from "@/src/Redux/Slices/UserSlice/User";
+import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
+import ToasterNotification from "@/src/Components/ToasterNotification/ToasterNotifications";
 
 const Verification: INoPropsReactComponent = () => {
   const { id, isNewUser } = useLocalSearchParams();
   const processedIsNewUser = processLocalQueryParam(isNewUser);
   const [verificationCode, setVerificationCode] = useState<string>("");
+  const [
+    showResendVerificationCodeSuccessToaster,
+    setShowResendVerificationCodeSuccessToaster,
+  ] = useState<boolean>(false);
   const [isVerificationLoading, setIsVerificationLoading] =
     useState<boolean>(false);
   const [isResendLoading, setIsResendLoading] = useState<boolean>(false);
@@ -53,6 +59,14 @@ const Verification: INoPropsReactComponent = () => {
       setTypingError("verification code should be 6 digits");
     else setTypingError(null);
   }, [verificationCode]);
+
+  useEffect(() => {
+    if (showResendVerificationCodeSuccessToaster)
+      setTimeout(
+        () => setShowResendVerificationCodeSuccessToaster(false),
+        3000
+      );
+  }, [showResendVerificationCodeSuccessToaster]);
 
   const verifyCodeForSecurityMutation = useMutation({
     mutationFn: verificationCodeForSecurityHttpFunc,
@@ -73,13 +87,23 @@ const Verification: INoPropsReactComponent = () => {
   const verifyCodeForNativeUserRegistrationMutation = useMutation({
     mutationFn: verifyCodeForNativeUserRegistrationHttpFunc,
     onSuccess(data) {
-      dispatch(updateAccessToken(data.data.accessToken));
-      dispatch(addEmailAddress(data.data.email));
-      dispatch(addFamilyName(data.data.familyName));
-      dispatch(addGivenName(data.data.givenName));
-      dispatch(addUserId(data.data.id));
-      router.dismissAll();
-      router.replace("/home");
+      saveSecureValue(
+        expoSecureValueKeyNames.accessToken,
+        JSON.stringify(data.data.accessToken)
+      )
+        .then((_data) => {
+          dispatch(updateAccessToken(data.data.accessToken));
+          dispatch(addEmailAddress(data.data.email));
+          dispatch(addFamilyName(data.data.familyName));
+          dispatch(addGivenName(data.data.givenName));
+          dispatch(addUserId(data.data.id));
+          router.dismissAll();
+          router.replace("/home");
+        })
+        .catch((e) => {
+          console.log("accessToken error ", e);
+        })
+        .finally(() => setIsVerificationLoading(false));
     },
     onError(error: any) {
       if (error.response?.data?.error !== "") {
@@ -89,6 +113,21 @@ const Verification: INoPropsReactComponent = () => {
     onSettled: () => {
       setVerificationCode("");
       setIsVerificationLoading(false);
+    },
+  });
+
+  const resendMutation = useMutation({
+    mutationFn: resendVerificationCodeHttpFunc,
+    onSuccess(_data) {
+      setShowResendVerificationCodeSuccessToaster(true);
+    },
+    onError(error: any) {
+      if (error.response?.data?.error !== "") {
+        setHttpError(error.response?.data?.error);
+      } else setHttpError("Something went wrong");
+    },
+    onSettled: () => {
+      setIsResendLoading(false);
     },
   });
 
@@ -108,21 +147,6 @@ const Verification: INoPropsReactComponent = () => {
       }
     }
   };
-
-  const resendMutation = useMutation({
-    mutationFn: resendVerificationCodeHttpFunc,
-    onSuccess(data) {
-      console.log(data.data);
-    },
-    onError(error: any) {
-      if (error.response?.data?.error !== "") {
-        setHttpError(error.response?.data?.error);
-      } else setHttpError("Something went wrong");
-    },
-    onSettled: () => {
-      setIsResendLoading(false);
-    },
-  });
 
   const handleResendCode = () => {
     setIsResendLoading(true);
@@ -196,6 +220,10 @@ const Verification: INoPropsReactComponent = () => {
             isModalVisible={httpError ? true : false}
           />
         )}
+        <ToasterNotification
+          isVisible={showResendVerificationCodeSuccessToaster}
+          message="please check your email for verification code"
+        />
       </ScrollView>
     </Screen>
   );

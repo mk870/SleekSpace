@@ -9,6 +9,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
+import * as Facebook from "expo-auth-session/providers/facebook";
+import * as authSession from "expo-auth-session"
 
 import {
   emailValidator,
@@ -27,6 +29,7 @@ import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookBut
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
 import { nativeRegisterHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
 import { IUserRegistrationData } from "./Types";
+import { faceBookAuthClientId } from "@/src/Utils/Constants";
 
 const Register = () => {
   const [signUpData, setSignUpData] = useState<IUserRegistrationData>({
@@ -53,6 +56,10 @@ const Register = () => {
     });
   };
   const theme = useColorScheme();
+  const [__, ___, fbPromptAsync] = Facebook.useAuthRequest({
+    clientId: "496126113091123",
+    redirectUri: authSession.makeRedirectUri({scheme:"SleekSpace"})
+  });
   const handleOnChangeLastName = (value: string | undefined) => {
     setSignUpData({
       ...signUpData,
@@ -71,8 +78,17 @@ const Register = () => {
       email: value,
     });
   };
-  
-  const registerMutation = useMutation({
+
+  const faceBookRegistrationMutation = useMutation({
+    mutationFn: async () => {
+      await fbPromptAsync();
+    },
+    onSuccess(data) {
+      console.log("data", data);
+    },
+  });
+
+  const nativeRegistrationMutation = useMutation({
     mutationFn: nativeRegisterHttpFunc,
     onSuccess(data) {
       router.push({
@@ -113,7 +129,7 @@ const Register = () => {
         signUpData.givenName !== "" &&
         signUpData.familyName !== ""
       ) {
-        registerMutation.mutate(signUpData);
+        nativeRegistrationMutation.mutate(signUpData);
       } else if (
         signUpData.email === "" &&
         signUpData.password !== "" &&
@@ -239,7 +255,7 @@ const Register = () => {
             contentType="givenName"
             type="givenName"
             label="Given Name"
-            borderColor={isGivenNameValidationError? red : undefined}
+            borderColor={isGivenNameValidationError ? red : undefined}
           />
           {isGivenNameValidationError && (
             <View style={errorContainer}>
@@ -255,7 +271,7 @@ const Register = () => {
             contentType="familyName"
             type="familyName"
             label="Family Name"
-            borderColor={isFamilyNameValidationError? red : undefined}
+            borderColor={isFamilyNameValidationError ? red : undefined}
           />
           {isFamilyNameValidationError && (
             <View style={errorContainer}>
@@ -271,7 +287,7 @@ const Register = () => {
             contentType="emailAddress"
             type="emailAddress"
             label="Email"
-            borderColor={isEmailValidationError? red : undefined}
+            borderColor={isEmailValidationError ? red : undefined}
           />
           {isEmailValidationError && (
             <View style={errorContainer}>
@@ -287,7 +303,7 @@ const Register = () => {
             contentType="password"
             type="password"
             label="Password"
-            borderColor={isPasswordValidationError? red : undefined}
+            borderColor={isPasswordValidationError ? red : undefined}
           />
           {isPasswordValidationError && (
             <View style={errorContainer}>
@@ -325,7 +341,11 @@ const Register = () => {
             <AuthDivider />
             <View style={styles.socialsWrapper}>
               <GoogleButton type="sign_up" disabled={isLoading} />
-              <FacebookButton type="sign_up" disabled={isLoading} />
+              <FacebookButton
+                type="sign_up"
+                disabled={isLoading}
+                handleOnPressFunc={faceBookRegistrationMutation.mutate}
+              />
             </View>
           </View>
         </View>
