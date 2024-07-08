@@ -4,6 +4,13 @@ export const expoSecureValueKeyNames = {
 
 const backEndUrl = "https://sleekspace-server.onrender.com";
 
+export const tabsMenu = {
+  home: "Home",
+  account: "Account",
+  favorites: "Favorites",
+  post: "Postproperty",
+  search: "Search",
+};
 export const endpoints = {
   login: `${backEndUrl}/login`,
   nativeRegistration: `${backEndUrl}/register`,
@@ -16,4 +23,4 @@ export const endpoints = {
   resendVerificationCode: `${backEndUrl}/resend-verification-code`,
 };
 
-export const faceBookAuthClientId = process.env.FACEBOOK_AUTH_CLIENT_ID
+export const faceBookAuthClientId = process.env.FACEBOOK_AUTH_CLIENT_ID;

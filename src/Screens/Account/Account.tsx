@@ -1,13 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, useColorScheme } from 'react-native'
 import React from 'react'
 
-type Props = {}
+import Screen from '@/src/Components/ScreenWrapper/Screen'
+import { INoPropsReactComponent } from '@/src/GlobalTypes/Types'
 
-const Account = (props: Props) => {
+const Account:INoPropsReactComponent = () => {
+  const theme =useColorScheme()
   return (
-    <View>
+    <Screen>
       <Text>Account</Text>
-    </View>
+    </Screen>
   )
 }
 
