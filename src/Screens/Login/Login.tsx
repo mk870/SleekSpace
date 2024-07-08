@@ -16,6 +16,7 @@ import {
   emailValidator,
   passwordGuideLines,
   passwordValidator,
+  saveSecureValue,
 } from "../../Utils/Funcs";
 import { styles } from "./Styles";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
@@ -35,6 +36,7 @@ import {
   addGivenName,
   addUserId,
 } from "@/src/Redux/Slices/UserSlice/User";
+import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
 
 const Login = () => {
   const { width } = useWindowDimensions();
@@ -67,13 +69,23 @@ const Login = () => {
   const loginMutation = useMutation({
     mutationFn: loginHttpFunc,
     onSuccess: (data) => {
-      dispatch(updateAccessToken(data.data.accessToken));
-      dispatch(addEmailAddress(data.data.email));
-      dispatch(addFamilyName(data.data.familyName));
-      dispatch(addGivenName(data.data.givenName));
-      dispatch(addUserId(data.data.id));
-      router.dismissAll();
-      router.replace("/home");
+      saveSecureValue(
+        expoSecureValueKeyNames.accessToken,
+        JSON.stringify(data.data.accessToken)
+      )
+        .then((_data) => {
+          dispatch(updateAccessToken(data.data.accessToken));
+          dispatch(addEmailAddress(data.data.email));
+          dispatch(addFamilyName(data.data.familyName));
+          dispatch(addGivenName(data.data.givenName));
+          dispatch(addUserId(data.data.id));
+          router.dismissAll();
+          router.replace("/home");
+        })
+        .catch((e) => {
+          console.log("accessToken error ", e);
+        })
+        .finally(() => setIsLoading(false));
     },
     onError(error: any) {
       if (error.response?.data?.error !== "") {
@@ -204,7 +216,11 @@ const Login = () => {
             <AuthDivider />
             <View style={styles.socialsWrapper}>
               <GoogleButton type="sign_in" disabled={isLoading} />
-              <FacebookButton type="sign_in" disabled={isLoading} />
+              <FacebookButton
+                type="sign_in"
+                disabled={isLoading}
+                handleOnPressFunc={() => console.log("fb")}
+              />
             </View>
           </View>
         </View>

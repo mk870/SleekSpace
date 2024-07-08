@@ -1,4 +1,9 @@
-import { StyleSheet, TouchableOpacity, useColorScheme } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import React from "react";
 
 import GoogleLogoSVG from "./Logos/GoogleLogoSVG";
@@ -21,9 +26,11 @@ const GoogleButton: React.FC<Props> = ({ type, disabled }) => {
       ]}
     >
       <GoogleLogoSVG />
-      <ThemedText type="regular">
-        {type === "sign_in" ? "Login with Google" : "Register with Google"}
-      </ThemedText>
+      <View style={styles.textContainer}>
+        <ThemedText type="regular">
+          {type === "sign_in" ? "Login with Google" : "Register with Google"}
+        </ThemedText>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -34,10 +41,15 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     flexDirection: "row",
-    gap: 20,
     alignItems: "center",
     height: 50,
     borderRadius: 7,
     paddingLeft: 10,
+  },
+  textContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: -30,
+    flex: 1,
   },
 });
