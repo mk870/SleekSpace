@@ -1,18 +1,225 @@
-import { StyleSheet, Text, useColorScheme } from 'react-native'
-import React from 'react'
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import React, { useState } from "react";
+import LottieView from "lottie-react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
-import Screen from '@/src/Components/ScreenWrapper/Screen'
-import { INoPropsReactComponent } from '@/src/GlobalTypes/Types'
+import Screen from "@/src/Components/ScreenWrapper/Screen";
+import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
+import { family, medium, small } from "@/src/Theme/Font";
+import { legalities, preferences, settings } from "./AccountOptions/Options";
+import { dark, pureWhite } from "@/src/Theme/Colors";
+import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
-const Account:INoPropsReactComponent = () => {
-  const theme =useColorScheme()
+const Account: INoPropsReactComponent = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const theme = useAppSelector((state)=>state.theme.value)
+  const router = useRouter();
+  const iconSize = 24;
+  const iconColor = "gray";
+  const { width } = useWindowDimensions();
+  const onNavigate = (route: string) => {
+    router.push(route);
+  };
+  const handleSignOut = () => {
+    console.log("signout");
+  };
   return (
     <Screen>
-      <Text>Account</Text>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.lottieContainer}>
+        <LottieView
+          source={require("../../Components/Lotties/user-account.json")}
+          autoPlay
+          loop
+          style={{
+            height: 100,
+            width: 100,
+          }}
+        />
+        </View>
+        <View style={styles.optionsDetailsWrapper}>
+          <Text style={styles.headerText}>Preferences</Text>
+          <View
+            style={[
+              styles.optionsContainer,
+              { backgroundColor: theme === "light" ? pureWhite: dark.darkGray },
+            ]}
+          >
+            {preferences.map(({ name, icon, route }, index) => (
+              <Pressable
+                key={name}
+                style={styles.option}
+                onPress={() => onNavigate(route)}
+              >
+                {icon}
+                <View
+                  style={[
+                    styles.optionIconText,
+                    {
+                      borderBottomWidth:
+                        index === preferences.length - 1 ? 0 : 1,
+                      borderBottomColor: "gray",
+                    },
+                  ]}
+                >
+                  <Text style={styles.optionText}>{name}</Text>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={iconSize}
+                    color={iconColor}
+                  />
+                </View>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+        <View style={styles.optionsDetailsWrapper}>
+          <Text style={styles.headerText}>Settings</Text>
+          <View
+            style={[
+              styles.optionsContainer,
+              { backgroundColor: theme === "light" ? pureWhite: dark.darkGray },
+            ]}
+          >
+            {settings.map(({ name, icon, route }, index) => (
+              <Pressable
+                key={name}
+                style={styles.option}
+                onPress={() => onNavigate(route)}
+              >
+                {icon}
+                <View
+                  style={[
+                    styles.optionIconText,
+                    {
+                      borderBottomWidth: index === settings.length - 1 ? 0 : 1,
+                      borderBottomColor: "gray",
+                    },
+                  ]}
+                >
+                  <Text style={styles.optionText}>{name}</Text>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={iconSize}
+                    color={iconColor}
+                  />
+                </View>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+        <View style={styles.optionsDetailsWrapper}>
+          <Text style={styles.headerText}>Legalities</Text>
+          <View
+            style={[
+              styles.optionsContainer,
+              { backgroundColor: theme === "light" ? pureWhite: dark.darkGray },
+            ]}
+          >
+            {legalities.map(({ name, icon, route }, index) => (
+              <Pressable
+                key={name}
+                style={styles.option}
+                onPress={() => onNavigate(route)}
+              >
+                {icon}
+                <View
+                  style={[
+                    styles.optionIconText,
+                    {
+                      borderBottomWidth:
+                        index === legalities.length - 1 ? 0 : 1,
+                      borderBottomColor: "gray",
+                    },
+                  ]}
+                >
+                  <Text style={styles.optionText}>{name}</Text>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={iconSize}
+                    color={iconColor}
+                  />
+                </View>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+        <View
+          style={[
+            {
+              width: width > 500 ? 400 : "100%",
+            },
+            styles.btn,
+          ]}
+        >
+          <CustomButton
+            title={isLoading ? "loading" : "Logout"}
+            onPressFunc={handleSignOut}
+            isDisabled={isLoading}
+          />
+        </View>
+      </ScrollView>
     </Screen>
-  )
-}
+  );
+};
 
-export default Account
+export default Account;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 10,
+    gap: 20,
+    paddingBottom: 20,
+  },
+  lottieContainer:{
+    alignSelf:"center"
+  },
+  optionsDetailsWrapper: {
+    gap: 10,
+  },
+  optionsContainer: {
+    gap: 10,
+    borderRadius: 10,
+  },
+  option: {
+    flexDirection: "row",
+    paddingHorizontal: 10,
+    alignItems: "center",
+    gap: 15,
+  },
+  optionIconText: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flex: 1,
+    height: 45,
+  },
+  optionText: {
+    fontFamily: family,
+    fontSize: small,
+    color: "gray",
+  },
+  headerText: {
+    fontFamily: family,
+    fontSize: medium,
+    color: "gray",
+    fontWeight: "bold",
+  },
+  btn: {
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf:"center"
+  },
+});

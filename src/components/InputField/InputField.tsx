@@ -13,6 +13,7 @@ import { ContentType } from "./Types/Types";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
 import { dark, light } from "@/src/Theme/Colors";
 import ThemedText from "../ThemedText/ThemedText";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
   width: DimensionValue;
@@ -46,7 +47,7 @@ const InputField: React.FC<Props> = ({
   const [ispassWordHidden, setIsPassWordHidden] = useState<boolean>(true);
   const iconSize = 20;
   const iconColor = "gray";
-  const theme = useColorScheme();
+  const theme = useAppSelector((state)=>state.theme.value)
   const secureText = () => {
     if (type === "password") {
       if (ispassWordHidden) return true;
@@ -127,9 +128,9 @@ const InputField: React.FC<Props> = ({
             {
               backgroundColor: backgroundColor
                 ? backgroundColor
-                : theme === "dark"
-                ? dark.darkGray
-                : light.darkGray,
+                : theme === "light"
+                ? light.darkGray
+                : dark.darkGray,
             },
           ]}
           value={textValue}
@@ -138,7 +139,7 @@ const InputField: React.FC<Props> = ({
           textContentType={contentType}
           placeholderTextColor={"gray"}
           keyboardType={keyboardAppearance()}
-          cursorColor={theme === "dark" ? dark.text : light.text}
+          cursorColor={theme === "light" ? light.text : dark.text}
           autoCorrect={false}
           enterKeyHint={"enter"}
           keyboardAppearance="dark"

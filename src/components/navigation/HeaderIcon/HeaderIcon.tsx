@@ -1,8 +1,9 @@
-import { StyleSheet, TouchableOpacity, useColorScheme } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 
 import { dark, light } from "@/src/Theme/Colors";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
   onPressFunc: () => void;
@@ -12,13 +13,13 @@ type Props = {
 
 const HeaderIcon: React.FC<Props> = ({ onPressFunc, iconName, iconSize }) => {
   const { iconContainer, icon } = styles;
-  const colorScheme = useColorScheme();
+  const theme = useAppSelector((state)=>state.theme.value)
   return (
     <TouchableOpacity style={iconContainer} onPress={onPressFunc}>
       <Ionicons
         name={iconName}
         size={iconSize ? iconSize : 20}
-        color={colorScheme === "dark" ? dark.text : light.text}
+        color={theme === "light" ? light.text : dark.text}
         style={icon}
       />
     </TouchableOpacity>

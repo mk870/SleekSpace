@@ -1,12 +1,13 @@
-import { View, useColorScheme, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import React from "react";
 
 import { dark, light } from "@/src/Theme/Colors";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 const ButtonSpinner: React.FC<{ backGroundColor?: string }> = ({
   backGroundColor,
 }) => {
-  const theme = useColorScheme();
+  const theme = useAppSelector((state) => state.theme.value);
   return (
     <View style={{ width: "100%" }}>
       <ActivityIndicator
@@ -14,9 +15,9 @@ const ButtonSpinner: React.FC<{ backGroundColor?: string }> = ({
         color={
           backGroundColor
             ? backGroundColor
-            : theme === "dark"
-            ? dark.text
-            : light.text
+            : theme === "light"
+            ? light.text
+            : dark.text
         }
       />
     </View>

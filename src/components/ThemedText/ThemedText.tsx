@@ -1,12 +1,12 @@
 import {
   Text,
   TextStyle,
-  useColorScheme,
 } from "react-native";
 import React from "react";
 
 import { family, large, medium, small } from "@/src/Theme/Font";
 import { dark, light } from "@/src/Theme/Colors";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
   styles?: TextStyle;
@@ -15,7 +15,7 @@ type Props = {
 };
 
 const ThemedText: React.FC<Props> = ({ styles, type, children }) => {
-  const theme = useColorScheme();
+  const theme = useAppSelector((state) => state.theme.value);
   return (
     <Text
       style={[
@@ -26,7 +26,7 @@ const ThemedText: React.FC<Props> = ({ styles, type, children }) => {
             type === "header" ? large : type === "subHeader" ? medium : small,
           fontWeight:
             type === "header" ? "bold" : type === "subHeader" ? "800" : "400",
-          color: theme === "dark" ? dark.text : light.text,
+          color: theme === "light" ? light.text : dark.text,
         },
       ]}
     >

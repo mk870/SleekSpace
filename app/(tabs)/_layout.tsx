@@ -1,6 +1,6 @@
 import React from "react";
-import { Tabs } from "expo-router";
-import { useColorScheme } from "react-native";
+import { Tabs, useSegments } from "expo-router";
+import { StyleSheet, useColorScheme } from "react-native";
 
 import { family, large } from "@/src/Theme/Font";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
@@ -8,31 +8,34 @@ import { dark, light, pureWhite, white } from "@/src/Theme/Colors";
 import { tabsMenu } from "@/src/Utils/Constants";
 import TabsIcons from "@/src/Components/TabsIcons/TabsIcons";
 import TabsLabels from "@/src/Components/TabsLabels/TabsLabels";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 const TabsLayout = () => {
-  const theme = useColorScheme();
+  const theme = useAppSelector((state)=>state.theme.value)
+  const segments = useSegments();
   return (
     <Screen>
       <Tabs
         screenOptions={{
           headerTitleStyle: {
             fontFamily: family,
-            color: theme === "dark" ? dark.text : light.text,
+            color: theme === "light" ? light.text : dark.text,
             fontSize: large,
             textAlign: "center",
           },
           headerTitleAlign: "center",
           headerStyle: {
-            backgroundColor: theme === "dark" ? dark.background : pureWhite,
+            backgroundColor: theme === "light" ?  pureWhite:dark.background ,
           },
-          tabBarStyle: {
-            backgroundColor: theme === "dark" ? dark.background : pureWhite,
-            borderTopWidth: 1,
-            borderTopColor: theme === "dark" ? dark.darkGray : pureWhite,
-            paddingTop:2
-          },
-          tabBarInactiveTintColor: theme === "dark" ? white : light.text,
-          tabBarActiveTintColor: theme === "dark" ? white : pureWhite,
+          tabBarStyle: [
+            styles.tabStyles,
+            {
+              backgroundColor: theme === "light" ? pureWhite:dark.background ,
+              borderTopColor: theme === "light" ? pureWhite:dark.darkGray,
+            },
+          ],
+          tabBarInactiveTintColor: theme === "light" ? light.text : white,
+          tabBarActiveTintColor: theme === "light" ? pureWhite : white,
           tabBarLabelPosition: "below-icon",
         }}
       >
@@ -91,9 +94,17 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="account"
+          name="(account)"
           options={{
+            headerShown: segments[3] === undefined ? true : false,
             title: "My Account",
+            tabBarStyle: [
+              styles.tabStyles,
+              {
+                backgroundColor: theme === "light" ? pureWhite : dark.background,
+                borderTopColor: theme === "light" ? pureWhite : dark.darkGray,
+              },
+            ],
             tabBarIcon: ({ color, focused }) => (
               <TabsIcons
                 focused={focused}
@@ -112,3 +123,11 @@ const TabsLayout = () => {
 };
 
 export default TabsLayout;
+
+const styles = StyleSheet.create({
+  tabStyles: {
+    borderTopWidth: 1,
+
+    paddingTop: 2,
+  },
+});

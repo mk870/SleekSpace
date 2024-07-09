@@ -9,6 +9,7 @@ import React from "react";
 import GoogleLogoSVG from "./Logos/GoogleLogoSVG";
 import ThemedText from "../../ThemedText/ThemedText";
 import { dark, light } from "@/src/Theme/Colors";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
   type: "sign_in" | "sign_up";
@@ -16,13 +17,13 @@ type Props = {
 };
 
 const GoogleButton: React.FC<Props> = ({ type, disabled }) => {
-  const theme = useColorScheme();
+  const theme = useAppSelector((state)=>state.theme.value)
   return (
     <TouchableOpacity
       disabled={disabled}
       style={[
         styles.container,
-        { backgroundColor: theme === "dark" ? dark.darkGray : light.darkGray },
+        { backgroundColor: theme === "light" ? light.darkGray : dark.darkGray },
       ]}
     >
       <GoogleLogoSVG />

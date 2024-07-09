@@ -1,8 +1,9 @@
-import { Text, useColorScheme } from "react-native";
+import { Text } from "react-native";
 import React from "react";
 
 import { family } from "@/src/Theme/Font";
 import { dark, primary, white } from "@/src/Theme/Colors";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
   focused: boolean;
@@ -10,20 +11,20 @@ type Props = {
 };
 
 const TabsLabels: React.FC<Props> = ({ focused, textItem }) => {
-  const theme = useColorScheme();
+  const theme = useAppSelector((state)=>state.theme.value)
   return (
     <Text
       style={{
         fontFamily: family,
         fontSize: 12,
         color:
-          theme === "dark"
+          theme === "light"
             ? focused
               ? primary
-              : white
+              : dark.background
             : focused
             ? primary
-            : dark.background,
+            : white,
       }}
     >
       {textItem}

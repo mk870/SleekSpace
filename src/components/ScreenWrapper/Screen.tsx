@@ -1,7 +1,8 @@
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 
 import { dark, light } from "@/src/Theme/Colors";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
   children: React.ReactNode;
@@ -9,14 +10,14 @@ type Props = {
 };
 
 const Screen: React.FC<Props> = ({ children,showBackArrow }) => {
-  const theme = useColorScheme();
+  const theme = useAppSelector((state)=>state.theme.value)
   return (
     <View
       style={[
         styles.screen,
         {
           backgroundColor:
-            theme === "dark" ? dark.background : light.background,
+            theme === "light" ? light.background : dark.background,
         },
       ]}
     >

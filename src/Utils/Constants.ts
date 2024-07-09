@@ -1,5 +1,6 @@
 export const expoSecureValueKeyNames = {
   accessToken: "accessToken",
+  theme: "theme"
 };
 
 const backEndUrl = "https://sleekspace-server.onrender.com";
