@@ -21,7 +21,7 @@ import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 const Account: INoPropsReactComponent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const theme = useAppSelector((state)=>state.theme.value)
+  const theme = useAppSelector((state) => state.theme.value);
   const router = useRouter();
   const iconSize = 24;
   const iconColor = "gray";
@@ -38,7 +38,7 @@ const Account: INoPropsReactComponent = () => {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.lottieContainer}>
+        {/* <View style={styles.lottieContainer}>
         <LottieView
           source={require("../../Components/Lotties/user-account.json")}
           autoPlay
@@ -48,13 +48,22 @@ const Account: INoPropsReactComponent = () => {
             width: 100,
           }}
         />
-        </View>
+        </View> */}
         <View style={styles.optionsDetailsWrapper}>
-          <Text style={styles.headerText}>Preferences</Text>
+          <Text
+            style={[
+              styles.headerText,
+              { color: theme === "light" ? dark.background : "gray" },
+            ]}
+          >
+            Preferences
+          </Text>
           <View
             style={[
               styles.optionsContainer,
-              { backgroundColor: theme === "light" ? pureWhite: dark.darkGray },
+              {
+                backgroundColor: theme === "light" ? pureWhite : dark.darkGray,
+              },
             ]}
           >
             {preferences.map(({ name, icon, route }, index) => (
@@ -70,11 +79,19 @@ const Account: INoPropsReactComponent = () => {
                     {
                       borderBottomWidth:
                         index === preferences.length - 1 ? 0 : 1,
-                      borderBottomColor: "gray",
+                      borderBottomColor:
+                        theme === "light" ? dark.background : "gray",
                     },
                   ]}
                 >
-                  <Text style={styles.optionText}>{name}</Text>
+                  <Text
+                    style={[
+                      styles.optionText,
+                      { color: theme === "light" ? dark.background : "gray" },
+                    ]}
+                  >
+                    {name}
+                  </Text>
                   <Ionicons
                     name="chevron-forward"
                     size={iconSize}
@@ -86,11 +103,20 @@ const Account: INoPropsReactComponent = () => {
           </View>
         </View>
         <View style={styles.optionsDetailsWrapper}>
-          <Text style={styles.headerText}>Settings</Text>
+          <Text
+            style={[
+              styles.headerText,
+              { color: theme === "light" ? dark.background : "gray" },
+            ]}
+          >
+            Settings
+          </Text>
           <View
             style={[
               styles.optionsContainer,
-              { backgroundColor: theme === "light" ? pureWhite: dark.darkGray },
+              {
+                backgroundColor: theme === "light" ? pureWhite : dark.darkGray,
+              },
             ]}
           >
             {settings.map(({ name, icon, route }, index) => (
@@ -105,11 +131,19 @@ const Account: INoPropsReactComponent = () => {
                     styles.optionIconText,
                     {
                       borderBottomWidth: index === settings.length - 1 ? 0 : 1,
-                      borderBottomColor: "gray",
+                      borderBottomColor:
+                        theme === "light" ? dark.background : "gray",
                     },
                   ]}
                 >
-                  <Text style={styles.optionText}>{name}</Text>
+                  <Text
+                    style={[
+                      styles.optionText,
+                      { color: theme === "light" ? dark.background : "gray" },
+                    ]}
+                  >
+                    {name}
+                  </Text>
                   <Ionicons
                     name="chevron-forward"
                     size={iconSize}
@@ -121,11 +155,20 @@ const Account: INoPropsReactComponent = () => {
           </View>
         </View>
         <View style={styles.optionsDetailsWrapper}>
-          <Text style={styles.headerText}>Legalities</Text>
+          <Text
+            style={[
+              styles.headerText,
+              { color: theme === "light" ? dark.background : "gray" },
+            ]}
+          >
+            Legalities
+          </Text>
           <View
             style={[
               styles.optionsContainer,
-              { backgroundColor: theme === "light" ? pureWhite: dark.darkGray },
+              {
+                backgroundColor: theme === "light" ? pureWhite : dark.darkGray,
+              },
             ]}
           >
             {legalities.map(({ name, icon, route }, index) => (
@@ -141,11 +184,19 @@ const Account: INoPropsReactComponent = () => {
                     {
                       borderBottomWidth:
                         index === legalities.length - 1 ? 0 : 1,
-                      borderBottomColor: "gray",
+                      borderBottomColor:
+                        theme === "light" ? dark.background : "gray",
                     },
                   ]}
                 >
-                  <Text style={styles.optionText}>{name}</Text>
+                  <Text
+                    style={[
+                      styles.optionText,
+                      { color: theme === "light" ? dark.background : "gray" },
+                    ]}
+                  >
+                    {name}
+                  </Text>
                   <Ionicons
                     name="chevron-forward"
                     size={iconSize}
@@ -183,8 +234,8 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingBottom: 20,
   },
-  lottieContainer:{
-    alignSelf:"center"
+  lottieContainer: {
+    alignSelf: "center",
   },
   optionsDetailsWrapper: {
     gap: 10,
@@ -209,17 +260,15 @@ const styles = StyleSheet.create({
   optionText: {
     fontFamily: family,
     fontSize: small,
-    color: "gray",
   },
   headerText: {
     fontFamily: family,
     fontSize: medium,
-    color: "gray",
     fontWeight: "bold",
   },
   btn: {
     alignItems: "center",
     justifyContent: "center",
-    alignSelf:"center"
+    alignSelf: "center",
   },
 });

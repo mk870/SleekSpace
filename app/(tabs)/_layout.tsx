@@ -1,17 +1,17 @@
 import React from "react";
 import { Tabs, useSegments } from "expo-router";
-import { StyleSheet, useColorScheme } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { family, large } from "@/src/Theme/Font";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
-import { dark, light, pureWhite, white } from "@/src/Theme/Colors";
+import { dark, light, primary, pureWhite, white } from "@/src/Theme/Colors";
 import { tabsMenu } from "@/src/Utils/Constants";
 import TabsIcons from "@/src/Components/TabsIcons/TabsIcons";
 import TabsLabels from "@/src/Components/TabsLabels/TabsLabels";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 const TabsLayout = () => {
-  const theme = useAppSelector((state)=>state.theme.value)
+  const theme = useAppSelector((state) => state.theme.value);
   const segments = useSegments();
   return (
     <Screen>
@@ -25,17 +25,17 @@ const TabsLayout = () => {
           },
           headerTitleAlign: "center",
           headerStyle: {
-            backgroundColor: theme === "light" ?  pureWhite:dark.background ,
+            backgroundColor: theme === "light" ? pureWhite : dark.background,
           },
           tabBarStyle: [
             styles.tabStyles,
             {
-              backgroundColor: theme === "light" ? pureWhite:dark.background ,
-              borderTopColor: theme === "light" ? pureWhite:dark.darkGray,
+              backgroundColor: theme === "light" ? pureWhite : dark.background,
+              borderTopColor: theme === "light" ? pureWhite : dark.darkGray,
             },
           ],
           tabBarInactiveTintColor: theme === "light" ? light.text : white,
-          tabBarActiveTintColor: theme === "light" ? pureWhite : white,
+          tabBarActiveTintColor: primary,
           tabBarLabelPosition: "below-icon",
         }}
       >
@@ -101,8 +101,10 @@ const TabsLayout = () => {
             tabBarStyle: [
               styles.tabStyles,
               {
-                backgroundColor: theme === "light" ? pureWhite : dark.background,
+                backgroundColor:
+                  theme === "light" ? pureWhite : dark.background,
                 borderTopColor: theme === "light" ? pureWhite : dark.darkGray,
+                display: segments[3] === undefined ? "flex" : "none",
               },
             ],
             tabBarIcon: ({ color, focused }) => (

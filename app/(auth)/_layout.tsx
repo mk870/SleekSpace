@@ -6,6 +6,7 @@ import { family } from "@/src/Theme/Font";
 import HeaderIcon from "@/src/Components/Navigation/HeaderIcon/HeaderIcon";
 import { stackAnimation } from "@/src/Components/Navigation/Utils/Constants";
 import { dark, light, pureWhite } from "@/src/Theme/Colors";
+import StackWrapper from "@/src/HOCs/StackWrapper";
 
 const AuthStack = () => {
   const router = useRouter();
@@ -49,7 +50,6 @@ const AuthStack = () => {
         name="verification/[id]"
         options={{
           title: "",
-          animation: stackAnimation,
           headerStyle: {
             backgroundColor:
               colorScheme === "dark" ? dark.background : light.background,
@@ -60,7 +60,6 @@ const AuthStack = () => {
         name="forgotPassword"
         options={{
           title: "",
-          animation: stackAnimation,
           headerStyle: {
             backgroundColor:
               colorScheme === "dark" ? dark.background : light.background,
@@ -71,7 +70,6 @@ const AuthStack = () => {
         name="resetPassword/[id]"
         options={{
           title: "",
-          animation: stackAnimation,
           headerStyle: {
             backgroundColor:
               colorScheme === "dark" ? dark.background : light.background,
@@ -82,4 +80,4 @@ const AuthStack = () => {
   );
 };
 
-export default AuthStack;
+export default StackWrapper(AuthStack);

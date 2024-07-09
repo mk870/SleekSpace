@@ -9,7 +9,7 @@ import { RootSiblingParent } from "react-native-root-siblings";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+const RootLayout = () => {
   const [fontsLoaded] = useFonts({
     Poppins: require("../assets/fonts/Poppins-Regular.ttf"),
   });
@@ -44,3 +44,5 @@ export default function RootLayout() {
     </Provider>
   );
 }
+
+export default RootLayout
