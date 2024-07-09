@@ -5,13 +5,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   useWindowDimensions,
-  useColorScheme,
 } from "react-native";
 import React from "react";
 
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import { family, large, small } from "@/src/Theme/Font";
 import { dark, light, lightPrimary, red, white } from "@/src/Theme/Colors";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
   handleCancel: () => void;
@@ -25,7 +25,7 @@ const ServerError: React.FC<Props> = ({
   isModalVisible,
 }) => {
   const { width } = useWindowDimensions();
-  const theme = useColorScheme();
+  const theme = useAppSelector((state)=>state.theme.value)
   const { container, errorContainer, headerText, row, btn } = styles;
   return (
     <Modal
@@ -39,7 +39,7 @@ const ServerError: React.FC<Props> = ({
           container,
           {
             backgroundColor:
-              theme === "dark" ? dark.background : light.background,
+              theme === "light" ? light.background : dark.background,
           },
         ]}
       >
@@ -48,7 +48,7 @@ const ServerError: React.FC<Props> = ({
             errorContainer,
             {
               width: width > 500 ? 420 : 250,
-              backgroundColor: theme === "dark" ? dark.lightBackGround : white,
+              backgroundColor: theme === "light" ? white : dark.lightBackGround,
             },
           ]}
         >

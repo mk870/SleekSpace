@@ -1,14 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const ProfileImage = () => {
+type Props = {}
+
+const History = (props: Props) => {
   return (
     <View>
-      <Text>ProfileImage</Text>
+      <Text>History</Text>
     </View>
   )
 }
 
-export default ProfileImage
+export default History
 
 const styles = StyleSheet.create({})
