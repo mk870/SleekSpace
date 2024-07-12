@@ -17,11 +17,13 @@ import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { passwordGuideLines, passwordValidator } from "@/src/Utils/Funcs";
 import { changePasswordHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
-import ServerError from "@/src/HttpServices/ServerError/ServerError";
+import MessageModal from "@/src/Components/Modals/MessageModal";
 
 const ResetPassword = () => {
   const { id } = useLocalSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [resetPassWordSuccess, setResetPassWordSuccess] =
+    useState<boolean>(false);
   const [resetPassWordError, setResetPassWordError] = useState<string>("");
   const [passwords, setPasswords] = useState<{
     password: string | undefined;
@@ -57,8 +59,7 @@ const ResetPassword = () => {
   const resetPasswordMutation = useMutation({
     mutationFn: changePasswordHttpFunc,
     onSuccess(_data) {
-      router.dismissAll();
-      router.push(`/login`);
+      setResetPassWordSuccess(true);
     },
     onError(error: any) {
       if (error.response?.data?.error !== "") {
@@ -88,6 +89,12 @@ const ResetPassword = () => {
         password: passwords.password,
       });
     }
+  };
+
+  const handlePasswordResetSuccessModalClose = () => {
+    setResetPassWordSuccess(false);
+    router.dismissAll();
+    router.push(`/login`);
   };
 
   return (
@@ -158,10 +165,21 @@ const ResetPassword = () => {
             />
           </View>
         </View>
-        <ServerError
+        <MessageModal
           isModalVisible={resetPassWordError ? true : false}
           message={resetPassWordError}
           handleCancel={() => setResetPassWordError("")}
+          type="error"
+          header="Password Reset Failed"
+        />
+        <MessageModal
+          isModalVisible={resetPassWordSuccess}
+          message={
+            "your password has been successfully updated, make sure you don't lose it."
+          }
+          handleCancel={handlePasswordResetSuccessModalClose}
+          type="success"
+          header="Password Reset Successful"
         />
       </ScrollView>
     </Screen>

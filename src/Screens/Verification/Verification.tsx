@@ -15,7 +15,7 @@ import Screen from "@/src/Components/ScreenWrapper/Screen";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import InputField from "@/src/Components/InputField/InputField";
 import { INoPropsReactComponent, IStringOrNull } from "@/src/GlobalTypes/Types";
-import ServerError from "@/src/HttpServices/ServerError/ServerError";
+import MessageModal from "@/src/Components/Modals/MessageModal";
 import { family, small } from "@/src/Theme/Font";
 import { red, dark, light } from "@/src/Theme/Colors";
 import ButtonSpinner from "@/src/Components/Spinners/ButtonSpinner";
@@ -35,17 +35,18 @@ import {
   addUserId,
 } from "@/src/Redux/Slices/UserSlice/User";
 import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
-import ToasterNotification from "@/src/Components/ToasterNotification/ToasterNotifications";
 
 const Verification: INoPropsReactComponent = () => {
   const { id, isNewUser } = useLocalSearchParams();
   const processedIsNewUser = processLocalQueryParam(isNewUser);
   const [verificationCode, setVerificationCode] = useState<string>("");
   const [
-    showResendVerificationCodeSuccessToaster,
-    setShowResendVerificationCodeSuccessToaster,
+    showResendVerificationCodeSuccess,
+    setShowResendVerificationCodeSuccess,
   ] = useState<boolean>(false);
   const [isVerificationLoading, setIsVerificationLoading] =
+    useState<boolean>(false);
+  const [isVerificationSuccessful, setIsVerificationSuccesful] =
     useState<boolean>(false);
   const [isResendLoading, setIsResendLoading] = useState<boolean>(false);
   const [typingError, setTypingError] = useState<IStringOrNull>(null);
@@ -61,12 +62,9 @@ const Verification: INoPropsReactComponent = () => {
   }, [verificationCode]);
 
   useEffect(() => {
-    if (showResendVerificationCodeSuccessToaster)
-      setTimeout(
-        () => setShowResendVerificationCodeSuccessToaster(false),
-        3000
-      );
-  }, [showResendVerificationCodeSuccessToaster]);
+    if (showResendVerificationCodeSuccess)
+      setTimeout(() => setShowResendVerificationCodeSuccess(false), 3000);
+  }, [showResendVerificationCodeSuccess]);
 
   const verifyCodeForSecurityMutation = useMutation({
     mutationFn: verificationCodeForSecurityHttpFunc,
@@ -97,8 +95,7 @@ const Verification: INoPropsReactComponent = () => {
           dispatch(addFamilyName(data.data.familyName));
           dispatch(addGivenName(data.data.givenName));
           dispatch(addUserId(data.data.id));
-          router.dismissAll();
-          router.replace("/home");
+          setIsVerificationSuccesful(true);
         })
         .catch((e) => {
           console.log("accessToken error ", e);
@@ -119,7 +116,7 @@ const Verification: INoPropsReactComponent = () => {
   const resendMutation = useMutation({
     mutationFn: resendVerificationCodeHttpFunc,
     onSuccess(_data) {
-      setShowResendVerificationCodeSuccessToaster(true);
+      setShowResendVerificationCodeSuccess(true);
     },
     onError(error: any) {
       if (error.response?.data?.error !== "") {
@@ -156,7 +153,11 @@ const Verification: INoPropsReactComponent = () => {
   const handleAlertCancel = () => {
     setHttpError("");
   };
-
+  const handleSuccessModalClose = () => {
+    setIsVerificationSuccesful(false);
+    router.dismissAll();
+    router.replace("/home");
+  };
   return (
     <Screen>
       <ScrollView
@@ -214,15 +215,35 @@ const Verification: INoPropsReactComponent = () => {
           </View>
         </View>
         {httpError && (
-          <ServerError
+          <MessageModal
             handleCancel={handleAlertCancel}
             message={httpError}
             isModalVisible={httpError ? true : false}
+            type="error"
+            header="Server Error"
           />
         )}
-        <ToasterNotification
-          isVisible={showResendVerificationCodeSuccessToaster}
+        <MessageModal
+          isModalVisible={showResendVerificationCodeSuccess}
           message="please check your email for verification code"
+          type="success"
+          header="Email Sent!"
+          handleCancel={() => setShowResendVerificationCodeSuccess(false)}
+        />
+        <MessageModal
+          isModalVisible={isVerificationSuccessful}
+          message={
+            processedIsNewUser === "no"
+              ? "your verification was successful, you may continue."
+              : "congradulations, your account has been successfully created, welcome to Sleek Space."
+          }
+          type="success"
+          header={
+            processedIsNewUser === "no"
+              ? "Verification Successful!"
+              : "Account Created!"
+          }
+          handleCancel={handleSuccessModalClose}
         />
       </ScrollView>
     </Screen>

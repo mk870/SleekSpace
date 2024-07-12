@@ -20,7 +20,7 @@ import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import {
   createVerificationCodeForSecurityHttpFunc,
 } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
-import ServerError from "@/src/HttpServices/ServerError/ServerError";
+import ServerError from "@/src/Components/Modals/MessageModal";
 
 const ForgotPassword: INoPropsReactComponent = () => {
   const [email, setEmail] = useState<string | undefined>(undefined);

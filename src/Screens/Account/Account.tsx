@@ -15,7 +15,7 @@ import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import { family, medium, small } from "@/src/Theme/Font";
 import { legalities, preferences, settings } from "./AccountOptions/Options";
-import { dark, pureWhite } from "@/src/Theme/Colors";
+import { dark, light, pureWhite } from "@/src/Theme/Colors";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
@@ -30,6 +30,7 @@ const Account: INoPropsReactComponent = () => {
     router.push(route);
   };
   const handleSignOut = () => {
+    router.push("/login")
     console.log("signout");
   };
   return (
@@ -49,11 +50,11 @@ const Account: INoPropsReactComponent = () => {
           }}
         />
         </View> */}
-        <View style={styles.optionsDetailsWrapper}>
+        <View style={[styles.optionsDetailsWrapper,{marginTop:20}]}>
           <Text
             style={[
               styles.headerText,
-              { color: theme === "light" ? dark.background : "gray" },
+              { color: theme === "light" ? light.text : dark.text },
             ]}
           >
             Preferences
@@ -87,7 +88,7 @@ const Account: INoPropsReactComponent = () => {
                   <Text
                     style={[
                       styles.optionText,
-                      { color: theme === "light" ? dark.background : "gray" },
+                      { color: theme === "light" ? light.text : dark.text },
                     ]}
                   >
                     {name}
@@ -106,7 +107,7 @@ const Account: INoPropsReactComponent = () => {
           <Text
             style={[
               styles.headerText,
-              { color: theme === "light" ? dark.background : "gray" },
+              { color: theme === "light" ? light.text : dark.text },
             ]}
           >
             Settings
@@ -139,7 +140,7 @@ const Account: INoPropsReactComponent = () => {
                   <Text
                     style={[
                       styles.optionText,
-                      { color: theme === "light" ? dark.background : "gray" },
+                      { color: theme === "light" ? light.text : dark.text },
                     ]}
                   >
                     {name}
@@ -158,7 +159,7 @@ const Account: INoPropsReactComponent = () => {
           <Text
             style={[
               styles.headerText,
-              { color: theme === "light" ? dark.background : "gray" },
+              { color: theme === "light" ? light.text : dark.text },
             ]}
           >
             Legalities
@@ -192,7 +193,7 @@ const Account: INoPropsReactComponent = () => {
                   <Text
                     style={[
                       styles.optionText,
-                      { color: theme === "light" ? dark.background : "gray" },
+                      { color: theme === "light" ? light.text : dark.text },
                     ]}
                   >
                     {name}
@@ -260,6 +261,7 @@ const styles = StyleSheet.create({
   optionText: {
     fontFamily: family,
     fontSize: small,
+    fontWeight:"700"
   },
   headerText: {
     fontFamily: family,

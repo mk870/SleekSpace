@@ -2,7 +2,6 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useColorScheme,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -20,9 +19,9 @@ import {
 } from "../../Utils/Funcs";
 import { styles } from "./Styles";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import ServerError from "@/src/HttpServices/ServerError/ServerError";
+import MessageModal from "@/src/Components/Modals/MessageModal";
 import { IUserLogin, IVoidFunc } from "@/src/GlobalTypes/Types";
-import { useAppDispatch } from "@/src/Redux/Hooks/Config";
+import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { updateAccessToken } from "@/src/Redux/Slices/AccessTokenSlice/AccessToken";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { dark, light, red } from "@/src/Theme/Colors";
@@ -46,12 +45,13 @@ const Login = () => {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string>("");
+  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
   const [isPasswordValidationError, setIsPasswordValidationError] =
     useState<boolean>(false);
   const [isEmailValidationError, setIsEmailValidationError] =
     useState<boolean>(false);
   const router = useRouter();
-  const theme = useColorScheme();
+  const theme = useAppSelector((state) => state.theme.value);
   const dispatch = useAppDispatch();
   const {
     container,
@@ -79,8 +79,7 @@ const Login = () => {
           dispatch(addFamilyName(data.data.familyName));
           dispatch(addGivenName(data.data.givenName));
           dispatch(addUserId(data.data.id));
-          router.dismissAll();
-          router.replace("/home");
+          setLoginSuccess(true);
         })
         .catch((e) => {
           console.log("accessToken error ", e);
@@ -129,6 +128,13 @@ const Login = () => {
       setIsEmailValidationError(false);
     }
   }, [loginUserData.email]);
+
+  const handleLoginSuccesModalCancel = () => {
+    setLoginSuccess(false);
+    router.dismissAll();
+    router.replace("/home");
+  };
+
   return (
     <Screen>
       <ScrollView
@@ -201,7 +207,7 @@ const Login = () => {
                   styles.linkContainer,
                   {
                     backgroundColor:
-                      theme === "dark" ? dark.darkGray : light.darkGray,
+                      theme === "light" ? light.darkGray : dark.darkGray,
                   },
                 ]}
               >
@@ -224,13 +230,20 @@ const Login = () => {
             </View>
           </View>
         </View>
-        {loginError && (
-          <ServerError
-            handleCancel={() => setLoginError("")}
-            message={loginError}
-            isModalVisible={loginError ? true : false}
-          />
-        )}
+        <MessageModal
+          handleCancel={() => setLoginError("")}
+          message={loginError}
+          isModalVisible={loginError ? true : false}
+          type="error"
+          header="Login Failed"
+        />
+        <MessageModal
+          handleCancel={handleLoginSuccesModalCancel}
+          message={"welcome back, please enjoy your search."}
+          isModalVisible={loginSuccess}
+          type="success"
+          header="Login Successful"
+        />
       </ScrollView>
     </Screen>
   );

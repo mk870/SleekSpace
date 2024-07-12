@@ -14,7 +14,7 @@ const AccountLayout = () => {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: theme === "light" ? pureWhite : dark.background,
+          //backgroundColor: theme === "light" ? pureWhite : dark.background,
         },
         headerTitleStyle: {
           color: theme === "light" ? light.text : dark.text,
@@ -23,6 +23,7 @@ const AccountLayout = () => {
         headerLeft: () => (
           <HeaderIcon iconName="arrow-back" onPressFunc={() => route.back()} />
         ),
+        headerTransparent:true
       }}
     >
       <Stack.Screen name="account/index" options={{ headerShown: false }} />
