@@ -261,7 +261,6 @@ const styles = StyleSheet.create({
   optionText: {
     fontFamily: family,
     fontSize: small,
-    fontWeight:"700"
   },
   headerText: {
     fontFamily: family,

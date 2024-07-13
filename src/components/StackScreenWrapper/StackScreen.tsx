@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -14,6 +14,7 @@ const StackScreen: React.FC<Props> = ({ children }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style={theme === "light" ? "dark" : "light"} />
+      <View style={styles.header}/>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContainer}
@@ -28,7 +29,10 @@ export default StackScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  header:{
+    height:50
+  },
   scrollViewContainer: {
-    paddingTop: 60,
+    paddingTop: 10,
   },
 });

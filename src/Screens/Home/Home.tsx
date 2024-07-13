@@ -17,15 +17,6 @@ const Home = (props: Props) => {
       <StatusBar style={theme === "light" ? "dark" : "light"} />
       <ThemedText type="regular" >Home</ThemedText>
       <CustomButton title="show modal" onPressFunc={()=>setIsModalVisible(true)}/>
-      <ServerError
-        isModalVisible={isModalVisible}
-        handleCancel={() => {
-          setIsModalVisible(false);
-        }}
-        header="Account Created"
-        type="success"
-        message="something went wrong hejh4jh24hnl4k2k4  4hkgh4hg4uhuhgu 34hjh4jb4jhjjjjjjjjjjj uh2uh4uh44yug4ygy4jhfbhb4hbh4bhb4hbg4hbgh4bg"
-      />
     </Screen>
   );
 };

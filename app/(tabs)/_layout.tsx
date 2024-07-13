@@ -9,6 +9,7 @@ import { tabsMenu } from "@/src/Utils/Constants";
 import TabsIcons from "@/src/Components/TabsIcons/TabsIcons";
 import TabsLabels from "@/src/Components/TabsLabels/TabsLabels";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import StackWrapper from "@/src/HOCs/StackWrapper";
 
 const TabsLayout = () => {
   const theme = useAppSelector((state) => state.theme.value);
@@ -124,7 +125,7 @@ const TabsLayout = () => {
   );
 };
 
-export default TabsLayout;
+export default StackWrapper(TabsLayout);
 
 const styles = StyleSheet.create({
   tabStyles: {

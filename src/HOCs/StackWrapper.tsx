@@ -1,5 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import React from "react";
+
 import { useAppSelector } from "../Redux/Hooks/Config";
 import { light, dark } from "../Theme/Colors";
 

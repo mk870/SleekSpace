@@ -1,6 +1,6 @@
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import { Feather, FontAwesome } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
@@ -18,12 +18,21 @@ const Avatar: INoPropsReactComponent = () => {
         style={styles.image}
       />
       <TouchableOpacity
-        style={[styles.cameraIcon,{backgroundColor:theme==="light"?light.darkGray:dark.darkGray}]}
+        style={[
+          styles.cameraIcon,
+          {
+            backgroundColor: theme === "light" ? light.darkGray : dark.darkGray,
+          },
+        ]}
         onPress={() => setOpenEditModal(true)}
       >
         <Feather name="camera" size={24} color={primary} />
       </TouchableOpacity>
-      <MediaModal isModalVisible={openEditModal} handleCancel={()=>setOpenEditModal(false)} type="profile-Photo"/>
+      <MediaModal
+        isModalVisible={openEditModal}
+        handleCancel={() => setOpenEditModal(false)}
+        type="profile-Photo"
+      />
     </View>
   );
 };
@@ -50,8 +59,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     bottom: 0,
-    width:40,
-    height:40,
-    borderRadius:20
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
 });

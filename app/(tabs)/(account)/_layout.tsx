@@ -2,7 +2,7 @@ import React from "react";
 import { Stack, useRouter } from "expo-router";
 
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
-import { pureWhite, dark, light } from "@/src/Theme/Colors";
+import { dark, light } from "@/src/Theme/Colors";
 import { family } from "@/src/Theme/Font";
 import HeaderIcon from "@/src/Components/Navigation/HeaderIcon/HeaderIcon";
 import StackWrapper from "@/src/HOCs/StackWrapper";
@@ -13,9 +13,6 @@ const AccountLayout = () => {
   return (
     <Stack
       screenOptions={{
-        headerStyle: {
-          //backgroundColor: theme === "light" ? pureWhite : dark.background,
-        },
         headerTitleStyle: {
           color: theme === "light" ? light.text : dark.text,
           fontFamily:family
@@ -63,10 +60,9 @@ const AccountLayout = () => {
         }}
       />
       <Stack.Screen
-        name="account/profile"
+        name="account/(profile)"
         options={{
-          headerTitle: "Profile",
-          headerTitleAlign: "center",
+          headerShown:false
         }}
       />
       <Stack.Screen

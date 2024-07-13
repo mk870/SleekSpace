@@ -1,23 +1,32 @@
-import { StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
-import React from "react";
 import {
-  EvilIcons,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import React, { useState } from "react";
+import {
   Feather,
   FontAwesome,
   Fontisto,
   Ionicons,
-  MaterialIcons,
 } from "@expo/vector-icons";
+import { router } from "expo-router";
+
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import Avatar from "./Components/Avatar/Avatar";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
-import { family, medium, small } from "@/src/Theme/Font";
-import { dark, light, primary, red, white } from "@/src/Theme/Colors";
+import { dark, light, primary, red } from "@/src/Theme/Colors";
+import { styles } from "./Styles";
+import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
+import MessageModal from "@/src/Components/Modals/MessageModal";
 
 const Profile: INoPropsReactComponent = () => {
+  const [openDeleteAccountConfirmation, setOpenDeleteAccountConfirmation] =
+    useState<boolean>(false);
   const {
     familyName,
     givenName,
@@ -29,7 +38,7 @@ const Profile: INoPropsReactComponent = () => {
   const theme = useAppSelector((state) => state.theme.value);
   const iconSize = 25;
   const iconColor = primary;
-  const {width} = useWindowDimensions()
+  const { width } = useWindowDimensions();
   const personalDetails = [
     {
       name: "Email",
@@ -81,7 +90,7 @@ const Profile: INoPropsReactComponent = () => {
               >
                 Personal Information
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>router.push("/account/profile/update")}>
                 <Text style={styles.editText}>edit</Text>
               </TouchableOpacity>
             </View>
@@ -106,70 +115,30 @@ const Profile: INoPropsReactComponent = () => {
               ))}
             </View>
           </View>
-          <View style={styles.wrapper}>
-            <View style={{ alignSelf: "flex-start", width: "100%" }}>
-              <Text
-                style={[
-                  styles.subHeaderText,
-                  { color: theme === "light" ? light.text : dark.text },
-                ]}
-              >
-                Utilies
-              </Text>
-            </View>
-            <View style={styles.infoContainer}>
-              <View
-                style={[
-                  styles.personalDetail,
-                  {
-                    backgroundColor:
-                      theme === "light" ? light.darkGray : dark.darkGray,
-                  },
-                ]}
-              >
-                <View style={styles.personalDetailIconAndText}>
-                  <Feather name="lock" size={iconSize} color={iconColor} />
-                  <ThemedText type="regular">Reset Password</ThemedText>
-                </View>
-                <Ionicons
-                  name="chevron-forward"
-                  size={iconSize}
-                  color={"gray"}
-                />
-              </View>
-              <View
-                style={[
-                  styles.personalDetail,
-                  {
-                    backgroundColor:
-                      theme === "light" ? light.darkGray : dark.darkGray,
-                  },
-                ]}
-              >
-                <View style={styles.personalDetailIconAndText}>
-                  <MaterialIcons
-                    name="logout"
-                    size={iconSize}
-                    color={iconColor}
-                  />
-                  <ThemedText type="regular">Logout</ThemedText>
-                </View>
-                <Ionicons
-                  name="chevron-forward"
-                  size={iconSize}
-                  color={"gray"}
-                />
-              </View>
-            </View>
-          </View>
-          <TouchableOpacity style={styles.deleteAccountbtn}>
-            <MaterialIcons
-              name="delete-outline"
-              size={iconSize}
-              color={white}
+          <View
+            style={[styles.btnContainer, { width: width > 700 ? 600 : "100%" }]}
+          >
+            <TouchableOpacity style={styles.resetPasswordBtn}>
+              <Text style={styles.resetPasswordText}>Reset Password</Text>
+            </TouchableOpacity>
+            <CustomButton
+              title="Logout"
+              onPressFunc={() => console.log("delete")}
             />
-            <Text style={styles.deleteText}>delete account</Text>
-          </TouchableOpacity>
+            <CustomButton
+              title="Delete Account"
+              color={red}
+              onPressFunc={() => setOpenDeleteAccountConfirmation(true)}
+            />
+          </View>
+          <MessageModal
+            handleCancel={() => setOpenDeleteAccountConfirmation(false)}
+            isModalVisible={openDeleteAccountConfirmation}
+            message="Are your sure you want to delete your account"
+            header="Delete Account?"
+            type="confirmation"
+            handleConfirm={()=>console.log("delete")}
+          />
         </View>
       </StackScreen>
     </Screen>
@@ -177,76 +146,3 @@ const Profile: INoPropsReactComponent = () => {
 };
 
 export default Profile;
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 20,
-    paddingHorizontal: 10,
-    paddingBottom: 10,
-  },
-  userDetails: {
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-  },
-  emailText: {
-    fontFamily: family,
-    fontSize: small,
-    marginTop: -7,
-  },
-  wrapper: {
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-    width: "100%",
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  subHeaderText: {
-    fontFamily: family,
-    fontSize: medium,
-    fontWeight: "bold",
-  },
-  editText: {
-    fontFamily: family,
-    fontSize: small,
-    color: primary,
-  },
-  infoContainer: {
-    gap: 5,
-  },
-  personalDetail: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    height: 50,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-  },
-  personalDetailIconAndText: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 15,
-  },
-  deleteAccountbtn:{
-    flexDirection:"row",
-    alignItems:"center",
-    justifyContent:"center",
-    gap:15,
-    backgroundColor:red,
-    height:40,
-    borderRadius:5,
-  },
-  deleteText:{
-    fontFamily: family,
-    color:white,
-    fontSize: small
-  }
-});
