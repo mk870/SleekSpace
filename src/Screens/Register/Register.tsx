@@ -372,7 +372,7 @@ const Register = () => {
           }
           handleCancel={handleCloseSuccesModal}
           isModalVisible={isRegistrationSuccessful}
-          header="Email Sent"
+          header="Email Sent!"
           type="success"
         />
       </ScrollView>

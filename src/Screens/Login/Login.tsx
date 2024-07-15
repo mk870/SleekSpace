@@ -22,20 +22,16 @@ import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { IUserLogin, IVoidFunc } from "@/src/GlobalTypes/Types";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
-import { updateAccessToken } from "@/src/Redux/Slices/AccessTokenSlice/AccessToken";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { dark, light, red } from "@/src/Theme/Colors";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
 import { loginHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
-import {
-  addEmailAddress,
-  addFamilyName,
-  addGivenName,
-  addUserId,
-} from "@/src/Redux/Slices/UserSlice/User";
 import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
+import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
+import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
+import { StatusBar } from "expo-status-bar";
 
 const Login = () => {
   const { width } = useWindowDimensions();
@@ -45,6 +41,7 @@ const Login = () => {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string>("");
+  const [userData, setUserData] = useState<IUser | null>(null);
   const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
   const [isPasswordValidationError, setIsPasswordValidationError] =
     useState<boolean>(false);
@@ -52,7 +49,7 @@ const Login = () => {
     useState<boolean>(false);
   const router = useRouter();
   const theme = useAppSelector((state) => state.theme.value);
-  const dispatch = useAppDispatch();
+  useUpdateUser(userData)
   const {
     container,
     inputWrapper,
@@ -71,14 +68,10 @@ const Login = () => {
     onSuccess: (data) => {
       saveSecureValue(
         expoSecureValueKeyNames.accessToken,
-        JSON.stringify(data.data.accessToken)
+        JSON.stringify(data.data.response.accessToken)
       )
         .then((_data) => {
-          dispatch(updateAccessToken(data.data.accessToken));
-          dispatch(addEmailAddress(data.data.email));
-          dispatch(addFamilyName(data.data.familyName));
-          dispatch(addGivenName(data.data.givenName));
-          dispatch(addUserId(data.data.id));
+          setUserData(data.data.response);
           setLoginSuccess(true);
         })
         .catch((e) => {
@@ -137,6 +130,7 @@ const Login = () => {
 
   return (
     <Screen>
+      <StatusBar style={theme === "light" ? "dark" : "light"} />
       <ScrollView
         style={container}
         showsVerticalScrollIndicator={false}

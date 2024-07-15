@@ -7,7 +7,13 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import { Fontisto, Feather, Ionicons, Octicons } from "@expo/vector-icons";
+import {
+  Fontisto,
+  Feather,
+  Ionicons,
+  Octicons,
+  EvilIcons,
+} from "@expo/vector-icons";
 
 import { ContentType } from "./Types/Types";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
@@ -47,7 +53,7 @@ const InputField: React.FC<Props> = ({
   const [ispassWordHidden, setIsPassWordHidden] = useState<boolean>(true);
   const iconSize = 20;
   const iconColor = "gray";
-  const theme = useAppSelector((state)=>state.theme.value)
+  const theme = useAppSelector((state) => state.theme.value);
   const secureText = () => {
     if (type === "password") {
       if (ispassWordHidden) return true;
@@ -118,6 +124,14 @@ const InputField: React.FC<Props> = ({
           <Octicons
             name="verified"
             size={iconSize}
+            color={iconColor}
+            style={styles(width, height, theme).icon}
+          />
+        )}
+        {type === "location" && (
+          <EvilIcons
+            name="location"
+            size={26}
             color={iconColor}
             style={styles(width, height, theme).icon}
           />

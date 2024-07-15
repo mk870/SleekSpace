@@ -1,6 +1,6 @@
 export const expoSecureValueKeyNames = {
   accessToken: "accessToken",
-  theme: "theme"
+  theme: "theme",
 };
 
 const backEndUrl = "https://sleekspace-server.onrender.com";
@@ -16,7 +16,7 @@ export const endpoints = {
   login: `${backEndUrl}/login`,
   nativeRegistration: `${backEndUrl}/register`,
   nativeRegistrationCodeVerification: `${backEndUrl}/verification-code/registration`,
-  deleteUser: `${backEndUrl}/user`,
+  user: `${backEndUrl}/user`,
   logout: `${backEndUrl}/logout`,
   changePassword: `${backEndUrl}/password`,
   createVerificationCodeForSecurity: `${backEndUrl}/verification-code`,

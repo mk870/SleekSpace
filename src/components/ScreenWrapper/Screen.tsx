@@ -9,7 +9,7 @@ type Props = {
 };
 
 const Screen: React.FC<Props> = ({ children }) => {
-  const theme = useAppSelector((state)=>state.theme.value)
+  const theme = useAppSelector((state) => state.theme.value);
   return (
     <View
       style={[

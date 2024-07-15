@@ -26,20 +26,15 @@ import {
   verifyCodeForNativeUserRegistrationHttpFunc,
 } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
 import { processLocalQueryParam, saveSecureValue } from "@/src/Utils/Funcs";
-import { useAppDispatch } from "@/src/Redux/Hooks/Config";
-import { updateAccessToken } from "@/src/Redux/Slices/AccessTokenSlice/AccessToken";
-import {
-  addEmailAddress,
-  addFamilyName,
-  addGivenName,
-  addUserId,
-} from "@/src/Redux/Slices/UserSlice/User";
 import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
+import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
+import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 
 const Verification: INoPropsReactComponent = () => {
   const { id, isNewUser } = useLocalSearchParams();
   const processedIsNewUser = processLocalQueryParam(isNewUser);
   const [verificationCode, setVerificationCode] = useState<string>("");
+  const [userData, setUserData] = useState<IUser | null>(null);
   const [
     showResendVerificationCodeSuccess,
     setShowResendVerificationCodeSuccess,
@@ -53,8 +48,8 @@ const Verification: INoPropsReactComponent = () => {
   const [httpError, setHttpError] = useState<string>("");
   const theme = useColorScheme();
   const { width } = useWindowDimensions();
-  const dispatch = useAppDispatch();
 
+  useUpdateUser(userData);
   useEffect(() => {
     if (verificationCode && verificationCode.length < 6)
       setTypingError("verification code should be 6 digits");
@@ -87,14 +82,10 @@ const Verification: INoPropsReactComponent = () => {
     onSuccess(data) {
       saveSecureValue(
         expoSecureValueKeyNames.accessToken,
-        JSON.stringify(data.data.accessToken)
+        JSON.stringify(data.data.response.accessToken)
       )
         .then((_data) => {
-          dispatch(updateAccessToken(data.data.accessToken));
-          dispatch(addEmailAddress(data.data.email));
-          dispatch(addFamilyName(data.data.familyName));
-          dispatch(addGivenName(data.data.givenName));
-          dispatch(addUserId(data.data.id));
+          setUserData(data.data.response);
           setIsVerificationSuccesful(true);
         })
         .catch((e) => {

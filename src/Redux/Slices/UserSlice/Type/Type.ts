@@ -6,5 +6,6 @@ export type IUser = {
     avatar: string,
     contactNumber: string,
     location: string,
-    whatsAppNumber: string
+    whatsAppNumber: string,
+    accessToken: string
 }

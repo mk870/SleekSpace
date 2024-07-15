@@ -2,14 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 import { IUser } from "./Type/Type";
 
 const user: IUser = {
-  email: "mkhue47@gmail.com",
-  givenName: "Mkhululi",
-  familyName: "Ndlovu",
+  email: "",
+  givenName: "",
+  familyName: "",
   avatar: "",
-  contactNumber: "0774676397",
-  whatsAppNumber: "0774676397",
-  location: "Bulawayo, ZW",
+  contactNumber: "",
+  whatsAppNumber: "",
+  location: "",
   id: 0,
+  accessToken:""
 };
 export const userSlice = createSlice({
   name: "user",
@@ -65,6 +66,12 @@ export const userSlice = createSlice({
         location: action.payload,
       };
     },
+    addAccessToken: (state, action) => {
+      state.value = {
+        ...state.value,
+        accessToken: action.payload,
+      };
+    },
   },
 });
 export const {
@@ -76,5 +83,6 @@ export const {
   addContactNumber,
   addLocation,
   addWhatsAppNumber,
+  addAccessToken
 } = userSlice.actions;
 export default userSlice.reducer;
