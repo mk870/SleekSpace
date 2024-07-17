@@ -11,6 +11,7 @@ export const tabsMenu = {
   favorites: "Favorites",
   post: "Postproperty",
   search: "Search",
+  chats:"Chats"
 };
 export const endpoints = {
   login: `${backEndUrl}/login`,

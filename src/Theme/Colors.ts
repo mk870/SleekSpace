@@ -13,6 +13,7 @@ const Colors = {
   white:"aliceblue",
   pureWhite:"#fff",
   lightPrimary: "rgba(77, 9, 205,0.5)",
+  gray:"gray",
   light: {
     text: black,
     background: "#eaeaea",
@@ -34,4 +35,4 @@ const Colors = {
   },
 };
 
-export const { dark, light, primary, lightPrimary, red, white, pureWhite } = Colors;
+export const { dark, light, primary, lightPrimary, red, white, pureWhite,gray } = Colors;

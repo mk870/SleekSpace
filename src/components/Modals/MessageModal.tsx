@@ -46,8 +46,8 @@ const MessageModal: React.FC<Props> = ({
       : type === "error"
       ? red
       : type === "confirmation"
-      ? "#e0b908"
-      : "#8c1085";
+      ? "#8c1085"
+      : "#e0b908";
   const { container, subContainer, headerText, row, btn } = styles;
   return (
     <Modal

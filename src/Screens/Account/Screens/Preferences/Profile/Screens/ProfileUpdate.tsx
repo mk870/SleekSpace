@@ -1,4 +1,4 @@
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
@@ -10,25 +10,38 @@ import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import PhoneNumberField from "@/src/Components/PhoneNumberField/PhoneNumberField";
 import InputField from "@/src/Components/InputField/InputField";
-import { white } from "@/src/Theme/Colors";
+import { red, white } from "@/src/Theme/Colors";
 import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { updateUserHttpFunc } from "@/src/HttpServices/Mutations/UserHttpFunctions";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import MessageModal from "@/src/Components/Modals/MessageModal";
+import { family } from "@/src/Theme/Font";
+import { IPhoneNumberDetails } from "./Types";
 
 const ProfileUpdate: INoPropsReactComponent = () => {
   const user = useAppSelector((state) => state.user.value);
   const accessToken = useAppSelector((state) => state.accessToken.value);
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState<boolean>(true);
+  const [isWhatsAppNumberValid, setIsWhatsAppNumberValid] =
+    useState<boolean>(true);
   const [location, setLocation] = useState<string | undefined>(user.location);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string | undefined>(
-    user.contactNumber
+  const [phoneNumberDetails, setPhoneNumberDetails] = useState<IPhoneNumberDetails>(
+    {
+      number:user.contactNumber,
+      countryCode:"263",
+      countryAbbrv:"ZW"
+    }
   );
-  const [whatsAppNumber, setWhatsAppNumber] = useState<string | undefined>(
-    user.whatsAppNumber
+  const [whatsAppNumberDetails, setWhatsAppNumberDetails] = useState<IPhoneNumberDetails>(
+    {
+      number:user.whatsAppNumber,
+      countryCode:"263",
+      countryAbbrv:"ZW"
+    }
   );
   const [userData, setUserData] = useState<IUser | null>(null);
   const router = useRouter();
@@ -39,10 +52,11 @@ const ProfileUpdate: INoPropsReactComponent = () => {
   const updateMutation = useMutation({
     mutationFn: updateUserHttpFunc,
     onSuccess: (data) => {
-      setUserData(data.data);
+      setUserData(data.data.response);
       setOpenSuccessModal(true);
     },
     onError(error: any) {
+      console.log(error)
       if (error.response?.data?.error !== "") {
         setUpdateError(error.response?.data?.error);
       } else setUpdateError("Something went wrong");
@@ -53,9 +67,15 @@ const ProfileUpdate: INoPropsReactComponent = () => {
   });
 
   const handleUpdate = () => {
-    if (phoneNumber || location || whatsAppNumber) {
-      setIsLoading(true)
-      updateMutation.mutate({ ...user, accessToken });
+    if (isPhoneNumberValid && isWhatsAppNumberValid) {
+      console.log(phoneNumberDetails,whatsAppNumberDetails)
+      // setIsLoading(true);
+      // updateMutation.mutate({
+      //   ...user,
+      //   accessToken,
+      //   whatsAppNumber: whatsAppNumber ? whatsAppNumber : "",
+      //   contactNumber: phoneNumber ? phoneNumber : "",
+      // });
     }
   };
   const closeSuccessModal = () => {
@@ -73,15 +93,31 @@ const ProfileUpdate: INoPropsReactComponent = () => {
             style={[styles.inputWrapper, { width: width > 700 ? 600 : "100%" }]}
           >
             <PhoneNumberField
-              setPhoneValue={setPhoneNumber}
+              setPhoneNumberDetails={setPhoneNumberDetails}
               label="Phone Number"
-              type="call"
+              initialValue={user.contactNumber}
+              isNumberValid={isPhoneNumberValid}
+              setIsNumberValid={setIsPhoneNumberValid}
+              phoneNumberDetails={phoneNumberDetails}
             />
+            {!isPhoneNumberValid && (
+              <Text style={styles.errorText}>
+                this number is not valid in this country
+              </Text>
+            )}
             <PhoneNumberField
-              setPhoneValue={setWhatsAppNumber}
+              setPhoneNumberDetails={setWhatsAppNumberDetails}
               label="Whatsapp Number"
-              type="whatsapp"
+              initialValue={user.whatsAppNumber}
+              isNumberValid={isWhatsAppNumberValid}
+              setIsNumberValid={setIsWhatsAppNumberValid}
+              phoneNumberDetails={whatsAppNumberDetails}
             />
+            {!isWhatsAppNumberValid && (
+              <Text style={styles.errorText}>
+                this number is not valid in this country
+              </Text>
+            )}
             <InputField
               textValue={location}
               placeHolder="your location"
@@ -92,14 +128,14 @@ const ProfileUpdate: INoPropsReactComponent = () => {
               type="location"
               label="Location"
               backgroundColor="transparent"
-              borderColor={theme === "light" ? "gray" : white}
+              borderColor={"gray"}
             />
           </View>
           <View
             style={[
               {
                 width: width > 700 ? 600 : "100%",
-                marginTop: height / 3,
+                marginTop: height / 3.5,
                 marginBottom: 15,
               },
             ]}
@@ -143,5 +179,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 20,
+  },
+  errorText: {
+    fontFamily: family,
+    color: red,
+    fontSize: 13,
+    marginTop: -19,
   },
 });

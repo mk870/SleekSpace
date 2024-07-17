@@ -14,7 +14,7 @@ import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import Avatar from "./Components/Avatar/Avatar";
-import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { dark, light, primary, red } from "@/src/Theme/Colors";
 import { styles } from "./Styles";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
@@ -24,6 +24,7 @@ import { deleteUserHttpFunc } from "@/src/HttpServices/Mutations/UserHttpFunctio
 import { saveSecureValue } from "@/src/Utils/Funcs";
 import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
 import ButtonSpinner from "@/src/Components/Spinners/ButtonSpinner";
+import { addAccessToken } from "@/src/Redux/Slices/UserSlice/User";
 
 const Profile: INoPropsReactComponent = () => {
   const [openDeleteAccountConfirmation, setOpenDeleteAccountConfirmation] =
@@ -57,6 +58,7 @@ const Profile: INoPropsReactComponent = () => {
   const iconSize = 25;
   const iconColor = primary;
   const { width } = useWindowDimensions();
+  const dispatch = useAppDispatch();
   const personalDetails = [
     {
       name: "Email",
@@ -128,6 +130,7 @@ const Profile: INoPropsReactComponent = () => {
     setLogoutLoader(true);
     saveSecureValue(expoSecureValueKeyNames.accessToken, "")
       .then((_) => {
+        dispatch(addAccessToken(""));
         setOpenLogoutSuccessModal(true);
       })
       .catch((_) => {
@@ -203,11 +206,18 @@ const Profile: INoPropsReactComponent = () => {
                 <Text style={styles.resetPasswordText}>Reset Password</Text>
               )}
             </TouchableOpacity>
-            <CustomButton
-              title={logoutLoader ? "loading" : "Logout"}
-              onPressFunc={() => setOpenLogoutConfirmation(true)}
-              isDisabled={logoutLoader}
-            />
+            {accessToken ? (
+              <CustomButton
+                title={logoutLoader ? "loading" : "Logout"}
+                onPressFunc={() => setOpenLogoutConfirmation(true)}
+                isDisabled={logoutLoader}
+              />
+            ) : (
+              <CustomButton
+                title="Login"
+                onPressFunc={() => router.push("/login")}
+              />
+            )}
             <CustomButton
               title={deleteAccountLoader ? "loading" : "Delete Account"}
               color={red}

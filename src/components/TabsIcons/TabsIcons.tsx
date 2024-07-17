@@ -52,10 +52,10 @@ const TabsIcons: React.FC<Props> = ({ focused, name, color }) => {
             color={color}
           />
         );
-    } else if (name === tabsMenu.search) {
+    } else if (name === tabsMenu.chats) {
       if (focused)
-        return <FontAwesome5 name="search" size={iconSize} color={color} />;
-      else return <Feather name="search" size={iconSize} color={color} />;
+        return <Ionicons name="chatbox" size={iconSize} color={color} />;
+      else return <Ionicons name="chatbox-outline" size={iconSize} color={color} />;
     } else {
       if (focused)
         return <Ionicons name="add-circle" size={35} color={color} />;

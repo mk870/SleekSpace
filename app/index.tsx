@@ -21,7 +21,7 @@ const index = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const theme = useAppSelector((state) => state.theme.value);
-  const { email } = useAppSelector((state) => state.user.value);
+  const { accessToken } = useAppSelector((state) => state.user.value);
   useUpdateUser(userData);
   useLayoutEffect(() => {
     getSecureValue(expoSecureValueKeyNames.theme)
@@ -40,16 +40,15 @@ const index = () => {
     getSecureValue(expoSecureValueKeyNames.accessToken)
       .then((value: string | null) => {
         if (value) {
-          console.log("accessToken",value)
           const decoded: JwtPayload = jwtDecode(value);
           const currentDate = new Date();
           if (decoded.exp) {
             if (decoded.exp * 1000 > currentDate.getTime()) {
-              if (!email) {
+              if (!accessToken) {
                 axios
                   .get(endpoints.user, {
                     headers: {
-                      Authorization: `Bearer ${value}`,
+                      Authorization: `Bearer ${JSON.parse(value)}`,
                     },
                   })
                   .then((res) => {
@@ -58,11 +57,11 @@ const index = () => {
                   .catch((error) => {
                     if (error.response?.data?.error !== "") {
                       console.log(error.response?.data?.error);
-                    } else console.log("Something went wrong",error);
+                    } else console.log("Something went wrong", error);
                   })
                   .finally(() => router.replace("/home"));
               } else {
-                dispatch(addAccessToken(value))
+                dispatch(addAccessToken(value));
                 router.replace("/home");
               }
             } else router.replace("/login");

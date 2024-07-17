@@ -53,18 +53,18 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="search"
+          name="chats"
           options={{
-            title: tabsMenu.search,
+            title: tabsMenu.chats,
             tabBarIcon: ({ color, focused }) => (
               <TabsIcons
                 focused={focused}
                 color={color}
-                name={tabsMenu.search}
+                name={tabsMenu.chats}
               />
             ),
             tabBarLabel: ({ focused }) => (
-              <TabsLabels focused={focused} textItem={tabsMenu.search} />
+              <TabsLabels focused={focused} textItem={tabsMenu.chats} />
             ),
           }}
         />
@@ -118,6 +118,17 @@ const TabsLayout = () => {
             tabBarLabel: ({ focused }) => (
               <TabsLabels focused={focused} textItem={tabsMenu.account} />
             ),
+          }}
+        />
+        <Tabs.Screen
+          name="search"
+          options={{
+            title: "none",
+            href: null,
+            headerShown: false,
+            tabBarStyle: {
+              display: "none",
+            },
           }}
         />
       </Tabs>

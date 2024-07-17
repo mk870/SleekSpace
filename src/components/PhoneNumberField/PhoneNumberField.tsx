@@ -5,43 +5,75 @@ import PhoneInput from "react-native-phone-number-input";
 
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import ThemedText from "../ThemedText/ThemedText";
-import { dark, light, white } from "@/src/Theme/Colors";
+import { dark, gray, light, white } from "@/src/Theme/Colors";
+import { IPhoneNumberDetails } from "@/src/Screens/Account/Screens/Preferences/Profile/Screens/Types";
 
 type Props = {
-  setPhoneValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setPhoneNumberDetails: React.Dispatch<
+    React.SetStateAction<IPhoneNumberDetails>
+  >;
   label: string;
-  type: "whatsapp" | "call";
+  setIsNumberValid: React.Dispatch<React.SetStateAction<boolean>>;
+  isNumberValid: boolean;
+  initialValue: string;
+  phoneNumberDetails: IPhoneNumberDetails;
 };
 
-const PhoneNumberField: React.FC<Props> = ({ setPhoneValue, label, type }) => {
-  const { whatsAppNumber, contactNumber } = useAppSelector(
-    (state) => state.user.value
-  );
-  const [value, setValue] = useState(
-    type === "call" ? contactNumber : whatsAppNumber
-  );
-  const [valid, setValid] = useState(false);
-  const phoneInput = useRef<PhoneInput>(null);
+const PhoneNumberField: React.FC<Props> = ({
+  setPhoneNumberDetails,
+  label,
+  setIsNumberValid,
+  isNumberValid,
+  initialValue,
+  phoneNumberDetails,
+}) => {
+  const [value, setValue] = useState(initialValue);
+  const phoneInputRef = useRef<PhoneInput>(null);
   const { width } = useWindowDimensions();
   const theme = useAppSelector((state) => state.theme.value);
+
   useEffect(() => {
+    const getNumber =
+      phoneInputRef.current?.getNumberAfterPossiblyEliminatingZero();
+    const state = phoneInputRef.current?.state;
     if (value) {
-      const checkValid = phoneInput.current?.isValidNumber(value);
-      setValid(checkValid ? checkValid : false);
-      setPhoneValue(value);
+      const checkValid = phoneInputRef.current?.isValidNumber(value);
+      setIsNumberValid(checkValid ? checkValid : false);
+      setPhoneNumberDetails({
+        ...phoneNumberDetails,
+        number: getNumber ? getNumber.number : initialValue,
+        countryCode: state
+          ? state.code
+            ? state.code
+            : phoneNumberDetails.countryCode
+          : phoneNumberDetails.countryCode,
+        countryAbbrv: state
+          ? state.countryCode
+          : phoneNumberDetails.countryAbbrv,
+      });
     } else {
-      setValid(true);
-      setPhoneValue(value);
+      setIsNumberValid(true);
+      setPhoneNumberDetails({
+        ...phoneNumberDetails,
+        number: getNumber ? getNumber.number : initialValue,
+        countryCode: state ? (state.code ? state.code : "") : "",
+        countryAbbrv: state ? state.countryCode : "",
+      });
     }
   }, [value]);
+
   return (
     <View style={[styles.container, { width: width > 700 ? 600 : "100%" }]}>
       <View style={styles.labelContainer}>
         <ThemedText type="regular">{label}</ThemedText>
       </View>
       <PhoneInput
-        ref={phoneInput}
-        defaultValue={value}
+        ref={phoneInputRef}
+        defaultValue={
+          value.split(
+            phoneNumberDetails.countryCode ? phoneNumberDetails.countryCode : ""
+          )[1]
+        }
         defaultCode="ZW"
         layout="first"
         onChangeText={(text) => {
@@ -54,12 +86,17 @@ const PhoneNumberField: React.FC<Props> = ({ setPhoneValue, label, type }) => {
           width: "100%",
           borderRadius: 7,
           borderWidth: 1,
-          borderColor: valid ? "gray" : "red",
+          borderColor: isNumberValid ? gray : "red",
           backgroundColor: "transparent",
         }}
-        textContainerStyle={[styles.textContainer, { borderLeftColor: "gray" }]}
+        textContainerStyle={[styles.textContainer, { borderLeftColor: gray }]}
         textInputStyle={{ color: theme === "light" ? light.text : dark.text }}
         codeTextStyle={{ color: theme === "light" ? light.text : dark.text }}
+        textInputProps={{
+          cursorColor: gray,
+          autoComplete: "off",
+          autoCorrect: false,
+        }}
         renderDropdownImage={
           <AntDesign
             name="caretdown"

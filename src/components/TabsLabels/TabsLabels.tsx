@@ -17,7 +17,6 @@ const TabsLabels: React.FC<Props> = ({ focused, textItem }) => {
       style={{
         fontFamily: family,
         fontSize: 12,
-        fontWeight: "900",
         color:
           theme === "light"
             ? focused
