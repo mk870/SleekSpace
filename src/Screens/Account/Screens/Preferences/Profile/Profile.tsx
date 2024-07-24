@@ -59,6 +59,7 @@ const Profile: INoPropsReactComponent = () => {
   const iconColor = primary;
   const { width } = useWindowDimensions();
   const dispatch = useAppDispatch();
+  
   const personalDetails = [
     {
       name: "Email",
@@ -155,7 +156,7 @@ const Profile: INoPropsReactComponent = () => {
               {email}
             </Text>
           </View>
-          <View style={styles.wrapper}>
+          <View style={[styles.wrapper,{ width: width > 700 ? 600 : "100%" }]}>
             <View style={styles.row}>
               <Text
                 style={[

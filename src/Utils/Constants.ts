@@ -23,6 +23,8 @@ export const endpoints = {
   createVerificationCodeForSecurity: `${backEndUrl}/verification-code`,
   verifyCodeForSecurity: `${backEndUrl}/verification-code/security`,
   resendVerificationCode: `${backEndUrl}/resend-verification-code`,
+  locationAutoComplete:``
 };
 
 export const faceBookAuthClientId = process.env.FACEBOOK_AUTH_CLIENT_ID;
+export const locationIQToken = process.env.LOCATION_IQ_ACCESS_TOKEN;

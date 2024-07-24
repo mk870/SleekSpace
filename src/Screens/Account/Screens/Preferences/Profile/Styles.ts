@@ -25,13 +25,12 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
-    width: "100%",
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "100%",
+    width:"100%"
   },
   subHeaderText: {
     fontFamily: family,
@@ -45,6 +44,7 @@ export const styles = StyleSheet.create({
   },
   infoContainer: {
     gap: 5,
+    width:"100%"
   },
   personalDetail: {
     flexDirection: "row",

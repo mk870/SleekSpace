@@ -156,7 +156,7 @@ const InputField: React.FC<Props> = ({
           cursorColor={theme === "light" ? light.text : dark.text}
           autoCorrect={false}
           enterKeyHint={"enter"}
-          keyboardAppearance="dark"
+          keyboardAppearance={theme==="light"?"light":"dark"}
           secureTextEntry={secureText()}
           autoFocus={isFocused ? isFocused : false}
           onSubmitEditing={handleOnEnter}

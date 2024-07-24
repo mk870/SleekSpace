@@ -23,6 +23,7 @@ const index = () => {
   const theme = useAppSelector((state) => state.theme.value);
   const { accessToken } = useAppSelector((state) => state.user.value);
   useUpdateUser(userData);
+
   useLayoutEffect(() => {
     getSecureValue(expoSecureValueKeyNames.theme)
       .then((value: string | null) => {
@@ -36,6 +37,7 @@ const index = () => {
         console.log("theme", e);
       });
   }, []);
+
   useEffect(() => {
     getSecureValue(expoSecureValueKeyNames.accessToken)
       .then((value: string | null) => {
@@ -74,6 +76,7 @@ const index = () => {
         console.log("error", e);
       });
   }, []);
+
   return (
     <Screen>
       <StatusBar style={theme === "light" ? "dark" : "light"} />
