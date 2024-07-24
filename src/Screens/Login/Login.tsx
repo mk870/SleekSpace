@@ -2,7 +2,6 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useColorScheme,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -20,23 +19,19 @@ import {
 } from "../../Utils/Funcs";
 import { styles } from "./Styles";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import ServerError from "@/src/HttpServices/ServerError/ServerError";
+import MessageModal from "@/src/Components/Modals/MessageModal";
 import { IUserLogin, IVoidFunc } from "@/src/GlobalTypes/Types";
-import { useAppDispatch } from "@/src/Redux/Hooks/Config";
-import { updateAccessToken } from "@/src/Redux/Slices/AccessTokenSlice/AccessToken";
+import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { dark, light, red } from "@/src/Theme/Colors";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
 import { loginHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
-import {
-  addEmailAddress,
-  addFamilyName,
-  addGivenName,
-  addUserId,
-} from "@/src/Redux/Slices/UserSlice/User";
 import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
+import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
+import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
+import { StatusBar } from "expo-status-bar";
 
 const Login = () => {
   const { width } = useWindowDimensions();
@@ -46,13 +41,15 @@ const Login = () => {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string>("");
+  const [userData, setUserData] = useState<IUser | null>(null);
+  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
   const [isPasswordValidationError, setIsPasswordValidationError] =
     useState<boolean>(false);
   const [isEmailValidationError, setIsEmailValidationError] =
     useState<boolean>(false);
   const router = useRouter();
-  const theme = useColorScheme();
-  const dispatch = useAppDispatch();
+  const theme = useAppSelector((state) => state.theme.value);
+  useUpdateUser(userData)
   const {
     container,
     inputWrapper,
@@ -71,16 +68,11 @@ const Login = () => {
     onSuccess: (data) => {
       saveSecureValue(
         expoSecureValueKeyNames.accessToken,
-        JSON.stringify(data.data.accessToken)
+        JSON.stringify(data.data.response.accessToken)
       )
         .then((_data) => {
-          dispatch(updateAccessToken(data.data.accessToken));
-          dispatch(addEmailAddress(data.data.email));
-          dispatch(addFamilyName(data.data.familyName));
-          dispatch(addGivenName(data.data.givenName));
-          dispatch(addUserId(data.data.id));
-          router.dismissAll();
-          router.replace("/home");
+          setUserData(data.data.response);
+          setLoginSuccess(true);
         })
         .catch((e) => {
           console.log("accessToken error ", e);
@@ -129,8 +121,16 @@ const Login = () => {
       setIsEmailValidationError(false);
     }
   }, [loginUserData.email]);
+
+  const handleLoginSuccesModalCancel = () => {
+    setLoginSuccess(false);
+    router.dismissAll();
+    router.replace("/home");
+  };
+
   return (
     <Screen>
+      <StatusBar style={theme === "light" ? "dark" : "light"} />
       <ScrollView
         style={container}
         showsVerticalScrollIndicator={false}
@@ -201,7 +201,7 @@ const Login = () => {
                   styles.linkContainer,
                   {
                     backgroundColor:
-                      theme === "dark" ? dark.darkGray : light.darkGray,
+                      theme === "light" ? light.darkGray : dark.darkGray,
                   },
                 ]}
               >
@@ -224,13 +224,20 @@ const Login = () => {
             </View>
           </View>
         </View>
-        {loginError && (
-          <ServerError
-            handleCancel={() => setLoginError("")}
-            message={loginError}
-            isModalVisible={loginError ? true : false}
-          />
-        )}
+        <MessageModal
+          handleCancel={() => setLoginError("")}
+          message={loginError}
+          isModalVisible={loginError ? true : false}
+          type="error"
+          header="Login Failed"
+        />
+        <MessageModal
+          handleCancel={handleLoginSuccesModalCancel}
+          message={"welcome back, please enjoy your search."}
+          isModalVisible={loginSuccess}
+          type="success"
+          header="Login Successful"
+        />
       </ScrollView>
     </Screen>
   );

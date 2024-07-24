@@ -6,11 +6,10 @@ import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
   children: React.ReactNode;
-  showBackArrow?: boolean
 };
 
-const Screen: React.FC<Props> = ({ children,showBackArrow }) => {
-  const theme = useAppSelector((state)=>state.theme.value)
+const Screen: React.FC<Props> = ({ children }) => {
+  const theme = useAppSelector((state) => state.theme.value);
   return (
     <View
       style={[

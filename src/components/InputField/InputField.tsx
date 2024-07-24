@@ -7,7 +7,13 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import { Fontisto, Feather, Ionicons, Octicons } from "@expo/vector-icons";
+import {
+  Fontisto,
+  Feather,
+  Ionicons,
+  Octicons,
+  EvilIcons,
+} from "@expo/vector-icons";
 
 import { ContentType } from "./Types/Types";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
@@ -47,7 +53,7 @@ const InputField: React.FC<Props> = ({
   const [ispassWordHidden, setIsPassWordHidden] = useState<boolean>(true);
   const iconSize = 20;
   const iconColor = "gray";
-  const theme = useAppSelector((state)=>state.theme.value)
+  const theme = useAppSelector((state) => state.theme.value);
   const secureText = () => {
     if (type === "password") {
       if (ispassWordHidden) return true;
@@ -122,6 +128,14 @@ const InputField: React.FC<Props> = ({
             style={styles(width, height, theme).icon}
           />
         )}
+        {type === "location" && (
+          <EvilIcons
+            name="location"
+            size={26}
+            color={iconColor}
+            style={styles(width, height, theme).icon}
+          />
+        )}
         <TextInput
           style={[
             styles(width, height, theme, borderColor).input,
@@ -142,7 +156,7 @@ const InputField: React.FC<Props> = ({
           cursorColor={theme === "light" ? light.text : dark.text}
           autoCorrect={false}
           enterKeyHint={"enter"}
-          keyboardAppearance="dark"
+          keyboardAppearance={theme==="light"?"light":"dark"}
           secureTextEntry={secureText()}
           autoFocus={isFocused ? isFocused : false}
           onSubmitEditing={handleOnEnter}

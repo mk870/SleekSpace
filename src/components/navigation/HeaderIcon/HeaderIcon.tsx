@@ -18,7 +18,7 @@ const HeaderIcon: React.FC<Props> = ({ onPressFunc, iconName, iconSize }) => {
     <TouchableOpacity style={iconContainer} onPress={onPressFunc}>
       <Ionicons
         name={iconName}
-        size={iconSize ? iconSize : 20}
+        size={iconSize ? iconSize : 24}
         color={theme === "light" ? light.text : dark.text}
         style={icon}
       />

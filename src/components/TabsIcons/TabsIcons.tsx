@@ -5,10 +5,10 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
   Feather,
+  FontAwesome5,
 } from "@expo/vector-icons";
 
 import { tabsMenu } from "@/src/Utils/Constants";
-import { primary } from "@/src/Theme/Colors";
 
 type Props = {
   focused: boolean;
@@ -52,25 +52,18 @@ const TabsIcons: React.FC<Props> = ({ focused, name, color }) => {
             color={color}
           />
         );
-    } else if (name === tabsMenu.search) {
+    } else if (name === tabsMenu.chats) {
       if (focused)
-        return <Feather name="search" size={iconSize} color={color} />;
-      else return <Feather name="search" size={iconSize} color={color} />;
+        return <Ionicons name="chatbox" size={iconSize} color={color} />;
+      else return <Ionicons name="chatbox-outline" size={iconSize} color={color} />;
     } else {
-      return <Ionicons name="add-circle" size={35} color={primary} />;
+      if (focused)
+        return <Ionicons name="add-circle" size={35} color={color} />;
+      else
+        return <Ionicons name="add-circle-outline" size={35} color={color} />;
     }
   };
-  return (
-    <Animated.View
-      style={{
-        backgroundColor: name === tabsMenu.post ? "" : focused ? primary : "",
-        paddingHorizontal:15,
-        borderRadius: 20,
-      }}
-    >
-      {icons()}
-    </Animated.View>
-  );
+  return <Animated.View>{icons()}</Animated.View>;
 };
 
 export default TabsIcons;

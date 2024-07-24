@@ -1,6 +1,4 @@
 import {
-  FontAwesome,
-  FontAwesome5,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
@@ -15,7 +13,7 @@ const iconColor = "gray";
 export const settings: IAccountOptions = [
   {
     name: "Change Password",
-    icon: <FontAwesome5 name="lock" size={iconSize} color={iconColor} />,
+    icon: <Ionicons name="lock-closed-outline" size={iconSize} color={iconColor} />,
     route: "/verification",
   },
   {
@@ -36,7 +34,7 @@ export const settings: IAccountOptions = [
   },
   {
     name: "Notifications",
-    icon: <Ionicons name="notifications" size={iconSize} color={iconColor} />,
+    icon: <Ionicons name="notifications-outline" size={iconSize} color={iconColor} />,
     route: "/account/notifications",
   },
 ];
@@ -44,30 +42,26 @@ export const settings: IAccountOptions = [
 export const preferences: IAccountOptions = [
   {
     name: "Profile",
-    icon: <Ionicons name="person" size={iconSize} color={iconColor} />,
+    icon: <Ionicons name="person-outline" size={iconSize} color={iconColor} />,
     route: "/account/profile",
   },
   {
     name: "Property Manager Account",
     icon: (
-      <MaterialIcons
-        name="real-estate-agent"
-        size={iconSize}
-        color={iconColor}
-      />
+      <MaterialCommunityIcons name="office-building-cog-outline" size={iconSize} color={iconColor} />
     ),
     route: "/account/manager",
   },
   {
     name: "My Chats",
-    icon: <Ionicons name="chatbubbles" size={iconSize} color={iconColor} />,
+    icon: <Ionicons name="chatbubbles-outline" size={iconSize} color={iconColor} />,
     route: "/chats",
   },
   {
     name: "My Favorites",
     icon: (
       <MaterialIcons
-        name="favorite"
+        name="favorite-outline"
         size={iconSize}
         color={iconColor}
       />
@@ -76,13 +70,13 @@ export const preferences: IAccountOptions = [
   },
   {
     name: "Billing&Payments",
-    icon: <MaterialIcons name="payments" size={iconSize} color={iconColor} />,
+    icon: <MaterialIcons name="payment" size={iconSize} color={iconColor} />,
     route: "/account/payments",
   },
   {
     name: "Help&Support",
     icon: (
-      <MaterialIcons name="contact-support" size={iconSize} color={iconColor} />
+      <MaterialIcons name="help-outline" size={iconSize} color={iconColor} />
     ),
     route: "/account/support",
   },
@@ -91,7 +85,7 @@ export const preferences: IAccountOptions = [
 export const legalities: IAccountOptions = [
   {
     name: "Legals",
-    icon: <FontAwesome name="legal" size={iconSize} color={iconColor} />,
+    icon: <Octicons name="law" size={iconSize} color={iconColor} />,
     route: "/account/legals",
   },
   {

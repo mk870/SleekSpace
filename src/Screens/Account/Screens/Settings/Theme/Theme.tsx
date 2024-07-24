@@ -8,6 +8,7 @@ import { switchTheme } from "@/src/Redux/Slices/Theme/Theme";
 import { StatusBar } from "expo-status-bar";
 import { saveSecureValue } from "@/src/Utils/Funcs";
 import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
+import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 
 type Props = {};
 
@@ -29,13 +30,13 @@ const Theme = (props: Props) => {
   };
   return (
     <Screen>
-      <SafeAreaView>
+      <StackScreen>
         {/* <StatusBar style={theme === "light" ? "dark" : "light"} /> */}
         <ThemedText type="regular">Theme</ThemedText>
         <TouchableOpacity onPress={toggleTheme}>
           <ThemedText type="regular">Theme</ThemedText>
         </TouchableOpacity>
-      </SafeAreaView>
+      </StackScreen>
     </Screen>
   );
 };

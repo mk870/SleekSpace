@@ -2,7 +2,6 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useColorScheme,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -10,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
 import * as Facebook from "expo-auth-session/providers/facebook";
-import * as authSession from "expo-auth-session"
+import * as authSession from "expo-auth-session";
 
 import {
   emailValidator,
@@ -19,7 +18,7 @@ import {
 } from "../../Utils/Funcs";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import InputField from "@/src/Components/InputField/InputField";
-import ServerError from "@/src/HttpServices/ServerError/ServerError";
+import MessageModal from "@/src/Components/Modals/MessageModal";
 import { styles } from "./Styles";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import { dark, light, red } from "@/src/Theme/Colors";
@@ -30,6 +29,7 @@ import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton"
 import { nativeRegisterHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
 import { IUserRegistrationData } from "./Types";
 import { faceBookAuthClientId } from "@/src/Utils/Constants";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 const Register = () => {
   const [signUpData, setSignUpData] = useState<IUserRegistrationData>({
@@ -40,6 +40,9 @@ const Register = () => {
   });
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [isRegistrationSuccessful, setIsRegistrationSuccessful] =
+    useState<boolean>(false);
   const [registrationError, setRegistrationError] = useState<string>("");
   const [isPasswordValidationError, setIsPasswordValidationError] =
     useState<boolean>(false);
@@ -55,10 +58,10 @@ const Register = () => {
       givenName: value,
     });
   };
-  const theme = useColorScheme();
+  const theme = useAppSelector((state) => state.theme.value);
   const [__, ___, fbPromptAsync] = Facebook.useAuthRequest({
     clientId: "496126113091123",
-    redirectUri: authSession.makeRedirectUri({scheme:"SleekSpace"})
+    redirectUri: authSession.makeRedirectUri({ scheme: "SleekSpace" }),
   });
   const handleOnChangeLastName = (value: string | undefined) => {
     setSignUpData({
@@ -91,12 +94,8 @@ const Register = () => {
   const nativeRegistrationMutation = useMutation({
     mutationFn: nativeRegisterHttpFunc,
     onSuccess(data) {
-      router.push({
-        pathname: `/verification/${data.data.userId}`,
-        params: {
-          isNewUser: "yes",
-        },
-      });
+      setUserId(data.data.userId);
+      setIsRegistrationSuccessful(true);
     },
     onError(error: any) {
       if (error.response?.data?.error !== "") {
@@ -223,6 +222,17 @@ const Register = () => {
       setIsFamilyNameValidationError(false);
     }
   }, [signUpData.familyName]);
+
+  const handleCloseSuccesModal = () => {
+    setIsRegistrationSuccessful(false);
+    router.push({
+      pathname: `/verification/${userId}`,
+      params: {
+        isNewUser: "yes",
+      },
+    });
+  };
+
   const {
     container,
     inputWrapper,
@@ -326,7 +336,7 @@ const Register = () => {
                   styles.linkContainer,
                   {
                     backgroundColor:
-                      theme === "dark" ? dark.darkGray : light.darkGray,
+                      theme === "light" ? light.darkGray : dark.darkGray,
                   },
                 ]}
               >
@@ -349,13 +359,22 @@ const Register = () => {
             </View>
           </View>
         </View>
-        {registrationError && (
-          <ServerError
-            message={registrationError}
-            handleCancel={() => setRegistrationError("")}
-            isModalVisible={registrationError ? true : false}
-          />
-        )}
+        <MessageModal
+          message={registrationError}
+          handleCancel={() => setRegistrationError("")}
+          isModalVisible={registrationError ? true : false}
+          header="Registration Failed"
+          type="error"
+        />
+        <MessageModal
+          message={
+            "please check your email for the verification code and finish setting up your account."
+          }
+          handleCancel={handleCloseSuccesModal}
+          isModalVisible={isRegistrationSuccessful}
+          header="Email Sent!"
+          type="success"
+        />
       </ScrollView>
     </Screen>
   );

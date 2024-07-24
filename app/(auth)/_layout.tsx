@@ -6,19 +6,21 @@ import { family } from "@/src/Theme/Font";
 import HeaderIcon from "@/src/Components/Navigation/HeaderIcon/HeaderIcon";
 import { stackAnimation } from "@/src/Components/Navigation/Utils/Constants";
 import { dark, light, pureWhite } from "@/src/Theme/Colors";
+import StackWrapper from "@/src/HOCs/StackWrapper";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 const AuthStack = () => {
   const router = useRouter();
-  const colorScheme = useColorScheme();
+  const theme = useAppSelector((state)=>state.theme.value)
   return (
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: colorScheme === "dark" ? "black" : pureWhite,
+          backgroundColor: theme === "light" ?pureWhite: "black" 
         },
         headerTitleStyle: {
           fontFamily: family,
-          color: colorScheme === "dark" ? dark.text : light.text,
+          color: theme === "light" ? light.text : dark.text,
         },
         headerTitleAlign: "center",
         headerLeft: () => (
@@ -49,10 +51,9 @@ const AuthStack = () => {
         name="verification/[id]"
         options={{
           title: "",
-          animation: stackAnimation,
           headerStyle: {
             backgroundColor:
-              colorScheme === "dark" ? dark.background : light.background,
+              theme === "light" ? light.background : dark.background,
           },
         }}
       />
@@ -60,10 +61,9 @@ const AuthStack = () => {
         name="forgotPassword"
         options={{
           title: "",
-          animation: stackAnimation,
           headerStyle: {
             backgroundColor:
-              colorScheme === "dark" ? dark.background : light.background,
+              theme === "light" ? light.background : dark.background,
           },
         }}
       />
@@ -71,10 +71,9 @@ const AuthStack = () => {
         name="resetPassword/[id]"
         options={{
           title: "",
-          animation: stackAnimation,
           headerStyle: {
             backgroundColor:
-              colorScheme === "dark" ? dark.background : light.background,
+              theme === "light" ? light.background : dark.background,
           },
         }}
       />
@@ -82,4 +81,4 @@ const AuthStack = () => {
   );
 };
 
-export default AuthStack;
+export default StackWrapper(AuthStack);

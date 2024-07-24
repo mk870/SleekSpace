@@ -1,17 +1,18 @@
 import React from "react";
 import { Tabs, useSegments } from "expo-router";
-import { StyleSheet, useColorScheme } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { family, large } from "@/src/Theme/Font";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
-import { dark, light, pureWhite, white } from "@/src/Theme/Colors";
+import { dark, light, primary, pureWhite, white } from "@/src/Theme/Colors";
 import { tabsMenu } from "@/src/Utils/Constants";
 import TabsIcons from "@/src/Components/TabsIcons/TabsIcons";
 import TabsLabels from "@/src/Components/TabsLabels/TabsLabels";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import StackWrapper from "@/src/HOCs/StackWrapper";
 
 const TabsLayout = () => {
-  const theme = useAppSelector((state)=>state.theme.value)
+  const theme = useAppSelector((state) => state.theme.value);
   const segments = useSegments();
   return (
     <Screen>
@@ -25,17 +26,17 @@ const TabsLayout = () => {
           },
           headerTitleAlign: "center",
           headerStyle: {
-            backgroundColor: theme === "light" ?  pureWhite:dark.background ,
+            backgroundColor: theme === "light" ? pureWhite : dark.background,
           },
           tabBarStyle: [
             styles.tabStyles,
             {
-              backgroundColor: theme === "light" ? pureWhite:dark.background ,
-              borderTopColor: theme === "light" ? pureWhite:dark.darkGray,
+              backgroundColor: theme === "light" ? pureWhite : dark.background,
+              borderTopColor: theme === "light" ? pureWhite : dark.darkGray,
             },
           ],
           tabBarInactiveTintColor: theme === "light" ? light.text : white,
-          tabBarActiveTintColor: theme === "light" ? pureWhite : white,
+          tabBarActiveTintColor: primary,
           tabBarLabelPosition: "below-icon",
         }}
       >
@@ -52,18 +53,18 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="search"
+          name="chats"
           options={{
-            title: tabsMenu.search,
+            title: tabsMenu.chats,
             tabBarIcon: ({ color, focused }) => (
               <TabsIcons
                 focused={focused}
                 color={color}
-                name={tabsMenu.search}
+                name={tabsMenu.chats}
               />
             ),
             tabBarLabel: ({ focused }) => (
-              <TabsLabels focused={focused} textItem={tabsMenu.search} />
+              <TabsLabels focused={focused} textItem={tabsMenu.chats} />
             ),
           }}
         />
@@ -101,8 +102,10 @@ const TabsLayout = () => {
             tabBarStyle: [
               styles.tabStyles,
               {
-                backgroundColor: theme === "light" ? pureWhite : dark.background,
+                backgroundColor:
+                  theme === "light" ? pureWhite : dark.background,
                 borderTopColor: theme === "light" ? pureWhite : dark.darkGray,
+                display: segments[3] === undefined ? "flex" : "none",
               },
             ],
             tabBarIcon: ({ color, focused }) => (
@@ -117,12 +120,23 @@ const TabsLayout = () => {
             ),
           }}
         />
+        <Tabs.Screen
+          name="search"
+          options={{
+            title: "none",
+            href: null,
+            headerShown: false,
+            tabBarStyle: {
+              display: "none",
+            },
+          }}
+        />
       </Tabs>
     </Screen>
   );
 };
 
-export default TabsLayout;
+export default StackWrapper(TabsLayout);
 
 const styles = StyleSheet.create({
   tabStyles: {
