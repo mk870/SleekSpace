@@ -82,6 +82,9 @@ const ProfileUpdate: INoPropsReactComponent = () => {
   const handleUpdate = () => {
     if (isPhoneNumberValid && isWhatsAppNumberValid) {
       console.log(phoneNumberDetails,whatsAppNumberDetails,location)
+      if(typeof location === "string"){
+        
+      }
       setLocation("")
       setIsLoading(true);
       // updateMutation.mutate({
