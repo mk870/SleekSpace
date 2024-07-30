@@ -7,6 +7,7 @@ import { dark, gray, light, primary, red } from "@/src/Theme/Colors";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import { family, medium, small } from "@/src/Theme/Font";
 import Row from "../../Row/Row";
+import { getLocation, shortenString } from "@/src/Utils/Funcs";
 
 type Props = {
   suggestions: ISearchLocation[] | null;
@@ -26,9 +27,8 @@ const SuggestedLocations: React.FC<Props> = ({
   const theme = useAppSelector((state) => state.theme.value);
   const handleLocationPress = (location: ISearchLocation) => {
     setLocation(location);
-    setTextInputValue(location.display_name);
+    setTextInputValue(getLocation(location));
     setOpenSuggestions(false);
-    console.log(location.lat, location.lon);
   };
   return (
     <View style={styles.container}>

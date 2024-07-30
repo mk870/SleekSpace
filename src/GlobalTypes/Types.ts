@@ -43,5 +43,5 @@ type IAddress = {
   country_code: string;
   county: string;
   state: string;
-  suburb: string;
+  surburb: string;
 };

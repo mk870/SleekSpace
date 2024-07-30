@@ -31,9 +31,23 @@ const ProfileLayout = () => {
         }}
       />
       <Stack.Screen
+        name="profile/contacts"
+        options={{
+          headerTitle: "Contacts",
+          headerTitleAlign: "center",
+        }}
+      />
+      <Stack.Screen
+        name="profile/location"
+        options={{
+          headerTitle: "Location",
+          headerTitleAlign: "center",
+        }}
+      />
+      <Stack.Screen
         name="profile/update"
         options={{
-          headerTitle: "Profile Update",
+          headerTitle: "Profile Updates",
           headerTitleAlign: "center",
         }}
       />

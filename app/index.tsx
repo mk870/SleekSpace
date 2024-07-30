@@ -55,6 +55,7 @@ const index = () => {
                   })
                   .then((res) => {
                     setUserData(res.data.response);
+                    dispatch(addAccessToken(res.data.response.accessToken));
                   })
                   .catch((error) => {
                     if (error.response?.data?.error !== "") {
