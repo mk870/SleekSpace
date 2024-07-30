@@ -1,15 +1,17 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
-import axios from "axios";
 import { FontAwesome } from "@expo/vector-icons";
+import { useMutation } from "@tanstack/react-query";
 
 import { primary } from "@/src/Theme/Colors";
 import Row from "../Row/Row";
-import RegularText from "../RegularText/RegularText";
-import { IReverseLocation, ISearchLocation } from "@/src/GlobalTypes/Types";
+import { ISearchLocation } from "@/src/GlobalTypes/Types";
 import MessageModal from "../Modals/MessageModal";
 import ButtonSpinner from "../Spinners/ButtonSpinner";
+import { locationReverseGeoCodingHttpFunc } from "@/src/HttpServices/Mutations/LocationHttpFunctions";
+import { numberToString } from "@/src/Utils/Funcs";
+import ThemedText from "../ThemedText/ThemedText";
 
 type Props = {
   setLocation: React.Dispatch<React.SetStateAction<string | ISearchLocation>>;
@@ -21,8 +23,42 @@ const MyCurrentLocation: React.FC<Props> = ({ setLocation }) => {
   const [locationDeviceError, setLocationDeviceError] =
     useState<boolean>(false);
   const [locationHttpError, setLocationHttpError] = useState<string>("");
+
+  const reverseGeocodingMutation = useMutation({
+    mutationFn: locationReverseGeoCodingHttpFunc,
+    onSuccess: (res) => {
+      let currentLocation: ISearchLocation = {
+        address: res.data.response.address,
+        boundingbox: res.data.response.boundingbox,
+        class: "",
+        display_address: "",
+        display_name: res.data.response.display_name,
+        display_place: res.data.response.display_name.split(",")[0],
+        lat: res.data.response.lat,
+        licence: res.data.response.licence,
+        lon: res.data.response.lon,
+        osm_id: res.data.response.osm_id,
+        osm_type: res.data.response.osm_type,
+        place_id: res.data.response.place_id,
+        type: "",
+      };
+      setLocation(currentLocation);
+    },
+    onError: (error: any) => {
+      console.log(error);
+      if (error.response?.data?.error !== "") {
+        setLocationHttpError(error.response?.data?.error);
+      } else setLocationHttpError("Something went wrong");
+    },
+    onSettled: () => {
+      setIsLoading(false);
+      setGetDeviceLocation(false);
+    },
+  });
+
   useEffect(() => {
     if (getDeviceLocation) {
+      setIsLoading(true);
       (async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
@@ -30,49 +66,24 @@ const MyCurrentLocation: React.FC<Props> = ({ setLocation }) => {
           return;
         }
         let location = await Location.getCurrentPositionAsync({});
-        setIsLoading(true);
-        const reverseUrl = `https://api.locationiq.com/v1/reverse.php?key=pk.5bd5d6c9527e29a965f843c398289678&lat=${location.coords.latitude}&lon=${location.coords.longitude}&format=json`;
-        axios
-          .get<IReverseLocation>(reverseUrl)
-          .then((res) => {
-            let currentLocation: ISearchLocation = {
-              address: res.data.address,
-              boundingbox: res.data.boundingbox,
-              class: "",
-              display_address: "",
-              display_name: res.data.display_name,
-              display_place: "",
-              lat: res.data.lat,
-              licence: res.data.licence,
-              lon: res.data.lon,
-              osm_id: res.data.osm_id,
-              osm_type: res.data.osm_type,
-              place_id: res.data.place_id,
-              type: "",
-            };
-            setLocation(currentLocation);
-          })
-          .catch((error) => {
-            console.log(error);
-            if (error.response?.data?.error !== "") {
-              setLocationHttpError(error.response?.data?.error);
-            } else setLocationHttpError("Something went wrong");
-          })
-          .finally(() => {
-            setIsLoading(false);
-            setGetDeviceLocation(false);
-          });
+        reverseGeocodingMutation.mutate({
+          lat: numberToString(location.coords.latitude),
+          lon: numberToString(location.coords.longitude),
+        });
       })();
     }
   }, [getDeviceLocation]);
+
   const handleCancelDeviceError = () => {
     setGetDeviceLocation(false);
     setLocationDeviceError(false);
   };
+
   const handleCancelHttpError = () => {
     setGetDeviceLocation(false);
     setLocationHttpError("");
   };
+  
   return (
     <View>
       <TouchableOpacity
@@ -84,7 +95,7 @@ const MyCurrentLocation: React.FC<Props> = ({ setLocation }) => {
         ) : (
           <Row style={styles.row}>
             <FontAwesome name="location-arrow" size={24} color={primary} />
-            <RegularText>use current location</RegularText>
+            <ThemedText type="regular">use current location</ThemedText>
           </Row>
         )}
       </TouchableOpacity>

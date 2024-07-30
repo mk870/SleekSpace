@@ -6,9 +6,8 @@ const user: IUser = {
   givenName: "",
   familyName: "",
   avatar: "",
-  contactNumber: "",
-  whatsAppNumber: "",
-  location: "",
+  contactNumbers: [],
+  location: null,
   id: 0,
   accessToken:""
 };
@@ -48,16 +47,10 @@ export const userSlice = createSlice({
         avatar: action.payload,
       };
     },
-    addWhatsAppNumber: (state, action) => {
+    addContactNumbers: (state, action) => {
       state.value = {
         ...state.value,
-        whatsAppNumber: action.payload,
-      };
-    },
-    addContactNumber: (state, action) => {
-      state.value = {
-        ...state.value,
-        contactNumber: action.payload,
+        contactNumbers: action.payload,
       };
     },
     addLocation: (state, action) => {
@@ -80,9 +73,8 @@ export const {
   addFamilyName,
   addUserId,
   addAvatar,
-  addContactNumber,
+  addContactNumbers,
   addLocation,
-  addWhatsAppNumber,
   addAccessToken
 } = userSlice.actions;
 export default userSlice.reducer;

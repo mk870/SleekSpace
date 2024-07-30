@@ -4,13 +4,12 @@ import { useAppDispatch } from "@/src/Redux/Hooks/Config";
 import {
   addAccessToken,
   addAvatar,
-  addContactNumber,
+  addContactNumbers,
   addEmailAddress,
   addFamilyName,
   addGivenName,
   addLocation,
   addUserId,
-  addWhatsAppNumber,
 } from "@/src/Redux/Slices/UserSlice/User";
 
 const useUpdateUser = (user: IUser | null) => {
@@ -22,8 +21,7 @@ const useUpdateUser = (user: IUser | null) => {
       dispatch(addGivenName(user.givenName));
       dispatch(addUserId(user.id));
       dispatch(addLocation(user.location));
-      dispatch(addWhatsAppNumber(user.whatsAppNumber));
-      dispatch(addContactNumber(user.contactNumber));
+      dispatch(addContactNumbers(user.contactNumbers));
       dispatch(addAvatar(user.avatar))
       dispatch(addAccessToken(user.accessToken))
     }

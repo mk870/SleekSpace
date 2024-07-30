@@ -1,5 +1,8 @@
 import * as SecureStore from "expo-secure-store";
 
+import { ISearchLocation } from "../GlobalTypes/Types";
+import { IContactNumber, ILocation } from "../Redux/Slices/UserSlice/Type/Type";
+
 export const saveSecureValue = async (key: string, value: string) => {
   await SecureStore.setItemAsync(key, value);
 };
@@ -76,4 +79,106 @@ export const processLocalQueryParam = (
   queryParam: string | string[] | undefined
 ) => {
   return queryParam ? (Array.isArray(queryParam) ? "" : queryParam) : "";
+};
+
+export const getContactNumber = (
+  type: "whatsapp" | "phone",
+  contactNumbers: IContactNumber[]
+) => {
+  if (contactNumbers && contactNumbers.length > 0) {
+    const contact = contactNumbers.filter((number) => number.type === type);
+    return "+" + contact[0].countryCode + contact[0].number;
+  } else return "";
+};
+
+export const getLocationFromUserData = (location: ILocation | null) => {
+  let result = "";
+  if (location) {
+    if (location.displayName) return location.displayName;
+    else if (location.city)
+      return result + location.city + ", " + location.country;
+    else return shortenString(location.displayName, 20);
+  } else return "";
+};
+
+export const getLocation = (
+  location: ISearchLocation,
+  doNotShorten?: boolean
+) => {
+  let result = "";
+  if (location) {
+    if (location.display_place && location.address.city)
+      return result + location.display_place + ", " + location.address.city;
+    else if (!location.display_place && location.address.city)
+      return doNotShorten
+        ? result + location.address.city + ", " + location.address.country
+        : shortenString(
+            result + location.address.city + ", " + location.address.country,
+            20
+          );
+    else if (
+      location.display_place &&
+      !location.address.city &&
+      location.address.state
+    )
+      return doNotShorten
+        ? result + location.display_place + ", " + location.address.state
+        : shortenString(
+            result + location.display_place + ", " + location.address.state,
+            20
+          );
+    else if (
+      location.display_place &&
+      !location.address.city &&
+      location.address.county &&
+      !location.address.state
+    )
+      return doNotShorten
+        ? result + location.display_place + ", " + location.address.county
+        : shortenString(
+            result + location.display_place + ", " + location.address.county,
+            20
+          );
+    else
+      return doNotShorten
+        ? location.display_name
+        : shortenString(location.display_name, 20);
+  } else return "";
+};
+
+export const convertLocationToSearchableFormat: (
+  location: ILocation
+) => ISearchLocation = (location: ILocation) => {
+  return {
+    display_address: "",
+    display_name: location.displayName,
+    display_place: "",
+    lat: location.lat,
+    licence: "",
+    lon: location.lon,
+    osm_id: "",
+    osm_type: "",
+    place_id: "",
+    class: "",
+    boundingbox: location.boundingbox ? location.boundingbox : [],
+    type: "",
+    address: {
+      city: location.city,
+      country: location.country,
+      country_code: location.countryCode,
+      county: location.county,
+      state: location.province,
+      surburb: location.surburb,
+    },
+  };
+};
+
+export const handleLayout = (
+  event: {
+    nativeEvent: { layout: { height: any } };
+  },
+  setViewHeight: React.Dispatch<React.SetStateAction<number>>
+) => {
+  const { height } = event.nativeEvent.layout;
+  setViewHeight(height);
 };

@@ -17,7 +17,7 @@ import InputField from "@/src/Components/InputField/InputField";
 import { INoPropsReactComponent, IStringOrNull } from "@/src/GlobalTypes/Types";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { family, small } from "@/src/Theme/Font";
-import { red, dark, light } from "@/src/Theme/Colors";
+import { red, dark, light, primary } from "@/src/Theme/Colors";
 import ButtonSpinner from "@/src/Components/Spinners/ButtonSpinner";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import {
@@ -167,7 +167,7 @@ const Verification: INoPropsReactComponent = () => {
           </ThemedText>
           <InputField
             width={"100%"}
-            height={40}
+            height={50}
             handleOnChangeText={(e) => setVerificationCode(e)}
             textValue={verificationCode}
             label="Code"
@@ -181,18 +181,14 @@ const Verification: INoPropsReactComponent = () => {
           <TouchableOpacity
             onPress={handleResendCode}
             disabled={isVerificationLoading || isResendLoading ? true : false}
-            style={[
-              styles.linkContainer,
-              {
-                backgroundColor:
-                  theme === "dark" ? dark.darkGray : light.darkGray,
-              },
-            ]}
+            style={
+              styles.linkContainer
+            }
           >
             {isResendLoading ? (
               <ButtonSpinner />
             ) : (
-              <ThemedText type="regular">Resend Code</ThemedText>
+              <Text style={styles.resendText}>Resend Code</Text>
             )}
           </TouchableOpacity>
           <View style={styles.btnWrapper}>
@@ -226,7 +222,7 @@ const Verification: INoPropsReactComponent = () => {
           message={
             processedIsNewUser === "no"
               ? "your verification was successful, you may continue."
-              : "congradulations, your account has been successfully created, welcome to Sleek Space."
+              : "congratulations, your account has been successfully created, welcome to Sleek Space."
           }
           type="success"
           header={
@@ -256,6 +252,11 @@ const styles = StyleSheet.create({
     fontFamily: family,
     fontSize: small,
     marginTop: -5,
+  },
+  resendText: {
+    color: primary,
+    fontFamily: family,
+    fontSize: small,
   },
   linkContainer: {
     paddingVertical: 8,
