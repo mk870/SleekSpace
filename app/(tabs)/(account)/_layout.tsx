@@ -39,10 +39,9 @@ const AccountLayout = () => {
         }}
       />
       <Stack.Screen
-        name="account/manager"
+        name="account/(manager)"
         options={{
-          headerTitle: "Property Manager Account",
-          headerTitleAlign: "center",
+          headerShown: false
         }}
       />
       <Stack.Screen

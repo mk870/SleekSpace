@@ -37,6 +37,24 @@ export type IReverseLocation = {
   place_id: string;
 };
 
+export type IManagerAccount = {
+  id?: number;
+  userId: number;
+  name: string;
+  email: string;
+  avatar: string;
+  contacts: IManagerContactNumber[];
+};
+
+export type IManagerContactNumber = {
+  id?: number;
+  managerId?: number;
+  number: string;
+  type: "whatsapp" | "phone";
+  countryCode: string;
+  countryAbbrv: string;
+};
+
 type IAddress = {
   city: string;
   country: string;
