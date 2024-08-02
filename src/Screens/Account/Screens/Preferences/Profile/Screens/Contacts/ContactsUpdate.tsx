@@ -1,16 +1,9 @@
-import {
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
 
-import {
-  INoPropsReactComponent,
-} from "@/src/GlobalTypes/Types";
+import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
@@ -22,13 +15,8 @@ import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { family } from "@/src/Theme/Font";
 import { IPhoneNumberDetails } from "../Types";
-import {
-  getContactNumber,
-  handleLayout,
-} from "@/src/Utils/Funcs";
-import {
-  updateAndCreateContactNumberHttpFunc,
-} from "@/src/HttpServices/Mutations/ContactNumberHttpFuncs";
+import { getContactNumber, handleLayout } from "@/src/Utils/Funcs";
+import { updateAndCreateContactNumberHttpFunc } from "@/src/HttpServices/Mutations/ContactNumberHttpFuncs";
 import { SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
 import { fetchUserData } from "../../Hooks/fetchUser";
 
@@ -181,9 +169,11 @@ const ProfileUpdate: INoPropsReactComponent = () => {
               phoneNumberDetails={phoneNumberDetails}
             />
             {!isPhoneNumberValid && (
-              <Text style={styles.errorText}>
-                this number is not valid in this country
-              </Text>
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>
+                  this number is not valid in this country
+                </Text>
+              </View>
             )}
             <PhoneNumberField
               setPhoneNumberDetails={setWhatsAppNumberDetails}
@@ -194,9 +184,11 @@ const ProfileUpdate: INoPropsReactComponent = () => {
               phoneNumberDetails={whatsAppNumberDetails}
             />
             {!isWhatsAppNumberValid && (
-              <Text style={styles.errorText}>
-                this number is not valid in this country
-              </Text>
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>
+                  this number is not valid in this country
+                </Text>
+              </View>
             )}
           </View>
           <View
@@ -205,7 +197,7 @@ const ProfileUpdate: INoPropsReactComponent = () => {
                 width: width > SCREEN_BREAK_POINT ? 600 : "100%",
                 height: height - viewHeight - 100,
               },
-              styles.btnContainer
+              styles.btnContainer,
             ]}
           >
             <CustomButton
@@ -255,8 +247,14 @@ const styles = StyleSheet.create({
     marginTop: -19,
   },
   row: { width: "100%", justifyContent: "space-between", marginTop: -10 },
-  btnContainer:{
+  errorContainer: {
+    width: "100%",
+    justifyContent: "center",
+    flexDirection: "column",
+    marginTop: -1,
+  },
+  btnContainer: {
     justifyContent: "flex-end",
     paddingBottom: 20,
-  }
+  },
 });

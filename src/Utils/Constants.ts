@@ -17,6 +17,7 @@ export const tabsMenu = {
 };
 
 export const SCREEN_BREAK_POINT = 700
+export const BUTTON_MAX_WIDTH = 400
 
 export const endpoints = {
   login: `${backEndUrl}/login`,
@@ -32,6 +33,8 @@ export const endpoints = {
   locationReverseGeoCoding: `${backEndUrl}/location/reverse-geocoding`,
   locationCreationAndUpdate: `${backEndUrl}/location`,
   contactNumberCreationAndUpdate: `${backEndUrl}/contact-number`,
+  getManagerAccountByUserId: `${backEndUrl}/manager/user/`,
+  postDeleteAndGetManagerAccountById: `${backEndUrl}/manager`,
 };
 export const emptyLocation: ISearchLocation = {
   display_address: "",

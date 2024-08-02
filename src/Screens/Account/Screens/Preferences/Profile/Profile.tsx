@@ -13,7 +13,7 @@ import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
-import Avatar from "./Components/Avatar/Avatar";
+import Avatar from "../../../../../Components/Avatar/Avatar";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { dark, light, primary, red } from "@/src/Theme/Colors";
 import { styles } from "./Styles";
@@ -26,7 +26,7 @@ import {
   saveSecureValue,
   shortenString,
 } from "@/src/Utils/Funcs";
-import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
+import { BUTTON_MAX_WIDTH, expoSecureValueKeyNames, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
 import ButtonSpinner from "@/src/Components/Spinners/ButtonSpinner";
 import { addAccessToken } from "@/src/Redux/Slices/UserSlice/User";
 import SigninAndSignupBtn from "@/src/Components/SigninAndSignupBtns/SigninAndSignupBtn";
@@ -44,6 +44,7 @@ const Profile: INoPropsReactComponent = () => {
     location,
     id,
     accessToken,
+    avatar
   } = useAppSelector((state) => state.user.value);
   const theme = useAppSelector((state) => state.theme.value);
   const [resetLoader, setResetLoader] = useState<boolean>(false);
@@ -111,8 +112,8 @@ const Profile: INoPropsReactComponent = () => {
     },
     onError(error: any) {
       if (error.response?.data?.error !== "") {
-        setResetPasswordError(error.response?.data?.error);
-      } else setResetPasswordError("Something went wrong");
+        setdeleteAccountError(error.response?.data?.error);
+      } else setdeleteAccountError("Something went wrong");
     },
     onSettled: () => {
       setDeleteAccountLoader(false);
@@ -163,7 +164,7 @@ const Profile: INoPropsReactComponent = () => {
         {accessToken && (
           <View style={styles.container}>
             <View style={styles.userDetails}>
-              <Avatar />
+              <Avatar avatar={avatar} />
               <ThemedText type="header">{`${givenName} ${familyName}`}</ThemedText>
               <Text
                 style={[
@@ -175,7 +176,7 @@ const Profile: INoPropsReactComponent = () => {
               </Text>
             </View>
             <View
-              style={[styles.wrapper, { width: width > 700 ? 600 : "100%" }]}
+              style={[styles.wrapper, { width: width > SCREEN_BREAK_POINT ? 600 : "100%" }]}
             >
               <View style={styles.row}>
                 <Text
@@ -216,7 +217,7 @@ const Profile: INoPropsReactComponent = () => {
             <View
               style={[
                 styles.btnContainer,
-                { width: width > 700 ? 600 : "100%" },
+                { width: width > SCREEN_BREAK_POINT ? BUTTON_MAX_WIDTH : "100%" },
               ]}
             >
               <TouchableOpacity

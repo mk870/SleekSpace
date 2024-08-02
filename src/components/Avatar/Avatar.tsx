@@ -2,15 +2,13 @@ import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 
-import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import { dark, light, primary } from "@/src/Theme/Colors";
 import MediaModal from "@/src/Components/Modals/MediaModal";
 
-const Avatar: INoPropsReactComponent = () => {
+const Avatar: React.FC<{avatar: string}> = ({avatar}) => {
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const theme = useAppSelector((state) => state.theme.value);
-  const { avatar } = useAppSelector((state) => state.user.value);
   return (
     <View style={styles.container}>
       <Image

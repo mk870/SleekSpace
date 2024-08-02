@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 
-import { ISearchLocation } from "../GlobalTypes/Types";
+import { IManagerContactNumber, ISearchLocation } from "../GlobalTypes/Types";
 import { IContactNumber, ILocation } from "../Redux/Slices/UserSlice/Type/Type";
 
 export const saveSecureValue = async (key: string, value: string) => {
@@ -88,6 +88,36 @@ export const getContactNumber = (
   if (contactNumbers && contactNumbers.length > 0) {
     const contact = contactNumbers.filter((number) => number.type === type);
     return "+" + contact[0].countryCode + contact[0].number;
+  } else return "";
+};
+
+export const getManagerContactNumber = (
+  contacts: IManagerContactNumber[],
+  type: "phone" | "whatsapp"
+) => {
+  if (contacts && contacts.length > 0) {
+    const contact = contacts.filter((number) => number.type === type);
+    return "+" + contact[0].countryCode + contact[0].number;
+  } else return "";
+};
+
+export const getManagerContactNumberCountryCode = (
+  contacts: IManagerContactNumber[],
+  type: "phone" | "whatsapp"
+) => {
+  if (contacts && contacts.length > 0) {
+    const contact = contacts.filter((number) => number.type === type);
+    return contact[0].countryCode;
+  } else return "";
+};
+
+export const getManagerContactNumberCountryAbbrv = (
+  contacts: IManagerContactNumber[],
+  type: "phone" | "whatsapp"
+) => {
+  if (contacts && contacts.length > 0) {
+    const contact = contacts.filter((number) => number.type === type);
+    return contact[0].countryAbbrv;
   } else return "";
 };
 

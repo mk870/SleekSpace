@@ -3,7 +3,6 @@ import {
   DimensionValue,
   StyleSheet,
   TextInput,
-  useColorScheme,
   View,
 } from "react-native";
 import React, { useState } from "react";
@@ -13,13 +12,15 @@ import {
   Ionicons,
   Octicons,
   EvilIcons,
+  FontAwesome5,
 } from "@expo/vector-icons";
 
 import { ContentType } from "./Types/Types";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
-import { dark, light } from "@/src/Theme/Colors";
+import { dark, light, red } from "@/src/Theme/Colors";
 import ThemedText from "../ThemedText/ThemedText";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import Row from "../Row/Row";
 
 type Props = {
   width: DimensionValue;
@@ -34,6 +35,7 @@ type Props = {
   isFocused?: boolean;
   backgroundColor?: string;
   borderColor?: string;
+  isRequired?:boolean
 };
 
 const InputField: React.FC<Props> = ({
@@ -49,6 +51,7 @@ const InputField: React.FC<Props> = ({
   backgroundColor,
   handleOnEnter,
   borderColor,
+  isRequired
 }) => {
   const [ispassWordHidden, setIsPassWordHidden] = useState<boolean>(true);
   const iconSize = 20;
@@ -67,7 +70,14 @@ const InputField: React.FC<Props> = ({
   };
   return (
     <View style={styles(width, height, theme).container}>
-      {label && <ThemedText type="regular">{label}</ThemedText>}
+      {label && <Row style={styles(width,height,theme).labelContainer}>
+        <ThemedText type="regular">{label}</ThemedText>
+        {isRequired && (
+          <View style={{ marginTop: 5 }}>
+            <FontAwesome5 name="star-of-life" size={7} color={red} />
+          </View>
+        )}
+        </Row>}
       <View style={styles(width, height, theme).inputWrapper}>
         {type === "emailAddress" && (
           <Fontisto
@@ -180,6 +190,11 @@ const styles = (
       borderRadius: 7,
       gap: 2,
       backgroundColor: theme === "dark" ? dark.background : light.background,
+    },
+    labelContainer: {
+      width: "100%",
+      gap: 5,
+      marginBottom:-3
     },
     inputWrapper: {
       width: width,

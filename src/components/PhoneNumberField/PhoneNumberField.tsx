@@ -1,12 +1,13 @@
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import PhoneInput from "react-native-phone-number-input";
 
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import ThemedText from "../ThemedText/ThemedText";
-import { dark, gray, light, white } from "@/src/Theme/Colors";
+import { dark, gray, light, red, white } from "@/src/Theme/Colors";
 import { IPhoneNumberDetails } from "@/src/Screens/Account/Screens/Preferences/Profile/Screens/Types";
+import Row from "../Row/Row";
 
 type Props = {
   setPhoneNumberDetails: React.Dispatch<
@@ -17,6 +18,7 @@ type Props = {
   isNumberValid: boolean;
   initialValue: string;
   phoneNumberDetails: IPhoneNumberDetails;
+  isRequired?: boolean;
 };
 
 const PhoneNumberField: React.FC<Props> = ({
@@ -26,6 +28,7 @@ const PhoneNumberField: React.FC<Props> = ({
   isNumberValid,
   initialValue,
   phoneNumberDetails,
+  isRequired,
 }) => {
   const [value, setValue] = useState(initialValue);
   const phoneInputRef = useRef<PhoneInput>(null);
@@ -64,9 +67,14 @@ const PhoneNumberField: React.FC<Props> = ({
 
   return (
     <View style={[styles.container, { width: width > 700 ? 600 : "100%" }]}>
-      <View style={styles.labelContainer}>
+      <Row style={styles.labelContainer}>
         <ThemedText type="regular">{label}</ThemedText>
-      </View>
+        {isRequired && (
+          <View style={{ marginTop: 5 }}>
+            <FontAwesome5 name="star-of-life" size={7} color={red} />
+          </View>
+        )}
+      </Row>
       <PhoneInput
         ref={phoneInputRef}
         defaultValue={
@@ -120,6 +128,7 @@ const styles = StyleSheet.create({
   },
   labelContainer: {
     width: "100%",
+    gap: 5,
   },
   textContainer: {
     borderTopRightRadius: 7,
