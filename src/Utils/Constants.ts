@@ -18,6 +18,8 @@ export const tabsMenu = {
 
 export const SCREEN_BREAK_POINT = 700
 export const BUTTON_MAX_WIDTH = 400
+export const BUTTON_SIZE_SCREEN_BREAK_POINT = 500
+export const MAX_INPUT_WIDTH = 600
 
 export const endpoints = {
   login: `${backEndUrl}/login`,
@@ -61,3 +63,6 @@ export const emptyLocation: ISearchLocation = {
 //const searchUrl = `https://api.locationiq.com/v1/search.php?key=pk.5bd5d6c9527e29a965f843c398289678&q=${value}&format=json`;
 export const faceBookAuthClientId = process.env.FACEBOOK_AUTH_CLIENT_ID;
 export const locationIQToken = process.env.LOCATION_IQ_ACCESS_TOKEN;
+export const supabaseApiKey = process.env.SUPABASE_APIKEY
+export const supabaseRefID =  process.env.SUPABASE_REF_ID
+export const supabaseUrl =  process.env.SUPABASE_URL

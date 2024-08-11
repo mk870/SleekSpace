@@ -60,6 +60,20 @@ const UpdateOptions: INoPropsReactComponent = () => {
             </Row>
             <AntDesign name="right" size={iconSize} color={iconColor} />
           </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.pressable]}
+            onPress={() => router.push("/account/profile/picture")}
+          >
+            <Row style={styles.row}>
+              <AntDesign
+                name="picture"
+                size={22}
+                color={theme === "light" ? light.text : dark.text}
+              />
+              <ThemedText type="regular">Profile Picture</ThemedText>
+            </Row>
+            <AntDesign name="right" size={iconSize} color={iconColor} />
+          </TouchableOpacity>
         </View>
       </StackScreen>
     </Screen>

@@ -14,7 +14,7 @@ export const settings: IAccountOptions = [
   {
     name: "Change Password",
     icon: <Ionicons name="lock-closed-outline" size={iconSize} color={iconColor} />,
-    route: "/verification",
+    route: "/resetPassword",
   },
   {
     name: "Theme",

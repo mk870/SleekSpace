@@ -1,7 +1,6 @@
 import {
   StyleSheet,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from "react-native";
 import React from "react";
@@ -23,7 +22,7 @@ const GoogleButton: React.FC<Props> = ({ type, disabled }) => {
       disabled={disabled}
       style={[
         styles.container,
-        { backgroundColor: theme === "light" ? light.darkGray : dark.darkGray },
+        { backgroundColor: theme === "light" ? light.background : dark.darkGray },
       ]}
     >
       <GoogleLogoSVG />

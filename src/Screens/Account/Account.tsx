@@ -6,10 +6,10 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import React, { useState } from "react";
-import LottieView from "lottie-react-native";
+import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
@@ -18,39 +18,28 @@ import { legalities, preferences, settings } from "./AccountOptions/Options";
 import { dark, light, pureWhite } from "@/src/Theme/Colors";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { BUTTON_MAX_WIDTH, BUTTON_SIZE_SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
 
 const Account: INoPropsReactComponent = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const theme = useAppSelector((state) => state.theme.value);
   const router = useRouter();
   const iconSize = 24;
-  const iconColor = "gray";
+  const iconColor = theme === "light" ? light.darkGray : "gray";
   const { width } = useWindowDimensions();
   const onNavigate = (route: string) => {
     router.push(route);
   };
   const handleSignOut = () => {
-    router.push("/login")
-    console.log("signout");
+    router.push("/login");
   };
   return (
     <Screen>
+      <StatusBar style={theme === "light" ? "dark" : "light"} />
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        {/* <View style={styles.lottieContainer}>
-        <LottieView
-          source={require("../../Components/Lotties/user-account.json")}
-          autoPlay
-          loop
-          style={{
-            height: 100,
-            width: 100,
-          }}
-        />
-        </View> */}
-        <View style={[styles.optionsDetailsWrapper,{marginTop:20}]}>
+        <View style={[styles.optionsDetailsWrapper, { marginTop: 20 }]}>
           <Text
             style={[
               styles.headerText,
@@ -63,7 +52,8 @@ const Account: INoPropsReactComponent = () => {
             style={[
               styles.optionsContainer,
               {
-                backgroundColor: theme === "light" ? pureWhite : dark.darkGray,
+                backgroundColor:
+                  theme === "light" ? pureWhite : dark.background,
               },
             ]}
           >
@@ -78,10 +68,9 @@ const Account: INoPropsReactComponent = () => {
                   style={[
                     styles.optionIconText,
                     {
-                      borderBottomWidth:
-                        index === preferences.length - 1 ? 0 : 1,
+                      borderBottomWidth:1,
                       borderBottomColor:
-                        theme === "light" ? dark.background : "gray",
+                        theme === "light" ? light.background : dark.darkGray,
                     },
                   ]}
                 >
@@ -116,7 +105,8 @@ const Account: INoPropsReactComponent = () => {
             style={[
               styles.optionsContainer,
               {
-                backgroundColor: theme === "light" ? pureWhite : dark.darkGray,
+                backgroundColor:
+                  theme === "light" ? pureWhite : dark.background,
               },
             ]}
           >
@@ -131,9 +121,9 @@ const Account: INoPropsReactComponent = () => {
                   style={[
                     styles.optionIconText,
                     {
-                      borderBottomWidth: index === settings.length - 1 ? 0 : 1,
+                      borderBottomWidth: 1,
                       borderBottomColor:
-                        theme === "light" ? dark.background : "gray",
+                        theme === "light" ? light.background : dark.darkGray,
                     },
                   ]}
                 >
@@ -168,7 +158,8 @@ const Account: INoPropsReactComponent = () => {
             style={[
               styles.optionsContainer,
               {
-                backgroundColor: theme === "light" ? pureWhite : dark.darkGray,
+                backgroundColor:
+                  theme === "light" ? pureWhite : dark.background,
               },
             ]}
           >
@@ -186,7 +177,7 @@ const Account: INoPropsReactComponent = () => {
                       borderBottomWidth:
                         index === legalities.length - 1 ? 0 : 1,
                       borderBottomColor:
-                        theme === "light" ? dark.background : "gray",
+                        theme === "light" ? light.background : dark.darkGray,
                     },
                   ]}
                 >
@@ -211,16 +202,12 @@ const Account: INoPropsReactComponent = () => {
         <View
           style={[
             {
-              width: width > 500 ? 400 : "100%",
+              width: width > BUTTON_SIZE_SCREEN_BREAK_POINT ? BUTTON_MAX_WIDTH : "100%",
             },
             styles.btn,
           ]}
         >
-          <CustomButton
-            title={isLoading ? "loading" : "Logout"}
-            onPressFunc={handleSignOut}
-            isDisabled={isLoading}
-          />
+          <CustomButton title={"Logout"} onPressFunc={handleSignOut} />
         </View>
       </ScrollView>
     </Screen>

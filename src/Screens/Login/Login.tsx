@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
 
 import InputField from "../../Components/InputField/InputField";
@@ -21,17 +22,23 @@ import { styles } from "./Styles";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { IUserLogin, IVoidFunc } from "@/src/GlobalTypes/Types";
-import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { dark, light, red } from "@/src/Theme/Colors";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
 import { loginHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
-import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
+import {
+  BUTTON_MAX_WIDTH,
+  BUTTON_SIZE_SCREEN_BREAK_POINT,
+  expoSecureValueKeyNames,
+  MAX_INPUT_WIDTH,
+  SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
-import { StatusBar } from "expo-status-bar";
+import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 
 const Login = () => {
   const { width } = useWindowDimensions();
@@ -49,7 +56,7 @@ const Login = () => {
     useState<boolean>(false);
   const router = useRouter();
   const theme = useAppSelector((state) => state.theme.value);
-  useUpdateUser(userData)
+  useUpdateUser(userData);
   const {
     container,
     inputWrapper,
@@ -61,6 +68,7 @@ const Login = () => {
     linkText,
     forgotPasswordWrapper,
     forgotPasswordText,
+    sectionTwoWrapper,
   } = styles;
 
   const loginMutation = useMutation({
@@ -131,114 +139,133 @@ const Login = () => {
   return (
     <Screen>
       <StatusBar style={theme === "light" ? "dark" : "light"} />
-      <ScrollView
-        style={container}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}
-      >
-        <View style={[inputWrapper, { width: width > 700 ? 600 : "95%" }]}>
-          <ThemedText type="header" styles={{ marginBottom: 10 }}>
-            Welcome back!
-          </ThemedText>
-          <InputField
-            textValue={loginUserData.email}
-            placeHolder="email"
-            width={"100%"}
-            handleOnChangeText={(e) =>
-              setLoginUserData({ ...loginUserData, email: e })
-            }
-            height={50}
-            contentType="emailAddress"
-            type="emailAddress"
-            label="Email"
-            borderColor={isEmailValidationError ? red : undefined}
-          />
-          {isEmailValidationError && (
-            <View style={errorContainer}>
-              <Text style={errorText}>please enter valid email address</Text>
+      <StackScreen>
+        <ScrollView
+          style={container}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+        >
+          <View
+            style={[
+              inputWrapper,
+              { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "95%" },
+            ]}
+          >
+            <ThemedText type="header" styles={{ marginBottom: 10 }}>
+              Welcome back!
+            </ThemedText>
+            <InputField
+              textValue={loginUserData.email}
+              placeHolder="email"
+              width={"100%"}
+              handleOnChangeText={(e) =>
+                setLoginUserData({ ...loginUserData, email: e })
+              }
+              height={50}
+              contentType="emailAddress"
+              type="emailAddress"
+              label="Email"
+              borderColor={isEmailValidationError ? red : undefined}
+            />
+            {isEmailValidationError && (
+              <View style={errorContainer}>
+                <Text style={errorText}>please enter valid email address</Text>
+              </View>
+            )}
+            <InputField
+              textValue={loginUserData.password}
+              placeHolder="password"
+              width={"100%"}
+              handleOnChangeText={(e) =>
+                setLoginUserData({ ...loginUserData, password: e })
+              }
+              height={50}
+              contentType="password"
+              type="password"
+              label="Password"
+              borderColor={isPasswordValidationError ? red : undefined}
+            />
+            <View style={forgotPasswordWrapper}>
+              <TouchableOpacity onPress={() => router.push("/forgotPassword")}>
+                <Text style={forgotPasswordText}>Forgot password?</Text>
+              </TouchableOpacity>
             </View>
-          )}
-          <InputField
-            textValue={loginUserData.password}
-            placeHolder="password"
-            width={"100%"}
-            handleOnChangeText={(e) =>
-              setLoginUserData({ ...loginUserData, password: e })
-            }
-            height={50}
-            contentType="password"
-            type="password"
-            label="Password"
-            borderColor={isPasswordValidationError ? red : undefined}
-          />
-          <View style={forgotPasswordWrapper}>
-            <TouchableOpacity onPress={() => router.push("/forgotPassword")}>
-              <Text style={forgotPasswordText}>Forgot password?</Text>
-            </TouchableOpacity>
-          </View>
-          {isPasswordValidationError && (
-            <View style={errorContainer}>
-              <Text style={guidelineHeaderText}>Password Guideines:</Text>
-              {passwordGuideLines.map((guideline: string) => (
-                <Text key={guideline} style={errorText}>
-                  {guideline}
-                </Text>
-              ))}
-            </View>
-          )}
-          <View style={btnWrapper}>
-            <View style={registerContainer}>
-              <ThemedText type="regular">
-                you don't have an account?{" "}
-              </ThemedText>
-              <TouchableOpacity
-                onPress={() => router.push("/register")}
-                disabled={isLoading}
+            {isPasswordValidationError && (
+              <View style={errorContainer}>
+                <Text style={guidelineHeaderText}>Password Guideines:</Text>
+                {passwordGuideLines.map((guideline: string) => (
+                  <Text key={guideline} style={errorText}>
+                    {guideline}
+                  </Text>
+                ))}
+              </View>
+            )}
+            <View style={sectionTwoWrapper}>
+              <View style={registerContainer}>
+                <ThemedText type="regular">
+                  you don't have an account?{" "}
+                </ThemedText>
+                <TouchableOpacity
+                  onPress={() => router.push("/register")}
+                  disabled={isLoading}
+                  style={[
+                    styles.linkContainer,
+                    {
+                      backgroundColor:
+                        theme === "light" ? light.background : dark.darkGray,
+                    },
+                  ]}
+                >
+                  <Text style={linkText}>Register</Text>
+                </TouchableOpacity>
+              </View>
+              <View
                 style={[
-                  styles.linkContainer,
+                  btnWrapper,
                   {
-                    backgroundColor:
-                      theme === "light" ? light.darkGray : dark.darkGray,
+                    width:
+                      width > BUTTON_SIZE_SCREEN_BREAK_POINT
+                        ? BUTTON_MAX_WIDTH
+                        : "100%",
                   },
                 ]}
               >
-                <Text style={linkText}>Register</Text>
-              </TouchableOpacity>
-            </View>
-            <CustomButton
-              title={isLoading ? "loading" : "Login"}
-              onPressFunc={handlePost}
-              isDisabled={isLoading}
-            />
-            <AuthDivider />
-            <View style={styles.socialsWrapper}>
-              <GoogleButton type="sign_in" disabled={isLoading} />
-              <FacebookButton
-                type="sign_in"
-                disabled={isLoading}
-                handleOnPressFunc={() => console.log("fb")}
-              />
+                <CustomButton
+                  title={isLoading ? "loading" : "Login"}
+                  onPressFunc={handlePost}
+                  isDisabled={isLoading}
+                />
+                <AuthDivider />
+                <View style={styles.socialsWrapper}>
+                  <GoogleButton type="sign_in" disabled={isLoading} />
+                  <FacebookButton
+                    type="sign_in"
+                    disabled={isLoading}
+                    handleOnPressFunc={() => console.log("fb")}
+                  />
+                </View>
+              </View>
             </View>
           </View>
-        </View>
-        <MessageModal
-          handleCancel={() => setLoginError("")}
-          message={loginError}
-          isModalVisible={loginError ? true : false}
-          type="error"
-          header="Login Failed"
-        />
-        <MessageModal
-          handleCancel={handleLoginSuccesModalCancel}
-          message={"welcome back, please enjoy your search."}
-          isModalVisible={loginSuccess}
-          type="success"
-          header="Login Successful"
-        />
-      </ScrollView>
+          <MessageModal
+            handleCancel={() => setLoginError("")}
+            message={loginError}
+            isModalVisible={loginError ? true : false}
+            type="error"
+            header="Login Failed"
+          />
+          <MessageModal
+            handleCancel={handleLoginSuccesModalCancel}
+            message={"welcome back, please enjoy your search."}
+            isModalVisible={loginSuccess}
+            type="success"
+            header="Login Successful"
+          />
+        </ScrollView>
+      </StackScreen>
     </Screen>
   );
 };

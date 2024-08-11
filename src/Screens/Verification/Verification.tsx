@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  useColorScheme,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -17,7 +16,7 @@ import InputField from "@/src/Components/InputField/InputField";
 import { INoPropsReactComponent, IStringOrNull } from "@/src/GlobalTypes/Types";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { family, small } from "@/src/Theme/Font";
-import { red, dark, light, primary } from "@/src/Theme/Colors";
+import { red, primary } from "@/src/Theme/Colors";
 import ButtonSpinner from "@/src/Components/Spinners/ButtonSpinner";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import {
@@ -26,9 +25,16 @@ import {
   verifyCodeForNativeUserRegistrationHttpFunc,
 } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
 import { processLocalQueryParam, saveSecureValue } from "@/src/Utils/Funcs";
-import { expoSecureValueKeyNames } from "@/src/Utils/Constants";
+import {
+  BUTTON_MAX_WIDTH,
+  BUTTON_SIZE_SCREEN_BREAK_POINT,
+  expoSecureValueKeyNames,
+  MAX_INPUT_WIDTH,
+  SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
+import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 
 const Verification: INoPropsReactComponent = () => {
   const { id, isNewUser } = useLocalSearchParams();
@@ -46,7 +52,6 @@ const Verification: INoPropsReactComponent = () => {
   const [isResendLoading, setIsResendLoading] = useState<boolean>(false);
   const [typingError, setTypingError] = useState<IStringOrNull>(null);
   const [httpError, setHttpError] = useState<string>("");
-  const theme = useColorScheme();
   const { width } = useWindowDimensions();
 
   useUpdateUser(userData);
@@ -151,88 +156,104 @@ const Verification: INoPropsReactComponent = () => {
   };
   return (
     <Screen>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}
-      >
-        <View style={[styles.container, { width: width > 700 ? 600 : "100%" }]}>
-          <ThemedText type="header" styles={{ textAlign: "center" }}>
-            Code Verification
-          </ThemedText>
-          <ThemedText type="regular">
-            Please enter your verification code
-          </ThemedText>
-          <InputField
-            width={"100%"}
-            height={50}
-            handleOnChangeText={(e) => setVerificationCode(e)}
-            textValue={verificationCode}
-            label="Code"
-            type="number"
-            handleOnEnter={handleVerification}
-            contentType="none"
-            placeHolder=""
-            borderColor={typingError ? red : undefined}
-          />
-          {typingError && <Text style={styles.errorText}>{typingError}</Text>}
-          <TouchableOpacity
-            onPress={handleResendCode}
-            disabled={isVerificationLoading || isResendLoading ? true : false}
-            style={
-              styles.linkContainer
-            }
+      <StackScreen>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+        >
+          <View
+            style={[
+              styles.container,
+              { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
+            ]}
           >
-            {isResendLoading ? (
-              <ButtonSpinner />
-            ) : (
-              <Text style={styles.resendText}>Resend Code</Text>
-            )}
-          </TouchableOpacity>
-          <View style={styles.btnWrapper}>
-            <CustomButton
-              title={isVerificationLoading ? "loading" : "Verify"}
-              onPressFunc={handleVerification}
-              isDisabled={
-                isVerificationLoading || isResendLoading ? true : false
-              }
+            <ThemedText
+              type="header"
+              styles={{ textAlign: "center", marginTop: 10 }}
+            >
+              Code Verification
+            </ThemedText>
+            <ThemedText type="regular">
+              Please enter your verification code
+            </ThemedText>
+            <InputField
+              width={"100%"}
+              height={50}
+              handleOnChangeText={(e) => setVerificationCode(e)}
+              textValue={verificationCode}
+              label="Code"
+              type="number"
+              handleOnEnter={handleVerification}
+              contentType="none"
+              placeHolder=""
+              borderColor={typingError ? red : undefined}
             />
+            {typingError && <Text style={styles.errorText}>{typingError}</Text>}
+            <TouchableOpacity
+              onPress={handleResendCode}
+              disabled={isVerificationLoading || isResendLoading ? true : false}
+              style={styles.linkContainer}
+            >
+              {isResendLoading ? (
+                <ButtonSpinner />
+              ) : (
+                <Text style={styles.resendText}>Resend Code</Text>
+              )}
+            </TouchableOpacity>
+            <View style={[
+                styles.btnWrapper,
+                {
+                  width:
+                    width > BUTTON_SIZE_SCREEN_BREAK_POINT
+                      ? BUTTON_MAX_WIDTH
+                      : "100%",
+                },
+              ]}>
+              <CustomButton
+                title={isVerificationLoading ? "loading" : "Verify"}
+                onPressFunc={handleVerification}
+                isDisabled={
+                  isVerificationLoading || isResendLoading ? true : false
+                }
+              />
+            </View>
           </View>
-        </View>
-        {httpError && (
+          {httpError && (
+            <MessageModal
+              handleCancel={handleAlertCancel}
+              message={httpError}
+              isModalVisible={httpError ? true : false}
+              type="error"
+              header="Server Error"
+            />
+          )}
           <MessageModal
-            handleCancel={handleAlertCancel}
-            message={httpError}
-            isModalVisible={httpError ? true : false}
-            type="error"
-            header="Server Error"
+            isModalVisible={showResendVerificationCodeSuccess}
+            message="please check your email for verification code"
+            type="success"
+            header="Email Sent!"
+            handleCancel={() => setShowResendVerificationCodeSuccess(false)}
           />
-        )}
-        <MessageModal
-          isModalVisible={showResendVerificationCodeSuccess}
-          message="please check your email for verification code"
-          type="success"
-          header="Email Sent!"
-          handleCancel={() => setShowResendVerificationCodeSuccess(false)}
-        />
-        <MessageModal
-          isModalVisible={isVerificationSuccessful}
-          message={
-            processedIsNewUser === "no"
-              ? "your verification was successful, you may continue."
-              : "congratulations, your account has been successfully created, welcome to Sleek Space."
-          }
-          type="success"
-          header={
-            processedIsNewUser === "no"
-              ? "Verification Successful!"
-              : "Account Created!"
-          }
-          handleCancel={handleSuccessModalClose}
-        />
-      </ScrollView>
+          <MessageModal
+            isModalVisible={isVerificationSuccessful}
+            message={
+              processedIsNewUser === "no"
+                ? "your verification was successful, you may continue."
+                : "congratulations, your account has been successfully created, welcome to Sleek Space."
+            }
+            type="success"
+            header={
+              processedIsNewUser === "no"
+                ? "Verification Successful!"
+                : "Account Created!"
+            }
+            handleCancel={handleSuccessModalClose}
+          />
+        </ScrollView>
+      </StackScreen>
     </Screen>
   );
 };
@@ -272,5 +293,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
+    alignSelf:"center"
   },
 });

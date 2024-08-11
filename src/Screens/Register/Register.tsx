@@ -28,8 +28,15 @@ import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookBut
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
 import { nativeRegisterHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
 import { IUserRegistrationData } from "./Types";
-import { faceBookAuthClientId } from "@/src/Utils/Constants";
+import {
+  BUTTON_MAX_WIDTH,
+  BUTTON_SIZE_SCREEN_BREAK_POINT,
+  faceBookAuthClientId,
+  MAX_INPUT_WIDTH,
+  SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 
 const Register = () => {
   const [signUpData, setSignUpData] = useState<IUserRegistrationData>({
@@ -242,140 +249,163 @@ const Register = () => {
     guidelineHeaderText,
     registerContainer,
     registerLink,
+    sectionTwoWrapper,
+    socialsWrapper,
   } = styles;
   const { width } = useWindowDimensions();
   return (
     <Screen>
-      <ScrollView
-        style={container}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}
-      >
-        <View style={[inputWrapper, { width: width > 700 ? 600 : "95%" }]}>
-          <ThemedText type="header">Registration</ThemedText>
-          <InputField
-            textValue={signUpData.givenName}
-            placeHolder="given name"
-            width={"100%"}
-            handleOnChangeText={handleOnChangeFirstName}
-            height={50}
-            contentType="givenName"
-            type="givenName"
-            label="Given Name"
-            borderColor={isGivenNameValidationError ? red : undefined}
-          />
-          {isGivenNameValidationError && (
-            <View style={errorContainer}>
-              <Text style={errorText}>please enter atleast 4 characters</Text>
-            </View>
-          )}
-          <InputField
-            textValue={signUpData.familyName}
-            placeHolder="family name"
-            width={"100%"}
-            handleOnChangeText={handleOnChangeLastName}
-            height={50}
-            contentType="familyName"
-            type="familyName"
-            label="Family Name"
-            borderColor={isFamilyNameValidationError ? red : undefined}
-          />
-          {isFamilyNameValidationError && (
-            <View style={errorContainer}>
-              <Text style={errorText}>please enter atleast 4 characters</Text>
-            </View>
-          )}
-          <InputField
-            textValue={signUpData.email}
-            placeHolder="email"
-            width={"100%"}
-            handleOnChangeText={handleOnChangeEmail}
-            height={50}
-            contentType="emailAddress"
-            type="emailAddress"
-            label="Email"
-            borderColor={isEmailValidationError ? red : undefined}
-          />
-          {isEmailValidationError && (
-            <View style={errorContainer}>
-              <Text style={errorText}>please enter valid a email address</Text>
-            </View>
-          )}
-          <InputField
-            textValue={signUpData.password}
-            placeHolder="password"
-            width={"100%"}
-            handleOnChangeText={handleOnChangePassword}
-            height={50}
-            contentType="password"
-            type="password"
-            label="Password"
-            borderColor={isPasswordValidationError ? red : undefined}
-          />
-          {isPasswordValidationError && (
-            <View style={errorContainer}>
-              <Text style={guidelineHeaderText}>Password Guideines:</Text>
-              {passwordGuideLines.map((guideline: string) => (
-                <Text key={guideline} style={errorText}>
-                  {guideline}
+      <StackScreen>
+        <ScrollView
+          style={container}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+        >
+          <View
+            style={[
+              inputWrapper,
+              { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "95%" },
+            ]}
+          >
+            <ThemedText type="header">Registration</ThemedText>
+            <InputField
+              textValue={signUpData.givenName}
+              placeHolder="given name"
+              width={"100%"}
+              handleOnChangeText={handleOnChangeFirstName}
+              height={50}
+              contentType="givenName"
+              type="givenName"
+              label="Given Name"
+              borderColor={isGivenNameValidationError ? red : undefined}
+            />
+            {isGivenNameValidationError && (
+              <View style={errorContainer}>
+                <Text style={errorText}>please enter atleast 4 characters</Text>
+              </View>
+            )}
+            <InputField
+              textValue={signUpData.familyName}
+              placeHolder="family name"
+              width={"100%"}
+              handleOnChangeText={handleOnChangeLastName}
+              height={50}
+              contentType="familyName"
+              type="familyName"
+              label="Family Name"
+              borderColor={isFamilyNameValidationError ? red : undefined}
+            />
+            {isFamilyNameValidationError && (
+              <View style={errorContainer}>
+                <Text style={errorText}>please enter atleast 4 characters</Text>
+              </View>
+            )}
+            <InputField
+              textValue={signUpData.email}
+              placeHolder="email"
+              width={"100%"}
+              handleOnChangeText={handleOnChangeEmail}
+              height={50}
+              contentType="emailAddress"
+              type="emailAddress"
+              label="Email"
+              borderColor={isEmailValidationError ? red : undefined}
+            />
+            {isEmailValidationError && (
+              <View style={errorContainer}>
+                <Text style={errorText}>
+                  please enter valid a email address
                 </Text>
-              ))}
-            </View>
-          )}
-          <View style={btnWrapper}>
-            <View style={registerContainer}>
-              <ThemedText type="regular">
-                you already have an account?{" "}
-              </ThemedText>
-              <TouchableOpacity
-                onPress={() => router.push("/login")}
+              </View>
+            )}
+            <InputField
+              textValue={signUpData.password}
+              placeHolder="password"
+              width={"100%"}
+              handleOnChangeText={handleOnChangePassword}
+              height={50}
+              contentType="password"
+              type="password"
+              label="Password"
+              borderColor={isPasswordValidationError ? red : undefined}
+            />
+            {isPasswordValidationError && (
+              <View style={errorContainer}>
+                <Text style={guidelineHeaderText}>Password Guideines:</Text>
+                {passwordGuideLines.map((guideline: string) => (
+                  <Text key={guideline} style={errorText}>
+                    {guideline}
+                  </Text>
+                ))}
+              </View>
+            )}
+            <View style={sectionTwoWrapper}>
+              <View style={registerContainer}>
+                <ThemedText type="regular">
+                  you already have an account?{" "}
+                </ThemedText>
+                <TouchableOpacity
+                  onPress={() => router.push("/login")}
+                  style={[
+                    styles.linkContainer,
+                    {
+                      backgroundColor:
+                        theme === "light" ? light.background : dark.darkGray,
+                    },
+                  ]}
+                >
+                  <Text style={registerLink}>Login</Text>
+                </TouchableOpacity>
+              </View>
+              <View
                 style={[
-                  styles.linkContainer,
+                  btnWrapper,
                   {
-                    backgroundColor:
-                      theme === "light" ? light.darkGray : dark.darkGray,
+                    width:
+                      width > BUTTON_SIZE_SCREEN_BREAK_POINT
+                        ? BUTTON_MAX_WIDTH
+                        : "100%",
                   },
                 ]}
               >
-                <Text style={registerLink}>Login</Text>
-              </TouchableOpacity>
-            </View>
-            <CustomButton
-              title={isLoading ? "loading" : "Register"}
-              onPressFunc={handleSignUp}
-              isDisabled={isLoading ? true : false}
-            />
-            <AuthDivider />
-            <View style={styles.socialsWrapper}>
-              <GoogleButton type="sign_up" disabled={isLoading} />
-              <FacebookButton
-                type="sign_up"
-                disabled={isLoading}
-                handleOnPressFunc={faceBookRegistrationMutation.mutate}
-              />
+                <CustomButton
+                  title={isLoading ? "loading" : "Register"}
+                  onPressFunc={handleSignUp}
+                  isDisabled={isLoading ? true : false}
+                />
+                <AuthDivider />
+                <View style={socialsWrapper}>
+                  <GoogleButton type="sign_up" disabled={isLoading} />
+                  <FacebookButton
+                    type="sign_up"
+                    disabled={isLoading}
+                    handleOnPressFunc={faceBookRegistrationMutation.mutate}
+                  />
+                </View>
+              </View>
             </View>
           </View>
-        </View>
-        <MessageModal
-          message={registrationError}
-          handleCancel={() => setRegistrationError("")}
-          isModalVisible={registrationError ? true : false}
-          header="Registration Failed"
-          type="error"
-        />
-        <MessageModal
-          message={
-            "please check your email for the verification code and finish setting up your account."
-          }
-          handleCancel={handleCloseSuccesModal}
-          isModalVisible={isRegistrationSuccessful}
-          header="Email Sent!"
-          type="success"
-        />
-      </ScrollView>
+          <MessageModal
+            message={registrationError}
+            handleCancel={() => setRegistrationError("")}
+            isModalVisible={registrationError ? true : false}
+            header="Registration Failed"
+            type="error"
+          />
+          <MessageModal
+            message={
+              "please check your email for the verification code and finish setting up your account."
+            }
+            handleCancel={handleCloseSuccesModal}
+            isModalVisible={isRegistrationSuccessful}
+            header="Email Sent!"
+            type="success"
+          />
+        </ScrollView>
+      </StackScreen>
     </Screen>
   );
 };

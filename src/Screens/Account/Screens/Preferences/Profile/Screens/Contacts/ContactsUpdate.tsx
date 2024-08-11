@@ -17,7 +17,12 @@ import { family } from "@/src/Theme/Font";
 import { IPhoneNumberDetails } from "../Types";
 import { getContactNumber, handleLayout } from "@/src/Utils/Funcs";
 import { updateAndCreateContactNumberHttpFunc } from "@/src/HttpServices/Mutations/ContactNumberHttpFuncs";
-import { SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
+import {
+  BUTTON_MAX_WIDTH,
+  BUTTON_SIZE_SCREEN_BREAK_POINT,
+  MAX_INPUT_WIDTH,
+  SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 import { fetchUserData } from "../../Hooks/fetchUser";
 
 const ProfileUpdate: INoPropsReactComponent = () => {
@@ -156,7 +161,7 @@ const ProfileUpdate: INoPropsReactComponent = () => {
           <View
             style={[
               styles.inputWrapper,
-              { width: width > SCREEN_BREAK_POINT ? 600 : "100%" },
+              { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
             ]}
             onLayout={(e) => handleLayout(e, setHeightView)}
           >
@@ -194,7 +199,10 @@ const ProfileUpdate: INoPropsReactComponent = () => {
           <View
             style={[
               {
-                width: width > SCREEN_BREAK_POINT ? 600 : "100%",
+                width:
+                  width > BUTTON_SIZE_SCREEN_BREAK_POINT
+                    ? BUTTON_MAX_WIDTH
+                    : "100%",
                 height: height - viewHeight - 100,
               },
               styles.btnContainer,

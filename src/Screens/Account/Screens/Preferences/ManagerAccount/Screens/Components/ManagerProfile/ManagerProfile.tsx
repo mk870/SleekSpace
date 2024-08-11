@@ -150,7 +150,7 @@ const ManagerProfile = (props: Props) => {
                 styles.personalDetail,
                 {
                   backgroundColor:
-                    theme === "light" ? light.darkGray : dark.darkGray,
+                    theme === "light" ? light.background : dark.darkGray,
                 },
               ]}
               key={name}

@@ -164,7 +164,7 @@ const Profile: INoPropsReactComponent = () => {
         {accessToken && (
           <View style={styles.container}>
             <View style={styles.userDetails}>
-              <Avatar avatar={avatar} />
+              <Avatar avatar={avatar} hideCameraOptions/>
               <ThemedText type="header">{`${givenName} ${familyName}`}</ThemedText>
               <Text
                 style={[
@@ -200,7 +200,7 @@ const Profile: INoPropsReactComponent = () => {
                       styles.personalDetail,
                       {
                         backgroundColor:
-                          theme === "light" ? light.darkGray : dark.darkGray,
+                          theme === "light" ? light.background : dark.darkGray,
                       },
                     ]}
                     key={name}

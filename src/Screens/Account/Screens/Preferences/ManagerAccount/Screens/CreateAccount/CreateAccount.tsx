@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
-import { BUTTON_MAX_WIDTH, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
+import { BUTTON_MAX_WIDTH, MAX_INPUT_WIDTH, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
 import { emailValidator, handleLayout } from "@/src/Utils/Funcs";
 import PhoneNumberField from "@/src/Components/PhoneNumberField/PhoneNumberField";
 import { IPhoneNumberDetails } from "../../../Profile/Screens/Types";
@@ -150,11 +150,11 @@ const CreateAccount = () => {
           <View
             style={[
               styles.inputWrapper,
-              { width: width > SCREEN_BREAK_POINT ? 600 : "100%" },
+              { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
             ]}
             onLayout={(e) => handleLayout(e, setHeightView)}
           >
-            <Avatar avatar="" />
+            <Avatar avatar={image} setImage={setImage} />
             <InputField
               textValue={name}
               placeHolder="company/personal name"
