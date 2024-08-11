@@ -18,6 +18,7 @@ import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { passwordGuideLines, passwordValidator } from "@/src/Utils/Funcs";
 import { changePasswordHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
 import MessageModal from "@/src/Components/Modals/MessageModal";
+import { BUTTON_MAX_WIDTH, BUTTON_SIZE_SCREEN_BREAK_POINT, MAX_INPUT_WIDTH, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
 
 const ResetPassword = () => {
   const { id } = useLocalSearchParams();
@@ -107,7 +108,10 @@ const ResetPassword = () => {
         }}
       >
         <View
-          style={[styles.subContainer, { width: width > 700 ? 600 : "100%" }]}
+          style={[
+            styles.subContainer,
+            { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
+          ]}
         >
           <ThemedText
             type="header"
@@ -157,7 +161,11 @@ const ResetPassword = () => {
               ))}
             </View>
           )}
-          <View style={styles.btnWrapper}>
+          <View style={[styles.btnWrapper,
+          {
+            width: width > BUTTON_SIZE_SCREEN_BREAK_POINT ? BUTTON_MAX_WIDTH : "100%",
+          }
+          ]}>
             <CustomButton
               title={isLoading ? "loading" : "Reset Password"}
               onPressFunc={handleReset}
@@ -217,7 +225,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   btnWrapper: {
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,

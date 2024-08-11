@@ -17,10 +17,15 @@ import { emailValidator } from "@/src/Utils/Funcs";
 import { red } from "@/src/Theme/Colors";
 import { family, small } from "@/src/Theme/Font";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
-import {
-  createVerificationCodeForSecurityHttpFunc,
-} from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import { createVerificationCodeForSecurityHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
 import ServerError from "@/src/Components/Modals/MessageModal";
+import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
+import {
+  BUTTON_MAX_WIDTH,
+  BUTTON_SIZE_SCREEN_BREAK_POINT,
+  MAX_INPUT_WIDTH,
+  SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 
 const ForgotPassword: INoPropsReactComponent = () => {
   const [email, setEmail] = useState<string | undefined>(undefined);
@@ -43,9 +48,9 @@ const ForgotPassword: INoPropsReactComponent = () => {
     onSuccess(data) {
       router.push({
         pathname: `/verification/${data.data.userId}`,
-        params:{
-          isNewUser: "no"
-        }
+        params: {
+          isNewUser: "no",
+        },
       });
     },
     onError(error: any) {
@@ -66,57 +71,72 @@ const ForgotPassword: INoPropsReactComponent = () => {
   };
   return (
     <Screen>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}
-      >
-        <View
-          style={[styles.subContainer, { width: width > 700 ? 600 : "100%" }]}
+      <StackScreen>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
         >
-          <ThemedText type="header" styles={styles.header}>
-            Forgot your password?
-          </ThemedText>
-          <ThemedText type="regular">
-            Enter your email address, and we'll send you a verification code to
-            change your password.
-          </ThemedText>
-          <InputField
-            textValue={email}
-            placeHolder="email"
-            width={"100%"}
-            handleOnChangeText={(e) => setEmail(e)}
-            height={50}
-            contentType="emailAddress"
-            type="emailAddress"
-            label="Email"
-            borderColor={isEmailValidationError ? red : undefined}
-          />
-          {isEmailValidationError && (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>
-                please enter valid email address
-              </Text>
-            </View>
-          )}
-          <View style={styles.btnWrapper}>
-            <CustomButton
-              title={isLoading ? "loading" : "Verify"}
-              onPressFunc={handlePost}
-              isDisabled={isLoading ? true : false}
+          <View
+            style={[
+              styles.subContainer,
+              { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
+            ]}
+          >
+            <ThemedText type="header" styles={styles.header}>
+              Forgot your password?
+            </ThemedText>
+            <ThemedText type="regular">
+              Enter your email address, and we'll send you a verification code
+              to change your password.
+            </ThemedText>
+            <InputField
+              textValue={email}
+              placeHolder="email"
+              width={"100%"}
+              handleOnChangeText={(e) => setEmail(e)}
+              height={50}
+              contentType="emailAddress"
+              type="emailAddress"
+              label="Email"
+              borderColor={isEmailValidationError ? red : undefined}
             />
+            {isEmailValidationError && (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>
+                  please enter valid email address
+                </Text>
+              </View>
+            )}
+            <View
+              style={[
+                styles.btnWrapper,
+                {
+                  width:
+                    width > BUTTON_SIZE_SCREEN_BREAK_POINT
+                      ? BUTTON_MAX_WIDTH
+                      : "100%",
+                },
+              ]}
+            >
+              <CustomButton
+                title={isLoading ? "loading" : "Verify"}
+                onPressFunc={handlePost}
+                isDisabled={isLoading ? true : false}
+              />
+            </View>
           </View>
-        </View>
-        {httpError && (
-          <ServerError
-            handleCancel={() => setHttpError("")}
-            message={httpError}
-            isModalVisible={httpError ? true : false}
-          />
-        )}
-      </ScrollView>
+          {httpError && (
+            <ServerError
+              handleCancel={() => setHttpError("")}
+              message={httpError}
+              isModalVisible={httpError ? true : false}
+            />
+          )}
+        </ScrollView>
+      </StackScreen>
     </Screen>
   );
 };
@@ -146,7 +166,6 @@ const styles = StyleSheet.create({
     fontSize: small,
   },
   btnWrapper: {
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,

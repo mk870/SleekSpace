@@ -61,8 +61,13 @@ export const styles = StyleSheet.create({
     fontFamily: family,
     fontSize: medium,
   },
+  sectionTwoWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+    width:"100%"
+  },
   btnWrapper: {
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,

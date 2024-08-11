@@ -153,7 +153,7 @@ const InputField: React.FC<Props> = ({
               backgroundColor: backgroundColor
                 ? backgroundColor
                 : theme === "light"
-                ? light.darkGray
+                ? light.background
                 : dark.darkGray,
             },
           ]}
@@ -189,7 +189,7 @@ const styles = (
       width: "100%",
       borderRadius: 7,
       gap: 2,
-      backgroundColor: theme === "dark" ? dark.background : light.background,
+      backgroundColor: "transparent",
     },
     labelContainer: {
       width: "100%",

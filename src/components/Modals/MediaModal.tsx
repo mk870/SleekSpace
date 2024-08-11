@@ -2,11 +2,14 @@ import {
   Modal,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
 import { dark, light, primary, pureWhite } from "@/src/Theme/Colors";
@@ -18,17 +21,48 @@ type Props = {
   handleCancel: IVoidFunc;
   isModalVisible: boolean;
   type: "profile-Photo" | "property-Photo";
+  setImage?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const MediaModal: React.FC<Props> = ({
   handleCancel,
   isModalVisible,
   type,
+  setImage,
 }) => {
+  const [facing, setFacing] = useState<CameraType>(
+    type === "profile-Photo" ? "front" : "back"
+  );
+  //const [permission, requestPermission] = useCameraPermissions();
   const theme = useAppSelector((state) => state.theme.value);
   const { width } = useWindowDimensions();
   const iconSize = 27;
   const color = primary;
+
+  const openGallery = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled && setImage) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const openCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled && setImage) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   return (
     <Modal
       visible={isModalVisible}
@@ -58,7 +92,8 @@ const MediaModal: React.FC<Props> = ({
             {type === "profile-Photo" ? "Profile Photo" : "Property Photos"}
           </ThemedText>
           <View style={styles.row}>
-            <View
+            <TouchableOpacity
+            onPress={openCamera}
               style={[
                 styles.mediaOption,
                 {
@@ -69,8 +104,9 @@ const MediaModal: React.FC<Props> = ({
             >
               <Feather name="camera" size={iconSize} color={color} />
               <Text style={styles.mediaOptionText}>camera</Text>
-            </View>
-            <View
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={openGallery}
               style={[
                 styles.mediaOption,
                 {
@@ -81,8 +117,8 @@ const MediaModal: React.FC<Props> = ({
             >
               <AntDesign name="picture" size={iconSize} color={color} />
               <Text style={styles.mediaOptionText}>gallery</Text>
-            </View>
-            <View
+            </TouchableOpacity>
+            <TouchableOpacity
               style={[
                 styles.mediaOption,
                 {
@@ -93,7 +129,7 @@ const MediaModal: React.FC<Props> = ({
             >
               <AntDesign name="delete" size={iconSize} color={color} />
               <Text style={styles.mediaOptionText}>remove</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -133,14 +169,13 @@ const styles = StyleSheet.create({
   mediaOption: {
     alignItems: "center",
     justifyContent: "center",
-    height: 60,
-    width: 60,
+    paddingTop: 10,
+    width: 65,
     borderRadius: 7,
   },
   mediaOptionText: {
     fontFamily: family,
     fontSize: small,
-    fontWeight: "bold",
     color: "gray",
   },
 });

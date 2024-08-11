@@ -51,6 +51,13 @@ const ProfileLayout = () => {
           headerTitleAlign: "center",
         }}
       />
+      <Stack.Screen
+        name="profile/picture"
+        options={{
+          headerTitle: "Profile Picture",
+          headerTitleAlign: "center",
+        }}
+      />
     </Stack>
   );
 };

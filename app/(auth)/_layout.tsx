@@ -23,6 +23,7 @@ const AuthStack = () => {
           color: theme === "light" ? light.text : dark.text,
         },
         headerTitleAlign: "center",
+        headerTransparent:true,
         headerLeft: () => (
           <HeaderIcon
             iconSize={24}
@@ -50,21 +51,13 @@ const AuthStack = () => {
       <Stack.Screen
         name="verification/[id]"
         options={{
-          title: "",
-          headerStyle: {
-            backgroundColor:
-              theme === "light" ? light.background : dark.background,
-          },
+          title: "Verification",
         }}
       />
       <Stack.Screen
         name="forgotPassword"
         options={{
-          title: "",
-          headerStyle: {
-            backgroundColor:
-              theme === "light" ? light.background : dark.background,
-          },
+          title: "Forgot Password",
         }}
       />
       <Stack.Screen

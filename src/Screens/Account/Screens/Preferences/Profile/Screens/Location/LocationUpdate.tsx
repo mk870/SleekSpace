@@ -18,7 +18,13 @@ import Screen from "@/src/Components/ScreenWrapper/Screen";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import LocationInputField from "@/src/Components/LocationInputField/LocationInputField";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
-import { emptyLocation, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
+import {
+  BUTTON_MAX_WIDTH,
+  BUTTON_SIZE_SCREEN_BREAK_POINT,
+  emptyLocation,
+  MAX_INPUT_WIDTH,
+  SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 import {
   convertLocationToSearchableFormat,
   getLocation,
@@ -161,7 +167,7 @@ const LocationUpdate: INoPropsReactComponent = () => {
           <View
             style={[
               styles.inputWrapper,
-              { width: width > SCREEN_BREAK_POINT ? 600 : "100%" },
+              { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
             ]}
             onLayout={(e) => handleLayout(e, setViewHeight)}
           >
@@ -189,7 +195,10 @@ const LocationUpdate: INoPropsReactComponent = () => {
             style={[
               styles.btnContainer,
               {
-                width: width > SCREEN_BREAK_POINT ? 600 : "100%",
+                width:
+                  width > BUTTON_SIZE_SCREEN_BREAK_POINT
+                    ? BUTTON_MAX_WIDTH
+                    : "100%",
                 height: height - viewHeight - 100,
               },
             ]}
