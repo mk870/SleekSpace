@@ -2,7 +2,7 @@ import { Text } from "react-native";
 import React from "react";
 
 import { family } from "@/src/Theme/Font";
-import { dark, primary, white } from "@/src/Theme/Colors";
+import { gray, primary } from "@/src/Theme/Colors";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
@@ -21,10 +21,10 @@ const TabsLabels: React.FC<Props> = ({ focused, textItem }) => {
           theme === "light"
             ? focused
               ? primary
-              : dark.background
+              : gray
             : focused
             ? primary
-            : white,
+            : gray,
       }}
     >
       {textItem}

@@ -31,14 +31,14 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
 
   const handlePictureUpdate = () => {
     setIsLoading(true);
-    supabaseCreateFile({ path: `${id}/${givenName}.png`, fileBody: image })
+    supabaseCreateFile({ path: `${id}/${givenName}`, fileBody: image })
       .then((res) => {
         console.log("data", res.data);
         setIsLoading(false);
       })
       .catch((error) => {
-        console.log("error", error);
         setIsLoading(false);
+        setUpdateError( error.message);
       });
   };
 

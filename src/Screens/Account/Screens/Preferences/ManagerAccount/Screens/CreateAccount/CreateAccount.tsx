@@ -259,7 +259,7 @@ const CreateAccount = () => {
           <MessageModal
             header="Account Created!"
             message={
-              "you have successfully created a property manager account, you can now add properties to our platform"
+              "you have successfully created a property management account, you can now add properties to our platform"
             }
             type="success"
             isModalVisible={isSuccessModalOpen}

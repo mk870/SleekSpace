@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+
 import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import { useAppDispatch } from "@/src/Redux/Hooks/Config";
 import {

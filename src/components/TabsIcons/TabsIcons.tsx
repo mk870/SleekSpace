@@ -4,8 +4,6 @@ import {
   Ionicons,
   MaterialIcons,
   MaterialCommunityIcons,
-  Feather,
-  FontAwesome5,
 } from "@expo/vector-icons";
 
 import { tabsMenu } from "@/src/Utils/Constants";

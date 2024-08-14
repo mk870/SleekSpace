@@ -31,7 +31,6 @@ import { IUserRegistrationData } from "./Types";
 import {
   BUTTON_MAX_WIDTH,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
-  faceBookAuthClientId,
   MAX_INPUT_WIDTH,
   SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";

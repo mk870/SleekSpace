@@ -3,6 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -15,13 +16,17 @@ import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import { family, medium, small } from "@/src/Theme/Font";
 import { legalities, preferences, settings } from "./AccountOptions/Options";
-import { dark, light, pureWhite } from "@/src/Theme/Colors";
+import { dark, light, primary, pureWhite } from "@/src/Theme/Colors";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
-import { BUTTON_MAX_WIDTH, BUTTON_SIZE_SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
+import {
+  BUTTON_MAX_WIDTH,
+  BUTTON_SIZE_SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 
 const Account: INoPropsReactComponent = () => {
   const theme = useAppSelector((state) => state.theme.value);
+  const { accessToken } = useAppSelector((state) => state.user.value);
   const router = useRouter();
   const iconSize = 24;
   const iconColor = theme === "light" ? light.darkGray : "gray";
@@ -68,7 +73,7 @@ const Account: INoPropsReactComponent = () => {
                   style={[
                     styles.optionIconText,
                     {
-                      borderBottomWidth:1,
+                      borderBottomWidth: 1,
                       borderBottomColor:
                         theme === "light" ? light.background : dark.darkGray,
                     },
@@ -202,12 +207,26 @@ const Account: INoPropsReactComponent = () => {
         <View
           style={[
             {
-              width: width > BUTTON_SIZE_SCREEN_BREAK_POINT ? BUTTON_MAX_WIDTH : "100%",
+              width:
+                width > BUTTON_SIZE_SCREEN_BREAK_POINT
+                  ? BUTTON_MAX_WIDTH
+                  : "100%",
             },
             styles.btn,
           ]}
         >
-          <CustomButton title={"Logout"} onPressFunc={handleSignOut} />
+          <CustomButton
+            title={accessToken ? "Logout" : "Login"}
+            onPressFunc={accessToken?handleSignOut:handleSignOut}
+          />
+          {!accessToken && (
+            <TouchableOpacity
+              style={styles.createAccountBtn}
+              onPress={() => router.push("/register")}
+            >
+              <Text style={styles.createAccountText}>create account</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </Screen>
@@ -258,5 +277,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
+    gap: 10,
+  },
+  createAccountBtn: {
+    borderWidth: 2,
+    borderColor: primary,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    borderRadius: 7,
+  },
+  createAccountText: {
+    fontFamily: family,
+    color: primary,
+    fontSize: medium,
   },
 });

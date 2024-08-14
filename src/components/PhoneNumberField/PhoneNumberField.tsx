@@ -1,4 +1,4 @@
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import PhoneInput from "react-native-phone-number-input";
@@ -8,6 +8,7 @@ import ThemedText from "../ThemedText/ThemedText";
 import { dark, gray, light, red, white } from "@/src/Theme/Colors";
 import { IPhoneNumberDetails } from "@/src/Screens/Account/Screens/Preferences/Profile/Screens/Types";
 import Row from "../Row/Row";
+import { MAX_INPUT_WIDTH, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
 
 type Props = {
   setPhoneNumberDetails: React.Dispatch<
@@ -66,7 +67,12 @@ const PhoneNumberField: React.FC<Props> = ({
   }, [value]);
 
   return (
-    <View style={[styles.container, { width: width > 700 ? 600 : "100%" }]}>
+    <View
+      style={[
+        styles.container,
+        { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
+      ]}
+    >
       <Row style={styles.labelContainer}>
         <ThemedText type="regular">{label}</ThemedText>
         {isRequired && (

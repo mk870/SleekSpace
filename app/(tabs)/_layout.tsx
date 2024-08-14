@@ -4,12 +4,13 @@ import { StyleSheet } from "react-native";
 
 import { family, large } from "@/src/Theme/Font";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
-import { dark, light, primary, pureWhite, white } from "@/src/Theme/Colors";
+import { dark, gray, light, primary, pureWhite } from "@/src/Theme/Colors";
 import { tabsMenu } from "@/src/Utils/Constants";
 import TabsIcons from "@/src/Components/TabsIcons/TabsIcons";
 import TabsLabels from "@/src/Components/TabsLabels/TabsLabels";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import StackWrapper from "@/src/HOCs/StackWrapper";
+import TabsRightHeader from "@/src/Components/TabsRightHeader/TabsRightHeader";
 
 const TabsLayout = () => {
   const theme = useAppSelector((state) => state.theme.value);
@@ -22,12 +23,13 @@ const TabsLayout = () => {
             fontFamily: family,
             color: theme === "light" ? light.text : dark.text,
             fontSize: large,
-            textAlign: "center",
+            textAlign: "left",
           },
-          headerTitleAlign: "center",
+          headerTitleAlign: "left",
           headerStyle: {
             backgroundColor: theme === "light" ? pureWhite : dark.background,
           },
+          headerRight:()=><TabsRightHeader />,
           tabBarStyle: [
             styles.tabStyles,
             {
@@ -35,7 +37,7 @@ const TabsLayout = () => {
               borderTopColor: theme === "light" ? pureWhite : dark.darkGray,
             },
           ],
-          tabBarInactiveTintColor: theme === "light" ? light.text : white,
+          tabBarInactiveTintColor: gray,
           tabBarActiveTintColor: primary,
           tabBarLabelPosition: "below-icon",
         }}
@@ -141,7 +143,6 @@ export default StackWrapper(TabsLayout);
 const styles = StyleSheet.create({
   tabStyles: {
     borderTopWidth: 1,
-
     paddingTop: 2,
   },
 });

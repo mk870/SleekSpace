@@ -15,6 +15,10 @@ import RegularText from "../RegularText/RegularText";
 import CustomButton from "../Buttons/Custom/CustomButton";
 import { primary } from "@/src/Theme/Colors";
 import { family, medium } from "@/src/Theme/Font";
+import {
+  BUTTON_MAX_WIDTH,
+  BUTTON_SIZE_SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 
 type Props = {
   screenType: "profile" | "favorites" | "chats" | "property";
@@ -42,7 +46,10 @@ const SigninAndSignupBtn: React.FC<Props> = ({ screenType }) => {
       <View
         style={[
           {
-            width: width > 500 ? 400 : "100%",
+            width:
+              width > BUTTON_SIZE_SCREEN_BREAK_POINT
+                ? BUTTON_MAX_WIDTH
+                : "100%",
           },
           styles.btnContainer,
         ]}

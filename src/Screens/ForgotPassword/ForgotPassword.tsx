@@ -56,19 +56,21 @@ const ForgotPassword: INoPropsReactComponent = () => {
     onError(error: any) {
       if (error.response?.data?.error !== "") {
         setHttpError(error.response?.data?.error);
-      } else setHttpError("Something went wrong");
+      } else setHttpError("Something went wrong")
     },
     onSettled: () => {
       setEmail(undefined);
       setIsLoading(false);
     },
   });
+
   const handlePost = () => {
     if (email && !isEmailValidationError) {
       setIsLoading(true);
       forgotPasswordMutation.mutate({ email });
     }
   };
+
   return (
     <Screen>
       <StackScreen>
@@ -130,6 +132,8 @@ const ForgotPassword: INoPropsReactComponent = () => {
           </View>
           {httpError && (
             <ServerError
+              type="error"
+              header="Email failed"
               handleCancel={() => setHttpError("")}
               message={httpError}
               isModalVisible={httpError ? true : false}
