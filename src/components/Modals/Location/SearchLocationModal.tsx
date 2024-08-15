@@ -28,7 +28,7 @@ const SearchLocationModal: React.FC<Props> = ({
       transparent
       animationType="slide"
     >
-      <LocationInputField placeHolder="enter your location" showLabel setLocation={setLocation}/>
+      {/* <LocationInputField placeHolder="enter your location" showLabel setLocation={setLocation}/> */}
     </Modal>
   );
 };

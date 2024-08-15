@@ -4,6 +4,40 @@ export type IVoidFunc = () => void;
 export type INoPropsReactComponent = React.FC;
 export type IStringOrNull = string | null;
 export type INumberOrNull = number | null;
+
+export type IUserImage = {
+  id?: number;
+  userId?: number;
+  uri: string;
+  name: string;
+  fullPath: string;
+  contentType: string | undefined;
+  size: number;
+  fileType: string | undefined;
+};
+
+export type IManagerProfileImage = {
+  id?: number;
+  managerId?: number;
+  uri: string;
+  name: string;
+  fullPath: string;
+  contentType: string | undefined;
+  size: number;
+  fileType: string | undefined;
+};
+
+export type IPropertyImageOrVideo = {
+  id?: number;
+  managerId?: number;
+  uri: string;
+  name: string;
+  fullPath: string;
+  contentType: string | undefined;
+  size: number;
+  fileType: string | undefined;
+};
+
 export type IUserLogin = {
   email: string | undefined;
   password: string | undefined;

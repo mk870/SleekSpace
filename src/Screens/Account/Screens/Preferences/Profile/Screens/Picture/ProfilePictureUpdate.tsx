@@ -15,7 +15,7 @@ import {
 import { handleLayout } from "@/src/Utils/Funcs";
 import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import MessageModal from "@/src/Components/Modals/MessageModal";
-import { supabaseCreateFile } from "@/src/HttpServices/Supabase/storageFuncs";
+import { uploadFileToFirebase } from "@/src/Firebase/config";
 
 const ProfilePictureUpdate: INoPropsReactComponent = () => {
   const [image, setImage] = useState<string>("");
@@ -29,17 +29,15 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
   const [viewHeight, setViewHeight] = useState<number>(0);
   const { width, height } = useWindowDimensions();
 
-  const handlePictureUpdate = () => {
-    setIsLoading(true);
-    supabaseCreateFile({ path: `${id}/${givenName}`, fileBody: image })
-      .then((res) => {
-        console.log("data", res.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        setUpdateError( error.message);
-      });
+  const handlePictureUpdate = async () => {
+    try {
+      const uploadResult = await uploadFileToFirebase(image);
+      console.log("upload result",uploadResult)
+
+    } catch (error:any) {
+      console.log("upload error", error);
+      setUpdateError(error.message)
+    }
   };
 
   const closeSuccessModal = () => {

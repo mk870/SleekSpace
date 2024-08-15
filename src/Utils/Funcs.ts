@@ -28,6 +28,11 @@ export const passwordValidator: (
   }
 };
 
+export const generateRandomSixDigitNumber = () => {
+  let result = 100000 + Math.floor(Math.random() * 900000);
+  return result.toString();
+};
+
 export const emailValidator: (
   setIsEmailValidationError: React.Dispatch<React.SetStateAction<boolean>>,
   emailValue: string | undefined

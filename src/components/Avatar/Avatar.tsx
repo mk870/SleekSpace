@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
-import { dark, light, primary, pureWhite } from "@/src/Theme/Colors";
-import MediaModal from "@/src/Components/Modals/MediaModal";
+import { primary, pureWhite } from "@/src/Theme/Colors";
+import MediaModal from "@/src/Components/Modals/MediaModal/MediaModal";
 
 const Avatar: React.FC<{
   avatar: string;
@@ -41,12 +41,12 @@ const Avatar: React.FC<{
           <Feather name="camera" size={24} color={pureWhite} />
         </TouchableOpacity>
       )}
-      <MediaModal
+      {!hideCameraOptions && <MediaModal
         isModalVisible={openEditModal}
         handleCancel={() => setOpenEditModal(false)}
         type="profile-Photo"
         setImage={setImage}
-      />
+      />}
     </View>
   );
 };
