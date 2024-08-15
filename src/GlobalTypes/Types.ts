@@ -29,7 +29,7 @@ export type IManagerProfileImage = {
 
 export type IPropertyImageOrVideo = {
   id?: number;
-  managerId?: number;
+  propertyId?: number;
   uri: string;
   name: string;
   fullPath: string;
