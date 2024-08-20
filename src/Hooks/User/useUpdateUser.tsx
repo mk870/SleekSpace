@@ -4,12 +4,12 @@ import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import { useAppDispatch } from "@/src/Redux/Hooks/Config";
 import {
   addAccessToken,
-  addAvatar,
   addContactNumbers,
   addEmailAddress,
   addFamilyName,
   addGivenName,
   addLocation,
+  addProfilePicture,
   addUserId,
 } from "@/src/Redux/Slices/UserSlice/User";
 
@@ -23,7 +23,7 @@ const useUpdateUser = (user: IUser | null) => {
       dispatch(addUserId(user.id));
       dispatch(addLocation(user.location));
       dispatch(addContactNumbers(user.contactNumbers));
-      dispatch(addAvatar(user.avatar))
+      dispatch(addProfilePicture(user.profiePicture))
       dispatch(addAccessToken(user.accessToken))
     }
   }, [user]);

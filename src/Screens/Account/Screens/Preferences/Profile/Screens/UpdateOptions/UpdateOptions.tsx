@@ -40,7 +40,7 @@ const UpdateOptions: INoPropsReactComponent = () => {
               <MaterialCommunityIcons
                 name="contacts-outline"
                 size={20}
-                color={theme === "light" ? light.text : dark.text}
+                color={gray}
               />
               <ThemedText type="regular">Contacts</ThemedText>
             </Row>
@@ -54,7 +54,7 @@ const UpdateOptions: INoPropsReactComponent = () => {
               <Ionicons
                 name="location-outline"
                 size={22}
-                color={theme === "light" ? light.text : dark.text}
+                color={gray}
               />
               <ThemedText type="regular">Location</ThemedText>
             </Row>
@@ -68,7 +68,7 @@ const UpdateOptions: INoPropsReactComponent = () => {
               <AntDesign
                 name="picture"
                 size={22}
-                color={theme === "light" ? light.text : dark.text}
+                color={gray}
               />
               <ThemedText type="regular">Profile Picture</ThemedText>
             </Row>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   row: {
-    gap: 4,
+    gap: 10,
   },
   pressable: {
     justifyContent: "space-between",

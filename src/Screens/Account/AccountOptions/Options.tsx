@@ -6,9 +6,10 @@ import {
 } from "@expo/vector-icons";
 
 import { IAccountOptions } from "../Types/Types";
+import { gray } from "@/src/Theme/Colors";
 
 const iconSize = 26;
-const iconColor = "gray";
+const iconColor = gray;
 
 export const settings: IAccountOptions = [
   {

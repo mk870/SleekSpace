@@ -16,7 +16,7 @@ import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import { family, medium, small } from "@/src/Theme/Font";
 import { legalities, preferences, settings } from "./AccountOptions/Options";
-import { dark, light, primary, pureWhite } from "@/src/Theme/Colors";
+import { dark, gray, light, primary, pureWhite } from "@/src/Theme/Colors";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import {
@@ -29,7 +29,7 @@ const Account: INoPropsReactComponent = () => {
   const { accessToken } = useAppSelector((state) => state.user.value);
   const router = useRouter();
   const iconSize = 24;
-  const iconColor = theme === "light" ? light.darkGray : "gray";
+  const iconColor = theme === "light" ? gray : gray;
   const { width } = useWindowDimensions();
   const onNavigate = (route: string) => {
     router.push(route);

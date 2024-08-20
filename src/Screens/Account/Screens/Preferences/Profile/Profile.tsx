@@ -44,7 +44,6 @@ const Profile: INoPropsReactComponent = () => {
     location,
     id,
     accessToken,
-    avatar
   } = useAppSelector((state) => state.user.value);
   const theme = useAppSelector((state) => state.theme.value);
   const [resetLoader, setResetLoader] = useState<boolean>(false);
@@ -164,7 +163,7 @@ const Profile: INoPropsReactComponent = () => {
         {accessToken && (
           <View style={styles.container}>
             <View style={styles.userDetails}>
-              <ProfilePicture uri={avatar} hideCameraOptions/>
+              <ProfilePicture uri={""} hideCameraOptions/>
               <ThemedText type="header">{`${givenName} ${familyName}`}</ThemedText>
               <Text
                 style={[

@@ -1,9 +1,9 @@
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
-import { primary, pureWhite } from "@/src/Theme/Colors";
+import { lightPrimary, primary, pureWhite } from "@/src/Theme/Colors";
 import MediaModal from "@/src/Components/Modals/MediaModal/MediaModal";
 
 const ProfilePicture: React.FC<{
@@ -28,25 +28,27 @@ const ProfilePicture: React.FC<{
         ]}
       />
       {!hideCameraOptions && (
-        <TouchableOpacity
+        <Pressable
           style={[
             styles.cameraIcon,
             {
-              backgroundColor: primary,
+              backgroundColor: theme === "light" ? "#372b47" : "#1f1926",
               bottom: size === "large" ? 10 : 0,
             },
           ]}
           onPress={() => setOpenEditModal(true)}
         >
           <Feather name="camera" size={24} color={pureWhite} />
-        </TouchableOpacity>
+        </Pressable>
       )}
-      {!hideCameraOptions && <MediaModal
-        isModalVisible={openEditModal}
-        handleCancel={() => setOpenEditModal(false)}
-        type="profile-Photo"
-        setImage={setImage}
-      />}
+      {!hideCameraOptions && (
+        <MediaModal
+          isModalVisible={openEditModal}
+          handleCancel={() => setOpenEditModal(false)}
+          type="profile-Photo"
+          setImage={setImage}
+        />
+      )}
     </View>
   );
 };

@@ -16,7 +16,7 @@ import {
 
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import { family, large, medium } from "@/src/Theme/Font";
-import { dark, light, pureWhite, red, white } from "@/src/Theme/Colors";
+import { dark, light, pureWhite, purple, red, white } from "@/src/Theme/Colors";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
 
@@ -46,7 +46,7 @@ const MessageModal: React.FC<Props> = ({
       : type === "error"
       ? red
       : type === "confirmation"
-      ? "#8c1085"
+      ? purple
       : "#e0b908";
   const { container, subContainer, headerText, row, btn } = styles;
   return (

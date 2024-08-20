@@ -9,7 +9,7 @@ import React from "react";
 import { Feather, AntDesign } from "@expo/vector-icons";
 
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import { primary, pureWhite, dark, light } from "@/src/Theme/Colors";
+import { primary, pureWhite, dark, light, gray } from "@/src/Theme/Colors";
 import { family, small } from "@/src/Theme/Font";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
@@ -115,6 +115,6 @@ const styles = StyleSheet.create({
   mediaOptionText: {
     fontFamily: family,
     fontSize: small,
-    color: "gray",
+    color: gray,
   },
 });
