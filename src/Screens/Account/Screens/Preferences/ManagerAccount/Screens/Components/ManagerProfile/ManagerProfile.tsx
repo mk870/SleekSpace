@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import { router } from "expo-router";
 
-import Avatar from "@/src/Components/Avatar/Avatar";
+import ProfilePicture from "@/src/Components/ProfilePicture/ProfilePicture";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
@@ -21,14 +21,12 @@ import {
   shortenString,
 } from "@/src/Utils/Funcs";
 import { styles } from "./Styles";
-import { IManagerContactNumber } from "@/src/GlobalTypes/Types";
+import { IManagerContactNumber, INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import { deleteManager } from "@/src/HttpServices/Mutations/ManagerHttpFunctions";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
 
-type Props = {};
-
-const ManagerProfile = (props: Props) => {
+const ManagerProfile:INoPropsReactComponent = () => {
   const user = useAppSelector((state) => state.user.value);
   const [deleteAccountLoader, setDeleteAccountLoader] =
     useState<boolean>(false);
@@ -96,7 +94,7 @@ const ManagerProfile = (props: Props) => {
         email: "",
         contacts: [],
         userId: 0,
-        avatar: "",
+        profilePicture: null,
       })
     );
     router.replace("/account");
@@ -108,7 +106,7 @@ const ManagerProfile = (props: Props) => {
         style={styles.managerDetails}
         onLayout={(e) => handleLayout(e, setDetailsViewHeight)}
       >
-        <Avatar avatar={""} />
+        <ProfilePicture uri={""} />
         <ThemedText type="header">{shortenString(manager.name, 30)}</ThemedText>
         <Text
           style={[

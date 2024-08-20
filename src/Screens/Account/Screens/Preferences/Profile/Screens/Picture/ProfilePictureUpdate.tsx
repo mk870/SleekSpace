@@ -5,7 +5,7 @@ import { router } from "expo-router";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
-import Avatar from "@/src/Components/Avatar/Avatar";
+import ProfilePicture from "@/src/Components/ProfilePicture/ProfilePicture";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import {
@@ -50,8 +50,8 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
       <StackScreen>
         <View style={styles.container}>
           <View onLayout={(e) => handleLayout(e, setViewHeight)}>
-            <Avatar
-              avatar={image ? image : avatar}
+            <ProfilePicture
+              uri={image ? image : avatar}
               setImage={setImage}
               size="large"
             />

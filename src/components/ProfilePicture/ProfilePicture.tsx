@@ -6,18 +6,18 @@ import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import { primary, pureWhite } from "@/src/Theme/Colors";
 import MediaModal from "@/src/Components/Modals/MediaModal/MediaModal";
 
-const Avatar: React.FC<{
-  avatar: string;
+const ProfilePicture: React.FC<{
+  uri: string;
   setImage?: React.Dispatch<React.SetStateAction<string>>;
   hideCameraOptions?: boolean;
   size?: "large" | "small";
-}> = ({ avatar, setImage, hideCameraOptions, size }) => {
+}> = ({ uri, setImage, hideCameraOptions, size }) => {
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const theme = useAppSelector((state) => state.theme.value);
   return (
     <View style={styles.container}>
       <Image
-        source={avatar ? { uri: avatar } : require("./Images/emptyProfile.jpg")}
+        source={uri ? { uri: uri } : require("./Images/emptyProfile.jpg")}
         style={[
           styles.image,
           {
@@ -51,7 +51,7 @@ const Avatar: React.FC<{
   );
 };
 
-export default Avatar;
+export default ProfilePicture;
 
 const styles = StyleSheet.create({
   container: {

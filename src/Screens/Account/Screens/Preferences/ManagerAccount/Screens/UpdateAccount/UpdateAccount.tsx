@@ -18,7 +18,7 @@ import { IPhoneNumberDetails } from "../../../Profile/Screens/Types";
 import { family, small } from "@/src/Theme/Font";
 import { red } from "@/src/Theme/Colors";
 import InputField from "@/src/Components/InputField/InputField";
-import Avatar from "@/src/Components/Avatar/Avatar";
+import ProfilePicture from "@/src/Components/ProfilePicture/ProfilePicture";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { UpdateManager } from "@/src/HttpServices/Mutations/ManagerHttpFunctions";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
@@ -124,7 +124,7 @@ const UpdateAccount: INoPropsReactComponent = () => {
           id: manager.id,
           email,
           userId: id,
-          avatar: image ? image : manager.avatar,
+          profilePicture: image ? null: manager.profilePicture,
           contacts: [
             {
               number: whatsAppNumberDetails.number
@@ -179,7 +179,7 @@ const UpdateAccount: INoPropsReactComponent = () => {
             ]}
             onLayout={(e) => handleLayout(e, setHeightView)}
           >
-            <Avatar avatar={image} setImage={setImage} />
+            <ProfilePicture uri={image} setImage={setImage} />
             <InputField
               textValue={name}
               placeHolder="company/personal name"

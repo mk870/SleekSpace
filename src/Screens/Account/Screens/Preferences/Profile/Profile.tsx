@@ -13,7 +13,7 @@ import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
-import Avatar from "../../../../../Components/Avatar/Avatar";
+import ProfilePicture from "../../../../../Components/ProfilePicture/ProfilePicture";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { dark, light, primary, red } from "@/src/Theme/Colors";
 import { styles } from "./Styles";
@@ -164,7 +164,7 @@ const Profile: INoPropsReactComponent = () => {
         {accessToken && (
           <View style={styles.container}>
             <View style={styles.userDetails}>
-              <Avatar avatar={avatar} hideCameraOptions/>
+              <ProfilePicture uri={avatar} hideCameraOptions/>
               <ThemedText type="header">{`${givenName} ${familyName}`}</ThemedText>
               <Text
                 style={[

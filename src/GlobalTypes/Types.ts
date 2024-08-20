@@ -5,7 +5,7 @@ export type INoPropsReactComponent = React.FC;
 export type IStringOrNull = string | null;
 export type INumberOrNull = number | null;
 
-export type IUserImage = {
+export type IUserProfilePicture = {
   id?: number;
   userId?: number;
   uri: string;
@@ -16,7 +16,7 @@ export type IUserImage = {
   fileType: string | undefined;
 };
 
-export type IManagerProfileImage = {
+export type IManagerProfilePicture = {
   id?: number;
   managerId?: number;
   uri: string;
@@ -76,8 +76,8 @@ export type IManagerAccount = {
   userId: number;
   name: string;
   email: string;
-  avatar: string;
   contacts: IManagerContactNumber[];
+  profilePicture: IManagerProfilePicture | null
 };
 
 export type IManagerContactNumber = {

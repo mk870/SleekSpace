@@ -5,11 +5,11 @@ const user: IUser = {
   email: "",
   givenName: "",
   familyName: "",
-  avatar: "",
   contactNumbers: [],
   location: null,
   id: 0,
-  accessToken:""
+  accessToken:"",
+  profiePicture:null
 };
 export const userSlice = createSlice({
   name: "user",
@@ -41,10 +41,10 @@ export const userSlice = createSlice({
         id: action.payload,
       };
     },
-    addAvatar: (state, action) => {
+    addProfilePicture: (state, action) => {
       state.value = {
         ...state.value,
-        avatar: action.payload,
+        profiePicture: action.payload,
       };
     },
     addContactNumbers: (state, action) => {
@@ -72,7 +72,7 @@ export const {
   addEmailAddress,
   addFamilyName,
   addUserId,
-  addAvatar,
+  addProfilePicture,
   addContactNumbers,
   addLocation,
   addAccessToken

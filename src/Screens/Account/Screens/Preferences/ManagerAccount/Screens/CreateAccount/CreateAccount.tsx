@@ -5,20 +5,25 @@ import { useMutation } from "@tanstack/react-query";
 
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
-import { BUTTON_MAX_WIDTH, MAX_INPUT_WIDTH, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
+import {
+  BUTTON_MAX_WIDTH,
+  MAX_INPUT_WIDTH,
+  SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 import { emailValidator, handleLayout } from "@/src/Utils/Funcs";
 import PhoneNumberField from "@/src/Components/PhoneNumberField/PhoneNumberField";
 import { IPhoneNumberDetails } from "../../../Profile/Screens/Types";
 import { family, small } from "@/src/Theme/Font";
 import { red } from "@/src/Theme/Colors";
 import InputField from "@/src/Components/InputField/InputField";
-import Avatar from "@/src/Components/Avatar/Avatar";
+import ProfilePicture from "@/src/Components/ProfilePicture/ProfilePicture";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { CreateManager } from "@/src/HttpServices/Mutations/ManagerHttpFunctions";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import RegularText from "@/src/Components/RegularText/RegularText";
+import { uploadFileToFirebase } from "@/src/Firebase/config";
 
 const CreateAccount = () => {
   const [viewHeight, setHeightView] = useState<number>(0);
@@ -89,7 +94,7 @@ const CreateAccount = () => {
     onSettled: () => setIsLoading(false),
   });
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     setOmmissionError(false);
     if (
       name &&
@@ -97,42 +102,55 @@ const CreateAccount = () => {
       whatsAppNumberDetails.number &&
       phoneNumberDetails.number
     ) {
-      setIsLoading(true);
-      createManagerAccount.mutate({
-        accessToken,
-        manager: {
-          name,
-          email,
-          userId: id,
-          avatar: image,
-          contacts: [
-            {
-              number: whatsAppNumberDetails.number
-                ? whatsAppNumberDetails.number
-                : "",
-              countryAbbrv: whatsAppNumberDetails.countryAbbrv
-                ? whatsAppNumberDetails.countryAbbrv
-                : "",
-              countryCode: whatsAppNumberDetails.countryCode
-                ? whatsAppNumberDetails.countryCode
-                : "",
-              type: "whatsapp",
-            },
-            {
-              number: phoneNumberDetails.number
-                ? phoneNumberDetails.number
-                : "",
-              countryAbbrv: phoneNumberDetails.countryAbbrv
-                ? phoneNumberDetails.countryAbbrv
-                : "",
-              countryCode: phoneNumberDetails.countryCode
-                ? phoneNumberDetails.countryCode
-                : "",
-              type: "phone",
-            },
-          ],
-        },
-      });
+      try {
+        setIsLoading(true);
+        createManagerAccount.mutate({
+          accessToken,
+          manager: {
+            name,
+            email,
+            userId: id,
+            profilePicture: image
+              ? { ...(await uploadFileToFirebase(image)) }
+              : {
+                  name: "",
+                  uri: "",
+                  contentType: "",
+                  fileType: "",
+                  fullPath: "",
+                  size: 0,
+                },
+            contacts: [
+              {
+                number: whatsAppNumberDetails.number
+                  ? whatsAppNumberDetails.number
+                  : "",
+                countryAbbrv: whatsAppNumberDetails.countryAbbrv
+                  ? whatsAppNumberDetails.countryAbbrv
+                  : "",
+                countryCode: whatsAppNumberDetails.countryCode
+                  ? whatsAppNumberDetails.countryCode
+                  : "",
+                type: "whatsapp",
+              },
+              {
+                number: phoneNumberDetails.number
+                  ? phoneNumberDetails.number
+                  : "",
+                countryAbbrv: phoneNumberDetails.countryAbbrv
+                  ? phoneNumberDetails.countryAbbrv
+                  : "",
+                countryCode: phoneNumberDetails.countryCode
+                  ? phoneNumberDetails.countryCode
+                  : "",
+                type: "phone",
+              },
+            ],
+          },
+        });
+      } catch (error: any) {
+        setHttpError(error.message);
+      }
     } else {
       setOmmissionError(true);
     }
@@ -154,7 +172,7 @@ const CreateAccount = () => {
             ]}
             onLayout={(e) => handleLayout(e, setHeightView)}
           >
-            <Avatar avatar={image} setImage={setImage} />
+            <ProfilePicture uri={image} setImage={setImage} />
             <InputField
               textValue={name}
               placeHolder="company/personal name"

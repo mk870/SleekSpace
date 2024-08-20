@@ -47,7 +47,14 @@ const getFileType = (contentType: string | undefined) => {
   }
 };
 
-const uploadFileToFirebase = async (uri: string) => {
+const uploadFileToFirebase: (uri: string) => Promise<{
+  uri: string;
+  name: string;
+  fullPath: string;
+  contentType: string | undefined;
+  size: number;
+  fileType: string | undefined;
+}> = async (uri: string) => {
   const blobResponse = await fetch(uri);
   const fileBlob = await blobResponse.blob();
   const fileName = getFileName(uri);

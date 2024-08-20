@@ -1,12 +1,14 @@
+import { IUserProfilePicture } from "@/src/GlobalTypes/Types";
+
 export type IUser = {
   email: string;
   givenName: string;
   familyName: string;
   id: number;
-  avatar: string;
   location: ILocation | null;
   contactNumbers: IContactNumber[];
   accessToken: string;
+  profiePicture: IUserProfilePicture | null;
 };
 export type ILocation = {
   lat: string;
