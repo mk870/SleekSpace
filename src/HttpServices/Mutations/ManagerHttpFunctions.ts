@@ -1,14 +1,14 @@
 import axios from "axios";
 
 import { IManagerAccount } from "@/src/GlobalTypes/Types";
-import { endpoints } from "@/src/Utils/Constants";
+import { managerRoutes } from "@/src/BackendRoutes/ManagerRoutes";
 
 export const CreateManager = (requestData: {
   accessToken: string;
   manager: IManagerAccount;
 }) => {
   return axios.post(
-    endpoints.postDeleteAndGetManagerAccountById,
+    managerRoutes.postDeleteAndGetManagerAccountById,
     requestData.manager,
     {
       headers: {
@@ -23,7 +23,7 @@ export const UpdateManager = (requestData: {
   manager: IManagerAccount;
 }) => {
   return axios.put(
-    endpoints.postDeleteAndGetManagerAccountById + `/${requestData.manager.id}`,
+    managerRoutes.postDeleteAndGetManagerAccountById + `/${requestData.manager.id}`,
     requestData.manager,
     {
       headers: {
@@ -38,7 +38,7 @@ export const deleteManager = (requestData: {
   id: number;
 }) => {
   return axios.delete(
-    endpoints.postDeleteAndGetManagerAccountById + `/${requestData.id}`,
+    managerRoutes.postDeleteAndGetManagerAccountById + `/${requestData.id}`,
     {
       headers: {
         Authorization: `Bearer ${requestData.accessToken}`,

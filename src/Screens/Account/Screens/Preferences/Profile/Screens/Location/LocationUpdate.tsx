@@ -37,8 +37,8 @@ import { primary, red } from "@/src/Theme/Colors";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import {
-  createLocationHttpFunc,
-  updateLocationHttpFunc,
+  createUserLocationHttpFunc,
+  updateUserLocationHttpFunc,
 } from "@/src/HttpServices/Mutations/LocationHttpFunctions";
 import { fetchUserData } from "../../Hooks/fetchUser";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
@@ -71,7 +71,7 @@ const LocationUpdate: INoPropsReactComponent = () => {
   }, [unSelectedSuggestedLocationsError]);
 
   const locationCreationMutation = useMutation({
-    mutationFn: createLocationHttpFunc,
+    mutationFn: createUserLocationHttpFunc,
     onSuccess(_data) {
       fetchUserData(
         user,
@@ -89,7 +89,7 @@ const LocationUpdate: INoPropsReactComponent = () => {
   });
 
   const locationUpdateMutation = useMutation({
-    mutationFn: updateLocationHttpFunc,
+    mutationFn: updateUserLocationHttpFunc,
     onSuccess(_data) {
       fetchUserData(
         user,

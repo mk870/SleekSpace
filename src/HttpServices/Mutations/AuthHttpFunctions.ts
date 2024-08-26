@@ -6,44 +6,44 @@ import {
   INewPasswordData,
   IUserVerificationData,
 } from "@/src/Screens/Verification/Types";
-import { endpoints } from "@/src/Utils/Constants";
+import { authRoutes } from "@/src/BackendRoutes/AuthRoutes";
 
 export const loginHttpFunc = (userLoginData: IUserLoginData) => {
-  return axios.post(endpoints.login, userLoginData);
+  return axios.post(authRoutes.login, userLoginData);
 };
 
 export const nativeRegisterHttpFunc = (
   userRegistrationData: IUserRegistrationData
 ) => {
-  return axios.post(endpoints.nativeRegistration, userRegistrationData);
+  return axios.post(authRoutes.nativeRegistration, userRegistrationData);
 };
 
 export const createVerificationCodeForSecurityHttpFunc = (email: {
   email: string | undefined;
 }) => {
-  return axios.post(endpoints.createVerificationCodeForSecurity, email);
+  return axios.post(authRoutes.createVerificationCodeForSecurity, email);
 };
 
 export const verificationCodeForSecurityHttpFunc = (
   verificationData: IUserVerificationData
 ) => {
-  return axios.post(endpoints.verifyCodeForSecurity, verificationData);
+  return axios.post(authRoutes.verifyCodeForSecurity, verificationData);
 };
 
 export const changePasswordHttpFunc = (
   newPasswordAndVerificationCode: INewPasswordData
 ) => {
-  return axios.put(endpoints.changePassword, newPasswordAndVerificationCode);
+  return axios.put(authRoutes.changePassword, newPasswordAndVerificationCode);
 };
 
 export const resendVerificationCodeHttpFunc = (userId: number) => {
-  return axios.get(`${endpoints.resendVerificationCode}/${userId}`);
+  return axios.get(`${authRoutes.resendVerificationCode}/${userId}`);
 };
 
 export const verifyCodeForNativeUserRegistrationHttpFunc =
   (verificationDetails: { userId: number; verificationCode: number }) => {
     return axios.post(
-      endpoints.nativeRegistrationCodeVerification,
+      authRoutes.nativeRegistrationCodeVerification,
       verificationDetails
     );
   };

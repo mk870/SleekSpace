@@ -5,7 +5,7 @@ export const expoSecureValueKeyNames = {
   theme: "theme",
 };
 
-const backEndUrl = "https://sleekspace-server.onrender.com";
+export const backEndUrl = "https://sleekspace-server.onrender.com";
 
 export const tabsMenu = {
   home: "Home",
@@ -21,23 +21,6 @@ export const BUTTON_MAX_WIDTH = 400;
 export const BUTTON_SIZE_SCREEN_BREAK_POINT = 500;
 export const MAX_INPUT_WIDTH = 600;
 
-export const endpoints = {
-  login: `${backEndUrl}/login`,
-  nativeRegistration: `${backEndUrl}/register`,
-  nativeRegistrationCodeVerification: `${backEndUrl}/verification-code/registration`,
-  user: `${backEndUrl}/user`,
-  logout: `${backEndUrl}/logout`,
-  changePassword: `${backEndUrl}/password`,
-  createVerificationCodeForSecurity: `${backEndUrl}/verification-code`,
-  verifyCodeForSecurity: `${backEndUrl}/verification-code/security`,
-  resendVerificationCode: `${backEndUrl}/resend-verification-code`,
-  locationAutoComplete: `${backEndUrl}/location/autocomplete`,
-  locationReverseGeoCoding: `${backEndUrl}/location/reverse-geocoding`,
-  locationCreationAndUpdate: `${backEndUrl}/location`,
-  contactNumberCreationAndUpdate: `${backEndUrl}/contact-number`,
-  getManagerAccountByUserId: `${backEndUrl}/manager/user/`,
-  postDeleteAndGetManagerAccountById: `${backEndUrl}/manager`,
-};
 export const emptyLocation: ISearchLocation = {
   display_address: "",
   display_name: "",

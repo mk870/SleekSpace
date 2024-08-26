@@ -6,7 +6,7 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 import axios from "axios";
 
 import { getSecureValue } from "@/src/Utils/Funcs";
-import { endpoints, expoSecureValueKeyNames } from "@/src/Utils/Constants";
+import {  expoSecureValueKeyNames } from "@/src/Utils/Constants";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import ScreenSpinner from "@/src/Components/Spinners/ScreenSpinner";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
@@ -14,6 +14,7 @@ import { switchTheme } from "@/src/Redux/Slices/Theme/Theme";
 import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import { addAccessToken } from "@/src/Redux/Slices/UserSlice/User";
+import { userRoutes } from "@/src/BackendRoutes/UserRoutes";
 
 const index = () => {
   const [userData, setUserData] = useState<IUser | null>(null);
@@ -48,7 +49,7 @@ const index = () => {
             if (decoded.exp * 1000 > currentDate.getTime()) {
               if (!accessToken) {
                 axios
-                  .get(endpoints.user, {
+                  .get(userRoutes.getUserByEmail, {
                     headers: {
                       Authorization: `Bearer ${JSON.parse(value)}`,
                     },

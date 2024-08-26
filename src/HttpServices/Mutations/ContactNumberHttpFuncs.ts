@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import { IContactNumber } from "@/src/Redux/Slices/UserSlice/Type/Type";
-import { endpoints } from "@/src/Utils/Constants";
+import { userRoutes } from "@/src/BackendRoutes/UserRoutes";
 
 export const updateAndCreateContactNumberHttpFunc = (contactData: {
   contactNumbers: IContactNumber[];
@@ -9,7 +9,7 @@ export const updateAndCreateContactNumberHttpFunc = (contactData: {
   userId: number;
 }) => {
   return axios.put(
-    `${endpoints.contactNumberCreationAndUpdate}/${contactData.userId}`,
+    `${userRoutes.getAndUpdateUserContactNumber}/${contactData.userId}`,
     { contacts: contactData.contactNumbers },
     {
       headers: { Authorization: `Bearer ${contactData.accessToken}` },
@@ -22,7 +22,7 @@ export const createContactHttpFunc = (contactData: {
   accessToken: string;
 }) => {
   return axios.post(
-    `${endpoints.contactNumberCreationAndUpdate}`,
+    `${userRoutes.getAndUpdateUserContactNumber}`,
     contactData.contactNumber,
     {
       headers: { Authorization: `Bearer ${contactData.accessToken}` },
