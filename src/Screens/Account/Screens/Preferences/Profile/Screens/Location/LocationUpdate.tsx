@@ -39,7 +39,7 @@ import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import {
   createUserLocationHttpFunc,
   updateUserLocationHttpFunc,
-} from "@/src/HttpServices/Mutations/LocationHttpFunctions";
+} from "@/src/HttpServices/Mutations/User/LocationHttpFunctions";
 import { fetchUserData } from "../../Hooks/fetchUser";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";

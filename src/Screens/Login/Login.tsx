@@ -21,14 +21,14 @@ import {
 import { styles } from "./Styles";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import MessageModal from "@/src/Components/Modals/MessageModal";
-import { IUserLogin, IVoidFunc } from "@/src/GlobalTypes/Types";
+import { IVoidFunc } from "@/src/GlobalTypes/Types";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { dark, light, red } from "@/src/Theme/Colors";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
-import { loginHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import { loginHttpFunc } from "@/src/HttpServices/Mutations/Auth/AuthHttpFunctions";
 import {
   BUTTON_MAX_WIDTH,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
@@ -36,9 +36,9 @@ import {
   MAX_INPUT_WIDTH,
   SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
-import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
+import { IUser, IUserLogin } from "@/src/GlobalTypes/User/UserTypes";
 
 const Login = () => {
   const { width } = useWindowDimensions();

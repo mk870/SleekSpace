@@ -16,7 +16,7 @@ import InputField from "@/src/Components/InputField/InputField";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { passwordGuideLines, passwordValidator } from "@/src/Utils/Funcs";
-import { changePasswordHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import { changePasswordHttpFunc } from "@/src/HttpServices/Mutations/Auth/AuthHttpFunctions";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { BUTTON_MAX_WIDTH, BUTTON_SIZE_SCREEN_BREAK_POINT, MAX_INPUT_WIDTH, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
 

@@ -26,8 +26,7 @@ import Screen from "@/src/Components/ScreenWrapper/Screen";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
-import { nativeRegisterHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
-import { IUserRegistrationData } from "./Types";
+import { nativeRegisterHttpFunc } from "@/src/HttpServices/Mutations/Auth/AuthHttpFunctions";
 import {
   BUTTON_MAX_WIDTH,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
@@ -36,6 +35,7 @@ import {
 } from "@/src/Utils/Constants";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
+import { IUserRegistrationData } from "@/src/GlobalTypes/User/UserTypes";
 
 const Register = () => {
   const [signUpData, setSignUpData] = useState<IUserRegistrationData>({

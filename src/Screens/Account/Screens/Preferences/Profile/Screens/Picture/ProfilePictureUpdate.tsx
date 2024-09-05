@@ -9,6 +9,7 @@ import ProfilePicture from "@/src/Components/ProfilePicture/ProfilePicture";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import {
+  backEndUrl,
   BUTTON_MAX_WIDTH,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
@@ -16,27 +17,37 @@ import { handleLayout } from "@/src/Utils/Funcs";
 import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { uploadFileToFirebase } from "@/src/Firebase/config";
+import axios from "axios";
 
 const ProfilePictureUpdate: INoPropsReactComponent = () => {
   const [image, setImage] = useState<string>("");
+  const [imageBase64, setImageBase64] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
   const [userData, setUserData] = useState<IUser | null>(null);
-  const { avatar, accessToken, id, givenName } = useAppSelector(
+  const { accessToken, id, givenName } = useAppSelector(
     (state) => state.user.value
   );
   const [viewHeight, setViewHeight] = useState<number>(0);
   const { width, height } = useWindowDimensions();
 
   const handlePictureUpdate = async () => {
-    try {
-      const uploadResult = await uploadFileToFirebase(image);
-      console.log("upload result",uploadResult)
+    // try {
+    //   const uploadResult = await uploadFileToFirebase(image);
+    //   console.log("upload result",uploadResult)
 
-    } catch (error:any) {
-      console.log("upload error", error);
-      setUpdateError(error.message)
+    // } catch (error:any) {
+    //   console.log("upload error", error);
+    //   setUpdateError(error.message)
+    // }
+    try {
+      const url = await axios.put(`${backEndUrl}/aws/image`, {
+        name: givenName + id.toString(),
+      });
+      console.log("aws",url.data)
+    } catch (error) {
+      console.log("upload error",error)
     }
   };
 
@@ -51,8 +62,9 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
         <View style={styles.container}>
           <View onLayout={(e) => handleLayout(e, setViewHeight)}>
             <ProfilePicture
-              uri={image ? image : avatar}
+              uri={image ? image : ""}
               setImage={setImage}
+              setImageBase64={setImageBase64}
               size="large"
             />
           </View>

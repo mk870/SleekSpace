@@ -23,7 +23,7 @@ import {
   resendVerificationCodeHttpFunc,
   verificationCodeForSecurityHttpFunc,
   verifyCodeForNativeUserRegistrationHttpFunc,
-} from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+} from "@/src/HttpServices/Mutations/Auth/AuthHttpFunctions";
 import { processLocalQueryParam, saveSecureValue } from "@/src/Utils/Funcs";
 import {
   BUTTON_MAX_WIDTH,

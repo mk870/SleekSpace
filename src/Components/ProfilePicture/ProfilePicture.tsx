@@ -9,9 +9,10 @@ import MediaModal from "@/src/Components/Modals/MediaModal/MediaModal";
 const ProfilePicture: React.FC<{
   uri: string;
   setImage?: React.Dispatch<React.SetStateAction<string>>;
+  setImageBase64?: React.Dispatch<React.SetStateAction<string>>;
   hideCameraOptions?: boolean;
   size?: "large" | "small";
-}> = ({ uri, setImage, hideCameraOptions, size }) => {
+}> = ({ uri, setImage, hideCameraOptions, size, setImageBase64 }) => {
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const theme = useAppSelector((state) => state.theme.value);
   return (
@@ -47,6 +48,7 @@ const ProfilePicture: React.FC<{
           handleCancel={() => setOpenEditModal(false)}
           type="profile-Photo"
           setImage={setImage}
+          setImageBase64={setImageBase64}
         />
       )}
     </View>

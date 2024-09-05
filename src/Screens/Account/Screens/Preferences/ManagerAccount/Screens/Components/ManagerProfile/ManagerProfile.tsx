@@ -22,7 +22,7 @@ import {
 } from "@/src/Utils/Funcs";
 import { styles } from "./Styles";
 import { IManagerContactNumber, INoPropsReactComponent } from "@/src/GlobalTypes/Types";
-import { deleteManager } from "@/src/HttpServices/Mutations/ManagerHttpFunctions";
+import { deleteManager } from "@/src/HttpServices/Mutations/Manager/ManagerHttpFunctions";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
 

@@ -9,7 +9,7 @@ import Row from "../Row/Row";
 import { ISearchLocation } from "@/src/GlobalTypes/Types";
 import MessageModal from "../Modals/MessageModal";
 import ButtonSpinner from "../Spinners/ButtonSpinner";
-import { locationReverseGeoCodingHttpFunc } from "@/src/HttpServices/Mutations/LocationHttpFunctions";
+import { locationReverseGeoCodingHttpFunc } from "@/src/HttpServices/Mutations/User/LocationHttpFunctions";
 import { numberToString } from "@/src/Utils/Funcs";
 import ThemedText from "../ThemedText/ThemedText";
 

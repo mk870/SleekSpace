@@ -9,7 +9,7 @@ import { light, dark, gray } from "@/src/Theme/Colors";
 import ThemedText from "../ThemedText/ThemedText";
 import SuggestedLocations from "./SuggestedLocations/SuggestedLocations";
 import MessageModal from "../Modals/MessageModal";
-import { locationAutoCompleteHttpFunc } from "@/src/HttpServices/Mutations/LocationHttpFunctions";
+import { locationAutoCompleteHttpFunc } from "@/src/HttpServices/Mutations/User/LocationHttpFunctions";
 import {
   getLocation,
   shortenString,

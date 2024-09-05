@@ -13,6 +13,7 @@ type Props = {
   isModalVisible: boolean;
   type: "profile-Photo" | "property-PhotoOrVideo";
   setImage?: React.Dispatch<React.SetStateAction<string>>;
+  setImageBase64?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const MediaModal: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const MediaModal: React.FC<Props> = ({
   isModalVisible,
   type,
   setImage,
+  setImageBase64
 }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const theme = useAppSelector((state) => state.theme.value);
@@ -37,9 +39,11 @@ const MediaModal: React.FC<Props> = ({
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
+      base64: true,
     });
-    if (!result.canceled && setImage) {
+    if (!result.canceled && setImage && setImageBase64) {
       setImage(result.assets[0].uri);
+      setImageBase64(result.assets[0].base64 as string)
     }
   };
 

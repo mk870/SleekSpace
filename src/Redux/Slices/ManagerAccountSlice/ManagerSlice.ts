@@ -1,4 +1,5 @@
-import { IManagerAccount } from "@/src/GlobalTypes/Types";
+
+import { IManagerAccount } from "@/src/GlobalTypes/Manager/ManagerTypes";
 import { createSlice } from "@reduxjs/toolkit";
 
 const managerAccount: IManagerAccount = {
@@ -6,7 +7,6 @@ const managerAccount: IManagerAccount = {
   email: "",
   id: 0,
   userId: 0,
-  avatar:"",
   contacts: [],
   profilePicture: null
 };

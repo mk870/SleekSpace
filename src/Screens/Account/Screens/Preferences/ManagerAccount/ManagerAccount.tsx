@@ -6,7 +6,7 @@ import Screen from "@/src/Components/ScreenWrapper/Screen";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import SigninAndSignupBtn from "@/src/Components/SigninAndSignupBtns/SigninAndSignupBtn";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
-import { getManagerByUserId } from "@/src/HttpServices/Queries/ManagerHttpFuncs";
+import { getManagerByUserId } from "@/src/HttpServices/Queries/Manager/ManagerHttpFuncs";
 import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import ScreenSpinner from "@/src/Components/Spinners/ScreenSpinner";

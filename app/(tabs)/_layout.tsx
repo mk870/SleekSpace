@@ -10,7 +10,7 @@ import TabsIcons from "@/src/Components/TabsIcons/TabsIcons";
 import TabsLabels from "@/src/Components/TabsLabels/TabsLabels";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import StackWrapper from "@/src/HOCs/StackWrapper";
-import TabsRightHeader from "@/src/components/TabsRightHeader/TabsRightHeader";
+import TabsRightHeader from "@/src/Components/TabsRightHeader/TabsRightHeader";
 
 const TabsLayout = () => {
   const theme = useAppSelector((state) => state.theme.value);

@@ -9,14 +9,13 @@ import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import PhoneNumberField from "@/src/Components/PhoneNumberField/PhoneNumberField";
 import { red } from "@/src/Theme/Colors";
-import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { family } from "@/src/Theme/Font";
 import { IPhoneNumberDetails } from "../Types";
 import { getContactNumber, handleLayout } from "@/src/Utils/Funcs";
-import { updateAndCreateContactNumberHttpFunc } from "@/src/HttpServices/Mutations/ContactNumberHttpFuncs";
+import { updateAndCreateContactNumberHttpFunc } from "@/src/HttpServices/Mutations/User/ContactNumberHttpFuncs";
 import {
   BUTTON_MAX_WIDTH,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
@@ -24,6 +23,7 @@ import {
   SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
 import { fetchUserData } from "../../Hooks/fetchUser";
+import { IUser } from "@/src/GlobalTypes/User/UserTypes";
 
 const ProfileUpdate: INoPropsReactComponent = () => {
   const user = useAppSelector((state) => state.user.value);

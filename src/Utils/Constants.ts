@@ -1,11 +1,12 @@
-import { ISearchLocation } from "../GlobalTypes/Types";
+import { ISearchLocation } from "../GlobalTypes/LocationIQ/LocationIQTypes";
 
 export const expoSecureValueKeyNames = {
   accessToken: "accessToken",
   theme: "theme",
 };
 
-export const backEndUrl = "https://sleekspace-server.onrender.com";
+//export const backEndUrl = "https://sleekspace-server.onrender.com";
+export const backEndUrl = "http://192.168.98.196:8080"
 
 export const tabsMenu = {
   home: "Home",

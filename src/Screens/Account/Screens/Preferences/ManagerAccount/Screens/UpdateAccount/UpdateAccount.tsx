@@ -20,7 +20,7 @@ import { red } from "@/src/Theme/Colors";
 import InputField from "@/src/Components/InputField/InputField";
 import ProfilePicture from "@/src/Components/ProfilePicture/ProfilePicture";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
-import { UpdateManager } from "@/src/HttpServices/Mutations/ManagerHttpFunctions";
+import { UpdateManager } from "@/src/HttpServices/Mutations/Manager/ManagerHttpFunctions";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
 import MessageModal from "@/src/Components/Modals/MessageModal";

@@ -19,8 +19,8 @@ import { dark, light, primary, red } from "@/src/Theme/Colors";
 import { styles } from "./Styles";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import MessageModal from "@/src/Components/Modals/MessageModal";
-import { createVerificationCodeForSecurityHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
-import { deleteUserHttpFunc } from "@/src/HttpServices/Mutations/UserHttpFunctions";
+import { createVerificationCodeForSecurityHttpFunc } from "@/src/HttpServices/Mutations/Auth/AuthHttpFunctions";
+import { deleteUserHttpFunc } from "@/src/HttpServices/Mutations/User/UserHttpFunctions";
 import {
   getContactNumber,
   saveSecureValue,

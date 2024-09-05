@@ -17,7 +17,7 @@ import { emailValidator } from "@/src/Utils/Funcs";
 import { red } from "@/src/Theme/Colors";
 import { family, small } from "@/src/Theme/Font";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
-import { createVerificationCodeForSecurityHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import { createVerificationCodeForSecurityHttpFunc } from "@/src/HttpServices/Mutations/Auth/AuthHttpFunctions";
 import ServerError from "@/src/Components/Modals/MessageModal";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import {
