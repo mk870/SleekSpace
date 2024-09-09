@@ -12,7 +12,7 @@ export const getManagerByUserId = (user: IUser) => {
 };
 
 export const getManagerById = (requestData: {
-  user: IUser;
+  accessToken: string;
   managerId: number;
 }) => {
   return axios.get(
@@ -21,7 +21,7 @@ export const getManagerById = (requestData: {
       requestData.managerId,
     {
       headers: {
-        Authorization: `Bearer ${requestData.user.accessToken}`,
+        Authorization: `Bearer ${requestData.accessToken}`,
       },
     }
   );

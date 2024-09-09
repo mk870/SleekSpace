@@ -1,13 +1,13 @@
-import { useRouter, Stack } from "expo-router";
 import React from "react";
+import { Stack, useRouter } from "expo-router";
 
-import HeaderIcon from "@/src/Components/Navigation/HeaderIcon/HeaderIcon";
-import StackWrapper from "@/src/HOCs/StackWrapper";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import HeaderIcon from "@/src/Components/Navigation/HeaderIcon/HeaderIcon";
 import { light, dark } from "@/src/Theme/Colors";
 import { family } from "@/src/Theme/Font";
+import StackWrapper from "@/src/HOCs/StackWrapper";
 
-const ManagerLayout = () => {
+const ManagerUpdateLayout = () => {
   const theme = useAppSelector((state) => state.theme.value);
   const route = useRouter();
   return (
@@ -24,29 +24,30 @@ const ManagerLayout = () => {
       }}
     >
       <Stack.Screen
-        name="manager/index"
+        name="index"
         options={{
-          headerTitle: "Manager Account",
+          headerTitle: "Update Options",
           headerTitleAlign: "center",
         }}
       />
       <Stack.Screen
-        name="manager/createAccount"
+        name="contacts"
         options={{
-          headerTitle: "Create Account",
+          headerTitle: "Update Contacts",
           headerTitleAlign: "center",
         }}
       />
       <Stack.Screen
-        name="manager/update"
+        name="details"
         options={{
-          headerShown: false
+          headerTitle: "Update Account Details",
+          headerTitleAlign: "center",
         }}
       />
       <Stack.Screen
-        name="manager/properties"
+        name="picture"
         options={{
-          headerTitle: "My Properties",
+          headerTitle: "Update Profile Picture",
           headerTitleAlign: "center",
         }}
       />
@@ -54,4 +55,4 @@ const ManagerLayout = () => {
   );
 };
 
-export default StackWrapper(ManagerLayout);
+export default StackWrapper(ManagerUpdateLayout);

@@ -3,17 +3,16 @@ import React, { useEffect, useState } from "react";
 import { EvilIcons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 
-import { ISearchLocation } from "@/src/GlobalTypes/Types";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import { light, dark, gray } from "@/src/Theme/Colors";
 import ThemedText from "../ThemedText/ThemedText";
 import SuggestedLocations from "./SuggestedLocations/SuggestedLocations";
 import MessageModal from "../Modals/MessageModal";
-import { locationAutoCompleteHttpFunc } from "@/src/HttpServices/Mutations/User/LocationHttpFunctions";
 import {
-  getLocation,
   shortenString,
 } from "@/src/Utils/Funcs";
+import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
+import { locationAutoCompleteHttpFunc } from "@/src/HttpServices/Mutations/LocationIQ/LocationIQHttpFuncs";
 
 type Props = {
   placeHolder: string;

@@ -6,8 +6,12 @@ export const expoSecureValueKeyNames = {
 };
 
 //export const backEndUrl = "https://sleekspace-server.onrender.com";
-export const backEndUrl = "http://192.168.98.196:8080"
+export const backEndUrl = "http://192.168.158.196:8080";
 
+export const managerAccountUpdateMsg =
+  "Remember, if you update your information, all your properties will also be updated, so make sure it is accurate.";
+export const imageBlurhash =
+  "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 export const tabsMenu = {
   home: "Home",
   account: "Account",
@@ -44,9 +48,10 @@ export const emptyLocation: ISearchLocation = {
   class: "",
   place_id: "",
 };
-export const firebaseBucketName = "ImagesAndVideos"
+export const firebaseBucketName = "ImagesAndVideos";
 //const searchUrl = `https://api.locationiq.com/v1/search.php?key=pk.5bd5d6c9527e29a965f843c398289678&q=${value}&format=json`;
-export const faceBookAuthClientId = process.env.EXPO_PUBLIC_FACEBOOK_AUTH_CLIENT_ID;
+export const faceBookAuthClientId =
+  process.env.EXPO_PUBLIC_FACEBOOK_AUTH_CLIENT_ID;
 export const locationIQToken = process.env.EXPO_PUBLIC_LOCATION_IQ_ACCESS_TOKEN;
 export const supabaseApiKey = process.env.EXPO_PUBLIC_SUPABASE_APIKEY;
 export const supabaseRefID = process.env.EXPO_PUBLIC_SUPABASE_REF_ID;
@@ -54,8 +59,10 @@ export const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 export const firebaseApiKey = process.env.EXPO_PUBLIC_FIREBASE_API_KEY;
 export const firebaseAuthDomain = process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN;
 export const firebaseProjectId = process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID;
-export const firebaseStorageBucket = process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET;
+export const firebaseStorageBucket =
+  process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET;
 export const firebaseMessagingSenderId =
   process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID;
 export const firebaseAppId = process.env.EXPO_PUBLIC_FIREBASE_APP_ID;
-export const firebaseMeasurementId = process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID;
+export const firebaseMeasurementId =
+  process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID;

@@ -14,6 +14,8 @@ type Props = {
   type: "profile-Photo" | "property-PhotoOrVideo";
   setImage?: React.Dispatch<React.SetStateAction<string>>;
   setImageBase64?: React.Dispatch<React.SetStateAction<string>>;
+  setMediaType?: React.Dispatch<React.SetStateAction<string>>;
+  setMediaSize?: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const MediaModal: React.FC<Props> = ({
@@ -21,7 +23,9 @@ const MediaModal: React.FC<Props> = ({
   isModalVisible,
   type,
   setImage,
-  setImageBase64
+  setImageBase64,
+  setMediaSize,
+  setMediaType,
 }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const theme = useAppSelector((state) => state.theme.value);
@@ -29,6 +33,21 @@ const MediaModal: React.FC<Props> = ({
   useEffect(() => {
     requestPermission();
   }, []);
+
+  const captureMediaInformation = (result: ImagePicker.ImagePickerResult)=>{
+    if (!result.canceled && setImage && setImageBase64) {
+      setImage(result.assets[0].uri);
+      setImageBase64(result.assets[0].base64 as string);
+      if (setMediaSize) {
+        setMediaSize(result.assets[0].fileSize ? result.assets[0].fileSize : 0);
+      }
+      if (setMediaType) {
+        setMediaType(
+          result.assets[0].mimeType ? result.assets[0].mimeType : ""
+        );
+      }
+    }
+  }
 
   const openGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -41,10 +60,7 @@ const MediaModal: React.FC<Props> = ({
       quality: 1,
       base64: true,
     });
-    if (!result.canceled && setImage && setImageBase64) {
-      setImage(result.assets[0].uri);
-      setImageBase64(result.assets[0].base64 as string)
-    }
+    captureMediaInformation(result)
   };
 
   const openCamera = async () => {
@@ -53,10 +69,9 @@ const MediaModal: React.FC<Props> = ({
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
+      base64: true
     });
-    if (!result.canceled && setImage) {
-      setImage(result.assets[0].uri);
-    }
+    captureMediaInformation(result)
   };
 
   return (

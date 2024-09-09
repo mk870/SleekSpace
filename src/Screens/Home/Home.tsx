@@ -8,6 +8,7 @@ import ServerError from "@/src/Components/Modals/MessageModal";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { firebaseApp } from "@/src/Firebase/config";
 import { locationIQToken } from "@/src/Utils/Constants";
+import SkeletonLoader from "@/src/Components/SkeletonLoader/SkeletonLoader";
 
 type Props = {};
 

@@ -1,4 +1,3 @@
-
 import { IManagerAccount } from "@/src/GlobalTypes/Manager/ManagerTypes";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -8,7 +7,15 @@ const managerAccount: IManagerAccount = {
   id: 0,
   userId: 0,
   contacts: [],
-  profilePicture: null
+  profilePicture: {
+    size: 0,
+    contentType: "",
+    fileType: "",
+    managerId: 0,
+    id: 0,
+    uri: "",
+    name: "",
+  },
 };
 export const managerAccountSlice = createSlice({
   name: "managerAccount",

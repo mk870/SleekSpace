@@ -23,7 +23,7 @@ const ManagerSignUpBtns: INoPropsReactComponent = () => {
       >
         <Image source={require("./Assets/manager.png")} style={styles.image} />
         <ThemedText type="header">
-          You do not have a property manager account.
+          You do not have a property management account.
         </ThemedText>
         <RegularText>
           Please create an account now and add your own properties to our

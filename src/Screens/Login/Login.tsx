@@ -24,7 +24,7 @@ import MessageModal from "@/src/Components/Modals/MessageModal";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
-import { dark, light, red } from "@/src/Theme/Colors";
+import { dark, gray, light, red } from "@/src/Theme/Colors";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
@@ -49,7 +49,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string>("");
   const [userData, setUserData] = useState<IUser | null>(null);
-  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
   const [isPasswordValidationError, setIsPasswordValidationError] =
     useState<boolean>(false);
   const [isEmailValidationError, setIsEmailValidationError] =
@@ -80,7 +79,8 @@ const Login = () => {
       )
         .then((_data) => {
           setUserData(data.data.response);
-          setLoginSuccess(true);
+          router.dismissAll();
+          router.replace("/home");
         })
         .catch((e) => {
           console.log("accessToken error ", e);
@@ -130,12 +130,6 @@ const Login = () => {
     }
   }, [loginUserData.email]);
 
-  const handleLoginSuccesModalCancel = () => {
-    setLoginSuccess(false);
-    router.dismissAll();
-    router.replace("/home");
-  };
-
   return (
     <Screen>
       <StatusBar style={theme === "light" ? "dark" : "light"} />
@@ -168,7 +162,8 @@ const Login = () => {
               contentType="emailAddress"
               type="emailAddress"
               label="Email"
-              borderColor={isEmailValidationError ? red : undefined}
+              backgroundColor="transparent"
+              borderColor={isEmailValidationError ? red : gray}
             />
             {isEmailValidationError && (
               <View style={errorContainer}>
@@ -186,7 +181,8 @@ const Login = () => {
               contentType="password"
               type="password"
               label="Password"
-              borderColor={isPasswordValidationError ? red : undefined}
+              backgroundColor="transparent"
+              borderColor={isPasswordValidationError ? red : gray}
             />
             <View style={forgotPasswordWrapper}>
               <TouchableOpacity onPress={() => router.push("/forgotPassword")}>
@@ -256,13 +252,6 @@ const Login = () => {
             isModalVisible={loginError ? true : false}
             type="error"
             header="Login Failed"
-          />
-          <MessageModal
-            handleCancel={handleLoginSuccesModalCancel}
-            message={"welcome back, please enjoy your search."}
-            isModalVisible={loginSuccess}
-            type="success"
-            header="Login Successful"
           />
         </ScrollView>
       </StackScreen>

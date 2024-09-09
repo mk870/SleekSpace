@@ -1,7 +1,7 @@
 import * as SecureStore from "expo-secure-store";
-
-import { IManagerContactNumber, ISearchLocation } from "../GlobalTypes/Types";
-import { IContactNumber, ILocation } from "../Redux/Slices/UserSlice/Type/Type";
+import { IUserContactNumber, IUserLocation } from "../GlobalTypes/User/UserTypes";
+import { IManagerContactNumber } from "../GlobalTypes/Manager/ManagerTypes";
+import { ISearchLocation } from "../GlobalTypes/LocationIQ/LocationIQTypes";
 
 export const saveSecureValue = async (key: string, value: string) => {
   await SecureStore.setItemAsync(key, value);
@@ -88,7 +88,7 @@ export const processLocalQueryParam = (
 
 export const getContactNumber = (
   type: "whatsapp" | "phone",
-  contactNumbers: IContactNumber[]
+  contactNumbers: IUserContactNumber[]
 ) => {
   if (contactNumbers && contactNumbers.length > 0) {
     const contact = contactNumbers.filter((number) => number.type === type);
@@ -126,7 +126,7 @@ export const getManagerContactNumberCountryAbbrv = (
   } else return "";
 };
 
-export const getLocationFromUserData = (location: ILocation | null) => {
+export const getLocationFromUserData = (location: IUserLocation | null) => {
   let result = "";
   if (location) {
     if (location.displayName) return location.displayName;
@@ -182,8 +182,8 @@ export const getLocation = (
 };
 
 export const convertLocationToSearchableFormat: (
-  location: ILocation
-) => ISearchLocation = (location: ILocation) => {
+  location: IUserLocation
+) => ISearchLocation = (location: IUserLocation) => {
   return {
     display_address: "",
     display_name: location.displayName,

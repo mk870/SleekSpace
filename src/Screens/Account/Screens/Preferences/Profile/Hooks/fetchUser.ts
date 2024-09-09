@@ -1,7 +1,6 @@
+import { userRoutes } from "@/src/BackendRoutes/UserRoutes";
+import { IUser } from "@/src/GlobalTypes/User/UserTypes";
 import axios from "axios";
-
-import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
-import { endpoints } from "@/src/Utils/Constants";
 
 export const fetchUserData = (
   user: IUser,
@@ -11,7 +10,7 @@ export const fetchUserData = (
   setUpdateError: React.Dispatch<React.SetStateAction<string>>
 ) => {
   axios
-    .get(endpoints.user + `/${user.id}`, {
+    .get(userRoutes.getUpdateAndDeleteUser + `/${user.id}`, {
       headers: { Authorization: `Bearer ${user.accessToken}` },
     })
     .then((data) => {

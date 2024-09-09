@@ -14,10 +14,10 @@ import {
   BUTTON_SIZE_SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
 import { handleLayout } from "@/src/Utils/Funcs";
-import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { uploadFileToFirebase } from "@/src/Firebase/config";
 import axios from "axios";
+import { IUser } from "@/src/GlobalTypes/User/UserTypes";
 
 const ProfilePictureUpdate: INoPropsReactComponent = () => {
   const [image, setImage] = useState<string>("");
@@ -26,29 +26,12 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
   const [userData, setUserData] = useState<IUser | null>(null);
-  const { accessToken, id, givenName } = useAppSelector(
-    (state) => state.user.value
-  );
+  const user = useAppSelector((state) => state.user.value);
   const [viewHeight, setViewHeight] = useState<number>(0);
   const { width, height } = useWindowDimensions();
 
   const handlePictureUpdate = async () => {
-    // try {
-    //   const uploadResult = await uploadFileToFirebase(image);
-    //   console.log("upload result",uploadResult)
-
-    // } catch (error:any) {
-    //   console.log("upload error", error);
-    //   setUpdateError(error.message)
-    // }
-    try {
-      const url = await axios.put(`${backEndUrl}/aws/image`, {
-        name: givenName + id.toString(),
-      });
-      console.log("aws",url.data)
-    } catch (error) {
-      console.log("upload error",error)
-    }
+    
   };
 
   const closeSuccessModal = () => {
@@ -60,9 +43,9 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
     <Screen>
       <StackScreen>
         <View style={styles.container}>
-          <View onLayout={(e) => handleLayout(e, setViewHeight)}>
+          <View style={{ flex: 1 }}>
             <ProfilePicture
-              uri={image ? image : ""}
+              uri={image ? image : user.profilePicture.uri}
               setImage={setImage}
               setImageBase64={setImageBase64}
               size="large"
@@ -76,7 +59,6 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
                   width > BUTTON_SIZE_SCREEN_BREAK_POINT
                     ? BUTTON_MAX_WIDTH
                     : "100%",
-                height: height - viewHeight - 100,
               },
             ]}
           >
@@ -113,13 +95,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     gap: 10,
     alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
     paddingTop: 20,
     width: "100%",
+    flex: 1,
   },
   btnContainer: {
     justifyContent: "flex-end",
     paddingBottom: 20,
+    marginTop: 20,
   },
 });

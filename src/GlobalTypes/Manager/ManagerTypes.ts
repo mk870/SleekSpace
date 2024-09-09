@@ -23,7 +23,7 @@ export type IManagerAccountCreation = {
   name: string;
   email: string;
   contacts: IManagerContactNumber[];
-  profilePicture: IManagerProfilePictureUpdateAndCreation | null;
+  profilePicture: IManagerProfilePictureUpdateAndCreation;
 };
 
 export type IManagerAccount = {
@@ -32,7 +32,7 @@ export type IManagerAccount = {
   name: string;
   email: string;
   contacts: IManagerContactNumber[];
-  profilePicture: IManagerProfilePicture | null;
+  profilePicture: IManagerProfilePicture;
 };
 
 export type IManagerContactNumber = {
@@ -45,6 +45,6 @@ export type IManagerContactNumber = {
 };
 
 export type IUpdateManagerAccountEmailAndName = {
-    email: string
-    name: string
-}
+  email: string;
+  name: string;
+};

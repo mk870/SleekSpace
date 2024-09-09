@@ -11,8 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
 
 import {
-  INoPropsReactComponent,
-  ISearchLocation,
+  INoPropsReactComponent
 } from "@/src/GlobalTypes/Types";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
@@ -40,10 +39,11 @@ import {
   createUserLocationHttpFunc,
   updateUserLocationHttpFunc,
 } from "@/src/HttpServices/Mutations/User/LocationHttpFunctions";
-import { fetchUserData } from "../../Hooks/fetchUser";
+import { fetchUserData } from "../../../Hooks/fetchUser";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
-import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import MessageModal from "@/src/Components/Modals/MessageModal";
+import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
+import { IUser } from "@/src/GlobalTypes/User/UserTypes";
 
 const LocationUpdate: INoPropsReactComponent = () => {
   const user = useAppSelector((state) => state.user.value);

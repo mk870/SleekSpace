@@ -1,6 +1,7 @@
+import axios from "axios";
+
 import { managerRoutes } from "@/src/BackendRoutes/ManagerRoutes";
 import { IManagerProfilePictureUpdateAndCreation } from "@/src/GlobalTypes/Manager/ManagerTypes";
-import axios from "axios";
 
 export const UpdateManagerProfilePicture = (requestData: {
     accessToken: string;
@@ -8,7 +9,7 @@ export const UpdateManagerProfilePicture = (requestData: {
     managerProfilePicture: IManagerProfilePictureUpdateAndCreation;
   }) => {
     return axios.put(
-      managerRoutes.updateManagerContactNumbers + `/${requestData.managerId}`,
+      managerRoutes.updateManagerProfilePicture + `/${requestData.managerId}`,
       requestData.managerProfilePicture,
       {
         headers: {

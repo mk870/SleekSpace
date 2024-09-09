@@ -1,24 +1,48 @@
-import { Image, Pressable, StyleSheet, View } from "react-native";
-import React, { useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
+import { Image } from "expo-image";
 
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
-import { lightPrimary, primary, pureWhite } from "@/src/Theme/Colors";
+import { pureWhite } from "@/src/Theme/Colors";
 import MediaModal from "@/src/Components/Modals/MediaModal/MediaModal";
+import { imageBlurhash } from "@/src/Utils/Constants";
 
 const ProfilePicture: React.FC<{
   uri: string;
   setImage?: React.Dispatch<React.SetStateAction<string>>;
   setImageBase64?: React.Dispatch<React.SetStateAction<string>>;
+  setImageType?: React.Dispatch<React.SetStateAction<string>>;
+  setImageSize?: React.Dispatch<React.SetStateAction<number>>;
   hideCameraOptions?: boolean;
   size?: "large" | "small";
-}> = ({ uri, setImage, hideCameraOptions, size, setImageBase64 }) => {
+}> = ({
+  uri,
+  setImage,
+  hideCameraOptions,
+  size,
+  setImageBase64,
+  setImageSize,
+  setImageType,
+}) => {
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const theme = useAppSelector((state) => state.theme.value);
+  const [timeStamp, setTimeStamp] = useState<number | null>(null);
+  useEffect(() => {
+    if (uri) {
+      setTimeStamp(Date.now());
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
       <Image
-        source={uri ? { uri: uri } : require("./Images/emptyProfile.jpg")}
+        source={
+          uri
+            ? { uri: uri + `?timestamp=${timeStamp}` }
+            : require("./Images/emptyProfile.jpg")
+        }
+        placeholder={{ blurhash: imageBlurhash }}
         style={[
           styles.image,
           {
@@ -49,6 +73,8 @@ const ProfilePicture: React.FC<{
           type="profile-Photo"
           setImage={setImage}
           setImageBase64={setImageBase64}
+          setMediaSize={setImageSize}
+          setMediaType={setImageType}
         />
       )}
     </View>

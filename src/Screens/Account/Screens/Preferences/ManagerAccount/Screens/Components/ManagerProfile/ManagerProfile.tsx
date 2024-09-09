@@ -21,12 +21,12 @@ import {
   shortenString,
 } from "@/src/Utils/Funcs";
 import { styles } from "./Styles";
-import { IManagerContactNumber, INoPropsReactComponent } from "@/src/GlobalTypes/Types";
+import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import { deleteManager } from "@/src/HttpServices/Mutations/Manager/ManagerHttpFunctions";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
 
-const ManagerProfile:INoPropsReactComponent = () => {
+const ManagerProfile: INoPropsReactComponent = () => {
   const user = useAppSelector((state) => state.user.value);
   const [deleteAccountLoader, setDeleteAccountLoader] =
     useState<boolean>(false);
@@ -47,7 +47,7 @@ const ManagerProfile:INoPropsReactComponent = () => {
   const personalDetails = [
     {
       name: "Email",
-      value: shortenString(manager.email, 28),
+      value: manager.email ? shortenString(manager.email, 28) : "-----",
       icon: <Fontisto name="email" size={iconSize} color={iconColor} />,
     },
     {
@@ -106,7 +106,10 @@ const ManagerProfile:INoPropsReactComponent = () => {
         style={styles.managerDetails}
         onLayout={(e) => handleLayout(e, setDetailsViewHeight)}
       >
-        <ProfilePicture uri={""} />
+        <ProfilePicture
+          uri={manager.profilePicture ? manager.profilePicture.uri : ""}
+          hideCameraOptions
+        />
         <ThemedText type="header">{shortenString(manager.name, 30)}</ThemedText>
         <Text
           style={[
@@ -114,7 +117,9 @@ const ManagerProfile:INoPropsReactComponent = () => {
             { color: theme === "light" ? light.text : dark.text },
           ]}
         >
-          {manager.email}
+          {manager.email
+            ? manager.email
+            : "your account does not have an email, please press edit and add one."}
         </Text>
       </View>
       <View

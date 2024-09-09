@@ -12,7 +12,7 @@ export type IUser = {
     favoriteLandProperties: number[];
     favoriteStands: number[];
     accessToken: string;
-    profiePicture: IUserProfilePicture | null;
+    profilePicture: IUserProfilePicture;
   };
 
   export type IUserRegistrationData = {

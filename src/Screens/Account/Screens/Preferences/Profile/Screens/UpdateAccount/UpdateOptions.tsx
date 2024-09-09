@@ -14,15 +14,13 @@ import Screen from "@/src/Components/ScreenWrapper/Screen";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import Row from "@/src/Components/Row/Row";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import { dark, gray, light } from "@/src/Theme/Colors";
+import { gray } from "@/src/Theme/Colors";
 import { SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
-import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 const UpdateOptions: INoPropsReactComponent = () => {
   const iconSize = 18;
   const iconColor = gray;
   const { width } = useWindowDimensions();
-  const theme = useAppSelector((state) => state.theme.value);
   return (
     <Screen>
       <StackScreen>
@@ -39,7 +37,7 @@ const UpdateOptions: INoPropsReactComponent = () => {
             <Row style={styles.row}>
               <MaterialCommunityIcons
                 name="contacts-outline"
-                size={20}
+                size={22}
                 color={gray}
               />
               <ThemedText type="regular">Contacts</ThemedText>

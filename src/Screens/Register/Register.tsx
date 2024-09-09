@@ -21,7 +21,7 @@ import InputField from "@/src/Components/InputField/InputField";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { styles } from "./Styles";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import { dark, light, red } from "@/src/Theme/Colors";
+import { dark, gray, light, red } from "@/src/Theme/Colors";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
@@ -279,7 +279,8 @@ const Register = () => {
               contentType="givenName"
               type="givenName"
               label="Given Name"
-              borderColor={isGivenNameValidationError ? red : undefined}
+              backgroundColor="transparent"
+              borderColor={isGivenNameValidationError ? red : gray}
             />
             {isGivenNameValidationError && (
               <View style={errorContainer}>
@@ -295,7 +296,8 @@ const Register = () => {
               contentType="familyName"
               type="familyName"
               label="Family Name"
-              borderColor={isFamilyNameValidationError ? red : undefined}
+              backgroundColor="transparent"
+              borderColor={isFamilyNameValidationError ? red : gray}
             />
             {isFamilyNameValidationError && (
               <View style={errorContainer}>
@@ -311,7 +313,8 @@ const Register = () => {
               contentType="emailAddress"
               type="emailAddress"
               label="Email"
-              borderColor={isEmailValidationError ? red : undefined}
+              backgroundColor="transparent"
+              borderColor={isEmailValidationError ? red : gray}
             />
             {isEmailValidationError && (
               <View style={errorContainer}>
@@ -329,7 +332,8 @@ const Register = () => {
               contentType="password"
               type="password"
               label="Password"
-              borderColor={isPasswordValidationError ? red : undefined}
+              backgroundColor="transparent"
+              borderColor={isPasswordValidationError ? red : gray}
             />
             {isPasswordValidationError && (
               <View style={errorContainer}>

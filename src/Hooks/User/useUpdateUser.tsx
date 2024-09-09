@@ -29,7 +29,7 @@ const useUpdateUser = (user: IUser | null) => {
       dispatch(addUserId(user.id));
       dispatch(addLocation(user.location));
       dispatch(addContactNumbers(user.contactNumbers));
-      dispatch(addProfilePicture(user.profiePicture))
+      dispatch(addProfilePicture(user.profilePicture))
       dispatch(addAccessToken(user.accessToken))
       dispatch(addFavoriteCommercialForSaleProperties(user.favoriteCommercialForSaleProperties))
       dispatch(addFavoriteCommercialRentalProperties(user.favoriteCommercialRentalProperties))

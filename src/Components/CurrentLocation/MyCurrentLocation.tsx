@@ -6,12 +6,12 @@ import { useMutation } from "@tanstack/react-query";
 
 import { primary } from "@/src/Theme/Colors";
 import Row from "../Row/Row";
-import { ISearchLocation } from "@/src/GlobalTypes/Types";
 import MessageModal from "../Modals/MessageModal";
 import ButtonSpinner from "../Spinners/ButtonSpinner";
-import { locationReverseGeoCodingHttpFunc } from "@/src/HttpServices/Mutations/User/LocationHttpFunctions";
 import { numberToString } from "@/src/Utils/Funcs";
 import ThemedText from "../ThemedText/ThemedText";
+import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
+import { locationReverseGeoCodingHttpFunc } from "@/src/HttpServices/Mutations/LocationIQ/LocationIQHttpFuncs";
 
 type Props = {
   setLocation: React.Dispatch<React.SetStateAction<string | ISearchLocation>>;

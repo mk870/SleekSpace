@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import * as WebBrowser from "expo-web-browser";
 
@@ -21,7 +21,7 @@ const FacebookButton: React.FC<Props> = ({
   handleOnPressFunc,
 }) => {
   return (
-    <TouchableOpacity
+    <Pressable
       style={styles.container}
       disabled={disabled}
       onPress={handleOnPressFunc}
@@ -34,7 +34,7 @@ const FacebookButton: React.FC<Props> = ({
             : "Register with Facebook"}
         </Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

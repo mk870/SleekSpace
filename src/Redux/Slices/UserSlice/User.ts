@@ -8,14 +8,22 @@ const user: IUser = {
   contactNumbers: [],
   location: null,
   id: 0,
-  accessToken:"",
-  profiePicture:null,
-  favoriteCommercialForSaleProperties:[],
-  favoriteCommercialRentalProperties:[],
-  favoriteLandProperties:[],
-  favoriteResidentialForSaleProperties:[],
-  favoriteResidentialRentalProperties:[],
-  favoriteStands:[]
+  accessToken: "",
+  profilePicture: {
+    name: "",
+    id: 0,
+    userId: 0,
+    contentType: "",
+    size: 0,
+    fileType: "",
+    uri: "",
+  },
+  favoriteCommercialForSaleProperties: [],
+  favoriteCommercialRentalProperties: [],
+  favoriteLandProperties: [],
+  favoriteResidentialForSaleProperties: [],
+  favoriteResidentialRentalProperties: [],
+  favoriteStands: [],
 };
 export const userSlice = createSlice({
   name: "user",
@@ -50,7 +58,7 @@ export const userSlice = createSlice({
     addProfilePicture: (state, action) => {
       state.value = {
         ...state.value,
-        profiePicture: action.payload,
+        profilePicture: action.payload,
       };
     },
     addContactNumbers: (state, action) => {
@@ -71,13 +79,13 @@ export const userSlice = createSlice({
         accessToken: action.payload,
       };
     },
-    addFavoriteResidentialForSaleProperties:(state, action) => {
+    addFavoriteResidentialForSaleProperties: (state, action) => {
       state.value = {
         ...state.value,
         favoriteResidentialForSaleProperties: action.payload,
       };
     },
-    addFavoriteResidentialRentalProperties:(state, action) => {
+    addFavoriteResidentialRentalProperties: (state, action) => {
       state.value = {
         ...state.value,
         favoriteResidentialRentalProperties: action.payload,

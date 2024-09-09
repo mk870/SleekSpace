@@ -1,151 +1,117 @@
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import React, { useState } from "react";
-import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
-import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import PhoneNumberField from "@/src/Components/PhoneNumberField/PhoneNumberField";
 import { red } from "@/src/Theme/Colors";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
-import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { family } from "@/src/Theme/Font";
-import { IPhoneNumberDetails } from "../Types";
-import { getContactNumber, handleLayout } from "@/src/Utils/Funcs";
-import { updateAndCreateContactNumberHttpFunc } from "@/src/HttpServices/Mutations/User/ContactNumberHttpFuncs";
+import { getManagerContactNumber } from "@/src/Utils/Funcs";
 import {
   BUTTON_MAX_WIDTH,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
+  managerAccountUpdateMsg,
   MAX_INPUT_WIDTH,
   SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
-import { fetchUserData } from "../../Hooks/fetchUser";
-import { IUser } from "@/src/GlobalTypes/User/UserTypes";
+import { IPhoneNumberDetails } from "../../../../Profile/Screens/Types";
+import { UpdateManagerContactNumbers } from "@/src/HttpServices/Mutations/Manager/ContactNumbersHttFuncs";
+import RegularText from "@/src/Components/RegularText/RegularText";
+import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
 
-const ProfileUpdate: INoPropsReactComponent = () => {
-  const user = useAppSelector((state) => state.user.value);
+const Contacts: INoPropsReactComponent = () => {
+  const manager = useAppSelector((state) => state.managerAccount.value);
+  const { accessToken } = useAppSelector((state) => state.user.value);
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState<boolean>(true);
   const [isWhatsAppNumberValid, setIsWhatsAppNumberValid] =
     useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
+  const dispatch = useAppDispatch();
 
   const [phoneNumberDetails, setPhoneNumberDetails] =
     useState<IPhoneNumberDetails>({
-      number: getContactNumber("phone", user.contactNumbers),
+      number: getManagerContactNumber(manager.contacts, "phone"),
       countryCode: "263",
       countryAbbrv: "ZW",
     });
   const [whatsAppNumberDetails, setWhatsAppNumberDetails] =
     useState<IPhoneNumberDetails>({
-      number: getContactNumber("whatsapp", user.contactNumbers),
+      number: getManagerContactNumber(manager.contacts, "whatsapp"),
       countryCode: "263",
       countryAbbrv: "ZW",
     });
-  const [userData, setUserData] = useState<IUser | null>(null);
-  const [viewHeight, setHeightView] = useState<number>(0);
   const router = useRouter();
-  const { width, height } = useWindowDimensions();
-  useUpdateUser(userData);
+  const { width } = useWindowDimensions();
 
-  const createAndUpdateContactsMutation = useMutation({
-    mutationFn: updateAndCreateContactNumberHttpFunc,
-    onSuccess(_data) {
-      fetchUserData(
-        user,
-        setUserData,
-        setIsLoading,
-        setOpenSuccessModal,
-        setUpdateError
-      );
+  const updateManagerContacts = useMutation({
+    mutationFn: UpdateManagerContactNumbers,
+    onSuccess(res) {
+      dispatch(addManagerAccount(res.data.response));
+      setOpenSuccessModal(true);
     },
     onError(error: any) {
       if (error.response?.data?.error !== "") {
         setUpdateError(error.response?.data?.error);
       } else setUpdateError("Something went wrong");
     },
+    onSettled: () => setIsLoading(false),
   });
 
+  const getContactId = (type: "phone" | "whatsapp") => {
+    const contact = manager.contacts.filter((contact) => contact.type === type);
+    return contact[0].id;
+  };
+
   const handleUpdate = () => {
-    if (isPhoneNumberValid && isWhatsAppNumberValid) {
+    if (
+      isPhoneNumberValid &&
+      isWhatsAppNumberValid &&
+      phoneNumberDetails.number &&
+      whatsAppNumberDetails.number
+    ) {
       setIsLoading(true);
-      if (user.contactNumbers.length === 0) {
-        createAndUpdateContactsMutation.mutate({
-          contactNumbers: [
-            {
-              number: phoneNumberDetails.number
-                ? phoneNumberDetails.number
-                : "",
-              countryAbbrv: phoneNumberDetails.countryAbbrv
-                ? phoneNumberDetails.countryAbbrv
-                : "",
-              countryCode: phoneNumberDetails.countryCode
-                ? phoneNumberDetails.countryCode
-                : "",
-              userId: user.id,
-              type: "phone",
-            },
-            {
-              number: whatsAppNumberDetails.number
-                ? whatsAppNumberDetails.number
-                : "",
-              countryAbbrv: whatsAppNumberDetails.countryAbbrv
-                ? whatsAppNumberDetails.countryAbbrv
-                : "",
-              countryCode: whatsAppNumberDetails.countryCode
-                ? whatsAppNumberDetails.countryCode
-                : "",
-              userId: user.id,
-              type: "whatsapp",
-            },
-          ],
-          accessToken: user.accessToken,
-          userId: user.id,
-        });
-      } else {
-        createAndUpdateContactsMutation.mutate({
-          contactNumbers: [
-            {
-              number: whatsAppNumberDetails.number
-                ? whatsAppNumberDetails.number
-                : "",
-              countryAbbrv: whatsAppNumberDetails.countryAbbrv
-                ? whatsAppNumberDetails.countryAbbrv
-                : "",
-              countryCode: whatsAppNumberDetails.countryCode
-                ? whatsAppNumberDetails.countryCode
-                : "",
-              userId: user.id,
-              type: "whatsapp",
-              id: user.contactNumbers.filter(
-                (contact) => contact.type === "whatsapp"
-              )[0].id,
-            },
-            {
-              number: phoneNumberDetails.number
-                ? phoneNumberDetails.number
-                : "",
-              countryAbbrv: phoneNumberDetails.countryAbbrv
-                ? phoneNumberDetails.countryAbbrv
-                : "",
-              countryCode: phoneNumberDetails.countryCode
-                ? phoneNumberDetails.countryCode
-                : "",
-              userId: user.id,
-              type: "phone",
-              id: user.contactNumbers.filter(
-                (contact) => contact.type === "phone"
-              )[0].id,
-            },
-          ],
-          accessToken: user.accessToken,
-          userId: user.id,
-        });
-      }
+      updateManagerContacts.mutate({
+        managerContacts: [
+          {
+            id: getContactId("phone"),
+            number: phoneNumberDetails.number ? phoneNumberDetails.number : "",
+            countryAbbrv: phoneNumberDetails.countryAbbrv
+              ? phoneNumberDetails.countryAbbrv
+              : "",
+            countryCode: phoneNumberDetails.countryCode
+              ? phoneNumberDetails.countryCode
+              : "",
+            managerId: manager.id,
+            type: "phone",
+          },
+          {
+            id: getContactId("whatsapp"),
+            number: whatsAppNumberDetails.number
+              ? whatsAppNumberDetails.number
+              : "",
+            countryAbbrv: whatsAppNumberDetails.countryAbbrv
+              ? whatsAppNumberDetails.countryAbbrv
+              : "",
+            countryCode: whatsAppNumberDetails.countryCode
+              ? whatsAppNumberDetails.countryCode
+              : "",
+            managerId: manager.id,
+            type: "whatsapp",
+          },
+        ],
+        accessToken: accessToken,
+        managerId: manager.id,
+      });
+    } else {
+      setUpdateError("please enter correct contact numbers");
     }
   };
 
@@ -163,12 +129,11 @@ const ProfileUpdate: INoPropsReactComponent = () => {
               styles.inputWrapper,
               { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
             ]}
-            onLayout={(e) => handleLayout(e, setHeightView)}
           >
             <PhoneNumberField
               setPhoneNumberDetails={setPhoneNumberDetails}
               label="Phone Number"
-              initialValue={getContactNumber("phone", user.contactNumbers)}
+              initialValue={getManagerContactNumber(manager.contacts, "phone")}
               isNumberValid={isPhoneNumberValid}
               setIsNumberValid={setIsPhoneNumberValid}
               phoneNumberDetails={phoneNumberDetails}
@@ -183,7 +148,10 @@ const ProfileUpdate: INoPropsReactComponent = () => {
             <PhoneNumberField
               setPhoneNumberDetails={setWhatsAppNumberDetails}
               label="Whatsapp Number"
-              initialValue={getContactNumber("whatsapp", user.contactNumbers)}
+              initialValue={getManagerContactNumber(
+                manager.contacts,
+                "whatsapp"
+              )}
               isNumberValid={isWhatsAppNumberValid}
               setIsNumberValid={setIsWhatsAppNumberValid}
               phoneNumberDetails={whatsAppNumberDetails}
@@ -195,6 +163,7 @@ const ProfileUpdate: INoPropsReactComponent = () => {
                 </Text>
               </View>
             )}
+            <RegularText>{managerAccountUpdateMsg}</RegularText>
           </View>
           <View
             style={[
@@ -203,7 +172,6 @@ const ProfileUpdate: INoPropsReactComponent = () => {
                   width > BUTTON_SIZE_SCREEN_BREAK_POINT
                     ? BUTTON_MAX_WIDTH
                     : "100%",
-                height: height - viewHeight - 100,
               },
               styles.btnContainer,
             ]}
@@ -216,14 +184,14 @@ const ProfileUpdate: INoPropsReactComponent = () => {
           </View>
           <MessageModal
             isModalVisible={openSuccessModal}
-            header="Update Successful"
-            message="your contact numbers have been successfully updated"
+            header="Account Updated!"
+            message="you have successfully updated your property manager account contacts. Please note, all your properties will be updated with this new information."
             type="success"
             handleCancel={closeSuccessModal}
           />
           <MessageModal
             isModalVisible={updateError ? true : false}
-            header="Update Failed"
+            header="Update Failed!"
             message={updateError}
             type="error"
             handleCancel={() => setUpdateError("")}
@@ -234,19 +202,19 @@ const ProfileUpdate: INoPropsReactComponent = () => {
   );
 };
 
-export default ProfileUpdate;
+export default Contacts;
 
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 15,
     gap: 20,
     alignItems: "center",
-    justifyContent: "center",
+    flex: 1,
   },
   inputWrapper: {
     alignItems: "center",
-    justifyContent: "center",
     gap: 20,
+    flex: 1,
   },
   errorText: {
     fontFamily: family,

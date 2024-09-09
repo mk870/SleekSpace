@@ -10,11 +10,15 @@ import {
   MAX_INPUT_WIDTH,
   SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
-import { emailValidator, handleLayout } from "@/src/Utils/Funcs";
+import {
+  emailValidator,
+  generateRandomSixDigitNumber,
+  handleLayout,
+} from "@/src/Utils/Funcs";
 import PhoneNumberField from "@/src/Components/PhoneNumberField/PhoneNumberField";
 import { IPhoneNumberDetails } from "../../../Profile/Screens/Types";
 import { family, small } from "@/src/Theme/Font";
-import { red } from "@/src/Theme/Colors";
+import { gray, red } from "@/src/Theme/Colors";
 import InputField from "@/src/Components/InputField/InputField";
 import ProfilePicture from "@/src/Components/ProfilePicture/ProfilePicture";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
@@ -23,10 +27,8 @@ import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import RegularText from "@/src/Components/RegularText/RegularText";
-import { uploadFileToFirebase } from "@/src/Firebase/config";
 
 const CreateAccount = () => {
-  const [viewHeight, setHeightView] = useState<number>(0);
   const user = useAppSelector((state) => state.user.value);
   const [email, setEmail] = useState<string>(user.email);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -52,6 +54,9 @@ const CreateAccount = () => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState<boolean>(true);
   const [image, setImage] = useState<string>("");
+  const [imageBase64, setImageBase64] = useState<string>("");
+  const [imageType, setImageType] = useState<string>("");
+  const [imageSize, setImageSize] = useState<number>(0);
   const [isWhatsAppNumberValid, setIsWhatsAppNumberValid] =
     useState<boolean>(true);
   const { width, height } = useWindowDimensions();
@@ -99,58 +104,63 @@ const CreateAccount = () => {
     if (
       name &&
       !isNameValidationError &&
+      !isEmailValidationError &&
       whatsAppNumberDetails.number &&
-      phoneNumberDetails.number
+      phoneNumberDetails.number &&
+      isWhatsAppNumberValid &&
+      isPhoneNumberValid
     ) {
-      try {
-        setIsLoading(true);
-        createManagerAccount.mutate({
-          accessToken,
-          manager: {
-            name,
-            email,
-            userId: id,
-            profilePicture: image
-              ? { ...(await uploadFileToFirebase(image)) }
+      setIsLoading(true);
+      createManagerAccount.mutate({
+        accessToken,
+        manager: {
+          name,
+          email,
+          userId: id,
+          profilePicture:
+            image && imageBase64
+              ? {
+                  name: `${generateRandomSixDigitNumber()}${name}`,
+                  image: imageBase64,
+                  contentType: "image",
+                  fileType: imageType,
+                  size: imageSize,
+                }
               : {
                   name: "",
-                  uri: "",
+                  image: "",
                   contentType: "",
                   fileType: "",
-                  fullPath: "",
                   size: 0,
                 },
-            contacts: [
-              {
-                number: whatsAppNumberDetails.number
-                  ? whatsAppNumberDetails.number
-                  : "",
-                countryAbbrv: whatsAppNumberDetails.countryAbbrv
-                  ? whatsAppNumberDetails.countryAbbrv
-                  : "",
-                countryCode: whatsAppNumberDetails.countryCode
-                  ? whatsAppNumberDetails.countryCode
-                  : "",
-                type: "whatsapp",
-              },
-              {
-                number: phoneNumberDetails.number
-                  ? phoneNumberDetails.number
-                  : "",
-                countryAbbrv: phoneNumberDetails.countryAbbrv
-                  ? phoneNumberDetails.countryAbbrv
-                  : "",
-                countryCode: phoneNumberDetails.countryCode
-                  ? phoneNumberDetails.countryCode
-                  : "",
-                type: "phone",
-              },
-            ],
-          },
-        });
-      } catch (error: any) {
-        setHttpError(error.message);
-      }
+          contacts: [
+            {
+              number: whatsAppNumberDetails.number
+                ? whatsAppNumberDetails.number
+                : "",
+              countryAbbrv: whatsAppNumberDetails.countryAbbrv
+                ? whatsAppNumberDetails.countryAbbrv
+                : "",
+              countryCode: whatsAppNumberDetails.countryCode
+                ? whatsAppNumberDetails.countryCode
+                : "",
+              type: "whatsapp",
+            },
+            {
+              number: phoneNumberDetails.number
+                ? phoneNumberDetails.number
+                : "",
+              countryAbbrv: phoneNumberDetails.countryAbbrv
+                ? phoneNumberDetails.countryAbbrv
+                : "",
+              countryCode: phoneNumberDetails.countryCode
+                ? phoneNumberDetails.countryCode
+                : "",
+              type: "phone",
+            },
+          ],
+        },
+      });
     } else {
       setOmmissionError(true);
     }
@@ -170,9 +180,14 @@ const CreateAccount = () => {
               styles.inputWrapper,
               { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
             ]}
-            onLayout={(e) => handleLayout(e, setHeightView)}
           >
-            <ProfilePicture uri={image} setImage={setImage} />
+            <ProfilePicture
+              uri={image}
+              setImage={setImage}
+              setImageBase64={setImageBase64}
+              setImageSize={setImageSize}
+              setImageType={setImageType}
+            />
             <InputField
               textValue={name}
               placeHolder="company/personal name"
@@ -182,7 +197,7 @@ const CreateAccount = () => {
               contentType="givenName"
               type="givenName"
               label="Name"
-              borderColor={isNameValidationError ? red : undefined}
+              borderColor={isNameValidationError ? red : gray}
               isRequired
             />
             {isNameValidationError && (
@@ -201,7 +216,7 @@ const CreateAccount = () => {
               contentType="emailAddress"
               type="emailAddress"
               label="Email"
-              borderColor={isEmailValidationError ? red : undefined}
+              borderColor={isEmailValidationError ? red : gray}
             />
             {isEmailValidationError && (
               <View style={styles.errorContainer}>
@@ -257,7 +272,6 @@ const CreateAccount = () => {
             style={[
               {
                 width: width > SCREEN_BREAK_POINT ? BUTTON_MAX_WIDTH : "100%",
-                height: ommissionError ? "auto" : height - viewHeight - 70,
               },
               styles.btnContainer,
             ]}
@@ -296,12 +310,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     gap: 20,
     alignItems: "center",
-    justifyContent: "center",
+    flex: 1,
   },
   inputWrapper: {
     alignItems: "center",
-    justifyContent: "center",
     gap: 10,
+    flex: 1,
   },
   errorText: {
     fontFamily: family,
@@ -318,6 +332,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     justifyContent: "flex-end",
     paddingBottom: 20,
+    marginTop: 20,
   },
   errorContainer: {
     width: "100%",

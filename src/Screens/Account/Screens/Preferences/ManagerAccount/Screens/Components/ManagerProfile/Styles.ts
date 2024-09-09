@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
     fontFamily: family,
     fontSize: small,
     marginTop: -7,
+    textAlign:"center"
   },
   wrapper: {
     alignItems: "center",
