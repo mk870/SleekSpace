@@ -1,10 +1,12 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
+import { Image } from "expo-image";
 
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import { primary, pureWhite } from "@/src/Theme/Colors";
 import { family, small } from "@/src/Theme/Font";
+import { imageBlurhash } from "@/src/Utils/Constants";
 
 type Props = {
   tintColor?: string;
@@ -13,9 +15,17 @@ type Props = {
 };
 
 const TabsRightHeader: React.FC<Props> = () => {
-  const { accessToken, avatar, givenName, familyName } = useAppSelector(
+  const [timeStamp, setTimeStamp] = useState<number | null>(null);
+  const { accessToken, profilePicture, givenName, familyName } = useAppSelector(
     (state) => state.user.value
   );
+
+  useEffect(() => {
+    if (profilePicture.uri) {
+      setTimeStamp(Date.now());
+    }
+  }, [profilePicture]);
+
   return (
     <View style={styles.container}>
       {accessToken && (
@@ -23,8 +33,12 @@ const TabsRightHeader: React.FC<Props> = () => {
           style={styles.subContainer}
           onPress={() => router.push("/account/profile")}
         >
-          {avatar ? (
-            <Image source={{ uri: avatar }} style={styles.image} />
+          {profilePicture.uri ? (
+            <Image
+              source={{ uri: `${profilePicture.uri}?timestamp=${timeStamp}` }}
+              style={styles.image}
+              placeholder={{ blurhash: imageBlurhash }}
+            />
           ) : (
             <View style={styles.userInitialsContainer}>
               <Text
@@ -44,7 +58,7 @@ const styles = StyleSheet.create({
   container: {},
   subContainer: {
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   image: {
     height: 40,

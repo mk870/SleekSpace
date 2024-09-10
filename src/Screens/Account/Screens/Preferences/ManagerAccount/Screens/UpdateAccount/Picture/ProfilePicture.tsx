@@ -77,7 +77,7 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
           contentType: "image",
           image: imageBase64,
           size: imageSize,
-          managerId: manager.id,
+          managerId: manager.profilePicture.managerId,
         },
       });
     } else {
@@ -122,7 +122,7 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
             ]}
           >
             <CustomButton
-              title={isLoading ? "loading" : "update profile picture"}
+              title={isLoading ? "loading" : "update"}
               onPressFunc={handleProfilePictureUpdate}
               isDisabled={isLoading}
             />
@@ -130,7 +130,7 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
           <MessageModal
             isModalVisible={openSuccessModal}
             header="Account Updated!"
-            message="your profile picture was updated successfully, it will take a few minutes to reflect."
+            message="your profile picture was updated successfully, it will take a few moments to reflect."
             type="success"
             handleCancel={handleCloseSuccessModal}
           />

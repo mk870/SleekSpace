@@ -11,7 +11,7 @@ import DeniedPermissionView from "./Components/DeniedPermissionView";
 type Props = {
   handleCancel: IVoidFunc;
   isModalVisible: boolean;
-  type: "profile-Photo" | "property-PhotoOrVideo";
+  type: "profile-Photo"|"property-Photo";
   setImage?: React.Dispatch<React.SetStateAction<string>>;
   setImageBase64?: React.Dispatch<React.SetStateAction<string>>;
   setMediaType?: React.Dispatch<React.SetStateAction<string>>;
@@ -51,13 +51,10 @@ const MediaModal: React.FC<Props> = ({
 
   const openGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes:
-        type === "profile-Photo"
-          ? ImagePicker.MediaTypeOptions.Images
-          : ImagePicker.MediaTypeOptions.All,
+      mediaTypes:ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0.3,
       base64: true,
     });
     captureMediaInformation(result)
@@ -65,10 +62,10 @@ const MediaModal: React.FC<Props> = ({
 
   const openCamera = async () => {
     let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0.3,
       base64: true
     });
     captureMediaInformation(result)

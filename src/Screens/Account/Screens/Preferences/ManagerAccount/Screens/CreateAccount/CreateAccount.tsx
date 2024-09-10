@@ -13,6 +13,7 @@ import {
 import {
   emailValidator,
   generateRandomSixDigitNumber,
+  getContactNumber,
   handleLayout,
 } from "@/src/Utils/Funcs";
 import PhoneNumberField from "@/src/Components/PhoneNumberField/PhoneNumberField";
@@ -38,17 +39,45 @@ const CreateAccount = () => {
   const [isEmailValidationError, setIsEmailValidationError] =
     useState<boolean>(false);
   const [phoneNumberDetails, setPhoneNumberDetails] =
-    useState<IPhoneNumberDetails>({
-      number: "",
-      countryCode: "263",
-      countryAbbrv: "ZW",
-    });
+    useState<IPhoneNumberDetails>(
+      user.contactNumbers.length > 0
+        ? {
+            number: user.contactNumbers.filter(
+              (contact) => contact.type === "phone"
+            )[0].number,
+            countryAbbrv: user.contactNumbers.filter(
+              (contact) => contact.type === "phone"
+            )[0].countryAbbrv,
+            countryCode: user.contactNumbers.filter(
+              (contact) => contact.type === "phone"
+            )[0].countryCode,
+          }
+        : {
+            number: "",
+            countryCode: "263",
+            countryAbbrv: "ZW",
+          }
+    );
   const [whatsAppNumberDetails, setWhatsAppNumberDetails] =
-    useState<IPhoneNumberDetails>({
-      number: "",
-      countryCode: "263",
-      countryAbbrv: "ZW",
-    });
+    useState<IPhoneNumberDetails>(
+      user.contactNumbers.length > 0
+        ? {
+            number: user.contactNumbers.filter(
+              (contact) => contact.type === "whatsapp"
+            )[0].number,
+            countryAbbrv: user.contactNumbers.filter(
+              (contact) => contact.type === "whatsapp"
+            )[0].countryAbbrv,
+            countryCode: user.contactNumbers.filter(
+              (contact) => contact.type === "whatsapp"
+            )[0].countryCode,
+          }
+        : {
+            number: "",
+            countryCode: "263",
+            countryAbbrv: "ZW",
+          }
+    );
   const [httpError, setHttpError] = useState<string>("");
   const [ommissionError, setOmmissionError] = useState<boolean>(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
@@ -59,7 +88,7 @@ const CreateAccount = () => {
   const [imageSize, setImageSize] = useState<number>(0);
   const [isWhatsAppNumberValid, setIsWhatsAppNumberValid] =
     useState<boolean>(true);
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const dispatch = useAppDispatch();
   const { accessToken, id } = useAppSelector((state) => state.user.value);
 
@@ -228,7 +257,7 @@ const CreateAccount = () => {
             <PhoneNumberField
               setPhoneNumberDetails={setPhoneNumberDetails}
               label="Phone Number"
-              initialValue={""}
+              initialValue={getContactNumber("phone",user.contactNumbers)}
               isNumberValid={isPhoneNumberValid}
               setIsNumberValid={setIsPhoneNumberValid}
               phoneNumberDetails={phoneNumberDetails}
@@ -244,7 +273,7 @@ const CreateAccount = () => {
             <PhoneNumberField
               setPhoneNumberDetails={setWhatsAppNumberDetails}
               label="Whatsapp Number"
-              initialValue={""}
+              initialValue={getContactNumber("whatsapp",user.contactNumbers)}
               isNumberValid={isWhatsAppNumberValid}
               setIsNumberValid={setIsWhatsAppNumberValid}
               phoneNumberDetails={whatsAppNumberDetails}
@@ -291,7 +320,7 @@ const CreateAccount = () => {
           <MessageModal
             header="Account Created!"
             message={
-              "you have successfully created a property management account, you can now add properties to our platform"
+              "you have successfully created a property management account, you can now add properties to our platform."
             }
             type="success"
             isModalVisible={isSuccessModalOpen}

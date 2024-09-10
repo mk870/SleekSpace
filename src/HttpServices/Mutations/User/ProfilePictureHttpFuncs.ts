@@ -3,7 +3,7 @@ import axios from "axios";
 import { userRoutes } from "@/src/BackendRoutes/UserRoutes";
 import { IUserProfilePictureUpdateAndCreation } from "@/src/GlobalTypes/User/UserTypes";
 
-export const postUserProfilePictureHttpFunc = (requestData: {
+export const createUserProfilePictureHttpFunc = (requestData: {
   profilePicture: IUserProfilePictureUpdateAndCreation;
   accessToken: string;
 }) => {

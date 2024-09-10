@@ -14,7 +14,7 @@ import { family, small } from "@/src/Theme/Font";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
-  type: "profile-Photo" | "property-PhotoOrVideo";
+  type: "profile-Photo" | "property-Photo";
   openCamera: () => Promise<void>;
   openGallery: () => Promise<void>;
 };

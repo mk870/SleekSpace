@@ -8,9 +8,7 @@ import { light, dark, gray } from "@/src/Theme/Colors";
 import ThemedText from "../ThemedText/ThemedText";
 import SuggestedLocations from "./SuggestedLocations/SuggestedLocations";
 import MessageModal from "../Modals/MessageModal";
-import {
-  shortenString,
-} from "@/src/Utils/Funcs";
+import { shortenString } from "@/src/Utils/Funcs";
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { locationAutoCompleteHttpFunc } from "@/src/HttpServices/Mutations/LocationIQ/LocationIQHttpFuncs";
 
@@ -40,6 +38,7 @@ const LocationInputField: React.FC<Props> = ({
   const [openSuggestions, setOpenSuggestions] = useState<boolean>(false);
   const [locationError, setLocationError] = useState<string>("");
   const theme = useAppSelector((state) => state.theme.value);
+
   const locationAutoCompleteMutation = useMutation({
     mutationFn: locationAutoCompleteHttpFunc,
     onSuccess: (data) => {
@@ -57,22 +56,25 @@ const LocationInputField: React.FC<Props> = ({
       setIsLoading(false);
     },
   });
+
   const handleSearch = () => {
     if (value) {
       setIsLoading(true);
       locationAutoCompleteMutation.mutate({ locationName: value });
     }
   };
+
   const handleCancelErrorModal = () => {
     setLocationError("");
   };
 
   useEffect(() => {
     if (location) {
-      if (typeof location !== "string") setValue(shortenString(location.display_name,40));
+      if (typeof location !== "string")
+        setValue(shortenString(location.display_name, 40));
     } else setValue("");
   }, [location]);
-  
+
   return (
     <View style={[styles.container]}>
       {showLabel && <ThemedText type="regular">Enter your Location</ThemedText>}
@@ -115,7 +117,7 @@ const LocationInputField: React.FC<Props> = ({
               borderWidth: 1,
               borderColor: gray,
               backgroundColor:
-                theme === "light" ? light.background : dark.background,
+                theme === "light" ? light.background : dark.darkGray,
             },
             styles.input,
           ]}
@@ -132,7 +134,7 @@ const LocationInputField: React.FC<Props> = ({
       )}
       <MessageModal
         header="Location Error!"
-        message={`Sorry, we could not get the coordinates of ${value}, please try adding the city.`}
+        message={`Sorry, we could not get the coordinates of ${value}, please try adding more information and make sure it's correctly spelt.`}
         isModalVisible={locationError ? true : false}
         handleCancel={handleCancelErrorModal}
         type="error"

@@ -44,6 +44,7 @@ const Profile: INoPropsReactComponent = () => {
     location,
     id,
     accessToken,
+    profilePicture
   } = useAppSelector((state) => state.user.value);
   const theme = useAppSelector((state) => state.theme.value);
   const [resetLoader, setResetLoader] = useState<boolean>(false);
@@ -63,7 +64,7 @@ const Profile: INoPropsReactComponent = () => {
   const iconColor = primary;
   const { width } = useWindowDimensions();
   const dispatch = useAppDispatch();
-
+  console.log("location:",location)
   const personalDetails = [
     {
       name: "Email",
@@ -163,7 +164,7 @@ const Profile: INoPropsReactComponent = () => {
         {accessToken && (
           <View style={styles.container}>
             <View style={styles.userDetails}>
-              <ProfilePicture uri={""} hideCameraOptions/>
+              <ProfilePicture uri={profilePicture.uri} hideCameraOptions/>
               <ThemedText type="header">{`${givenName} ${familyName}`}</ThemedText>
               <Text
                 style={[
@@ -252,7 +253,7 @@ const Profile: INoPropsReactComponent = () => {
             <MessageModal
               handleCancel={() => setOpenDeleteAccountConfirmation(false)}
               isModalVisible={openDeleteAccountConfirmation}
-              message="Are your sure you want to delete your account"
+              message="Are your sure you want to delete your account?"
               header="Delete Account?"
               type="confirmation"
               handleConfirm={handleDeleteAccount}
@@ -277,7 +278,7 @@ const Profile: INoPropsReactComponent = () => {
               handleCancel={() => setResetPasswordError("")}
               isModalVisible={resetPasswordError ? true : false}
               message={resetPasswordError}
-              header="Verification Email Failed"
+              header="Verification Email Failed!"
               type="error"
             />
             <MessageModal

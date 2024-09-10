@@ -16,7 +16,7 @@ import InputField from "@/src/Components/InputField/InputField";
 import { INoPropsReactComponent, IStringOrNull } from "@/src/GlobalTypes/Types";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { family, small } from "@/src/Theme/Font";
-import { red, primary } from "@/src/Theme/Colors";
+import { red, primary, gray } from "@/src/Theme/Colors";
 import ButtonSpinner from "@/src/Components/Spinners/ButtonSpinner";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import {
@@ -32,9 +32,9 @@ import {
   MAX_INPUT_WIDTH,
   SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
-import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
+import { IUser } from "@/src/GlobalTypes/User/UserTypes";
 
 const Verification: INoPropsReactComponent = () => {
   const { id, isNewUser } = useLocalSearchParams();
@@ -189,7 +189,7 @@ const Verification: INoPropsReactComponent = () => {
               handleOnEnter={handleVerification}
               contentType="none"
               placeHolder=""
-              borderColor={typingError ? red : undefined}
+              borderColor={typingError ? red : gray}
             />
             {typingError && <Text style={styles.errorText}>{typingError}</Text>}
             <TouchableOpacity

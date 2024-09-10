@@ -41,7 +41,7 @@ const SigninAndSignupBtn: React.FC<Props> = ({ screenType }) => {
       </View>
       <ThemedText type="header">There is no profile to show</ThemedText>
       <RegularText>
-        Please login or create an account to view and update your profile
+        Please login or create an account to view and update your profile.
       </RegularText>
       <View
         style={[

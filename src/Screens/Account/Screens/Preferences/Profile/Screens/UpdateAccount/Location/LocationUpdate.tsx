@@ -10,9 +10,7 @@ import { Feather } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
 
-import {
-  INoPropsReactComponent
-} from "@/src/GlobalTypes/Types";
+import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import LocationInputField from "@/src/Components/LocationInputField/LocationInputField";
@@ -27,7 +25,6 @@ import {
 import {
   convertLocationToSearchableFormat,
   getLocation,
-  handleLayout,
 } from "@/src/Utils/Funcs";
 import { family } from "@/src/Theme/Font";
 import MyCurrentLocation from "@/src/Components/CurrentLocation/MyCurrentLocation";
@@ -51,7 +48,6 @@ const LocationUpdate: INoPropsReactComponent = () => {
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
   const [userData, setUserData] = useState<IUser | null>(null);
-  const [viewHeight, setViewHeight] = useState<number>(0);
   const [
     unSelectedSuggestedLocationsError,
     setUnSelectedSuggestedLocationsError,
@@ -61,7 +57,7 @@ const LocationUpdate: INoPropsReactComponent = () => {
       ? convertLocationToSearchableFormat(user.location)
       : emptyLocation
   );
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   useUpdateUser(userData);
   useEffect(() => {
@@ -136,24 +132,33 @@ const LocationUpdate: INoPropsReactComponent = () => {
       }
     } else {
       if (typeof location === "object" || location === "") {
-        setIsLoading(true);
-        locationUpdateMutation.mutate({
-          location: {
-            displayName: location ? getLocation(location, true) : "",
-            lat: location ? location.lat : "",
-            lon: location ? location.lon : "",
-            userId: user.id,
-            city: location ? location.address.city : "",
-            country: location ? location.address.country : "",
-            countryCode: location ? location.address.country_code : "",
-            county: location ? location.address.county : "",
-            province: location ? location.address.state : "",
-            boundingbox: location ? location.boundingbox : [],
-            surburb: location ? location.address.surburb : "",
-            id: user.location?.id,
-          },
-          accessToken: user.accessToken,
-        });
+        if (
+          typeof location === "object" &&
+          location.lat === user.location?.lat
+        ) {
+          setUpdateError(
+            "your location is still the same, please search for another location to update your account."
+          );
+        } else {
+          setIsLoading(true);
+          locationUpdateMutation.mutate({
+            location: {
+              displayName: location ? getLocation(location, true) : "",
+              lat: location ? location.lat : "",
+              lon: location ? location.lon : "",
+              userId: user.id,
+              city: location ? location.address.city : "",
+              country: location ? location.address.country : "",
+              countryCode: location ? location.address.country_code : "",
+              county: location ? location.address.county : "",
+              province: location ? location.address.state : "",
+              boundingbox: location ? location.boundingbox : [],
+              surburb: location ? location.address.surburb : "",
+              id: user.location?.id,
+            },
+            accessToken: user.accessToken,
+          });
+        }
       } else {
         setUnSelectedSuggestedLocationsError(true);
       }
@@ -169,7 +174,6 @@ const LocationUpdate: INoPropsReactComponent = () => {
               styles.inputWrapper,
               { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
             ]}
-            onLayout={(e) => handleLayout(e, setViewHeight)}
           >
             <LocationInputField
               placeHolder="enter your location"
@@ -179,8 +183,8 @@ const LocationUpdate: INoPropsReactComponent = () => {
             />
             {unSelectedSuggestedLocationsError && (
               <Text style={styles.errorText}>
-                please press the search button on keyboard and select suggested
-                locations, this helps with accuracy
+                please press the search button on your keyboard and select suggested
+                locations, this helps with accuracy.
               </Text>
             )}
             <Row style={styles.row}>
@@ -199,7 +203,6 @@ const LocationUpdate: INoPropsReactComponent = () => {
                   width > BUTTON_SIZE_SCREEN_BREAK_POINT
                     ? BUTTON_MAX_WIDTH
                     : "100%",
-                height: height - viewHeight - 100,
               },
             ]}
           >
@@ -212,7 +215,7 @@ const LocationUpdate: INoPropsReactComponent = () => {
           <MessageModal
             isModalVisible={openSuccessModal}
             header="Update Successful"
-            message="your location was updated successfully"
+            message="your location was updated successfully."
             type="success"
             handleCancel={closeSuccessModal}
           />
@@ -236,11 +239,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     gap: 20,
     alignItems: "center",
-    justifyContent: "center",
+    flex: 1,
   },
   inputWrapper: {
     alignItems: "center",
-    justifyContent: "center",
+    flex: 1,
     gap: 20,
   },
   errorText: {

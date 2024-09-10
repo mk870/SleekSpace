@@ -14,7 +14,7 @@ import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { family } from "@/src/Theme/Font";
 import { IPhoneNumberDetails } from "../../Types";
-import { getContactNumber, handleLayout } from "@/src/Utils/Funcs";
+import { getContactNumber } from "@/src/Utils/Funcs";
 import { updateAndCreateContactNumberHttpFunc } from "@/src/HttpServices/Mutations/User/ContactNumberHttpFuncs";
 import {
   BUTTON_MAX_WIDTH,
@@ -47,9 +47,8 @@ const ProfileUpdate: INoPropsReactComponent = () => {
       countryAbbrv: "ZW",
     });
   const [userData, setUserData] = useState<IUser | null>(null);
-  const [viewHeight, setHeightView] = useState<number>(0);
   const router = useRouter();
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   useUpdateUser(userData);
 
   const createAndUpdateContactsMutation = useMutation({
@@ -71,7 +70,12 @@ const ProfileUpdate: INoPropsReactComponent = () => {
   });
 
   const handleUpdate = () => {
-    if (isPhoneNumberValid && isWhatsAppNumberValid) {
+    if (
+      isPhoneNumberValid &&
+      isWhatsAppNumberValid &&
+      phoneNumberDetails.number &&
+      whatsAppNumberDetails.number
+    ) {
       setIsLoading(true);
       if (user.contactNumbers.length === 0) {
         createAndUpdateContactsMutation.mutate({
@@ -146,6 +150,8 @@ const ProfileUpdate: INoPropsReactComponent = () => {
           userId: user.id,
         });
       }
+    } else {
+      setUpdateError("please enter correct contact numbers");
     }
   };
 
@@ -163,7 +169,6 @@ const ProfileUpdate: INoPropsReactComponent = () => {
               styles.inputWrapper,
               { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
             ]}
-            onLayout={(e) => handleLayout(e, setHeightView)}
           >
             <PhoneNumberField
               setPhoneNumberDetails={setPhoneNumberDetails}
@@ -203,7 +208,6 @@ const ProfileUpdate: INoPropsReactComponent = () => {
                   width > BUTTON_SIZE_SCREEN_BREAK_POINT
                     ? BUTTON_MAX_WIDTH
                     : "100%",
-                height: height - viewHeight - 100,
               },
               styles.btnContainer,
             ]}
@@ -217,7 +221,7 @@ const ProfileUpdate: INoPropsReactComponent = () => {
           <MessageModal
             isModalVisible={openSuccessModal}
             header="Update Successful"
-            message="your contact numbers have been successfully updated"
+            message="your contact numbers have been successfully updated."
             type="success"
             handleCancel={closeSuccessModal}
           />
@@ -241,12 +245,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     gap: 20,
     alignItems: "center",
-    justifyContent: "center",
+    flex: 1,
   },
   inputWrapper: {
     alignItems: "center",
-    justifyContent: "center",
     gap: 20,
+    flex: 1,
   },
   errorText: {
     fontFamily: family,

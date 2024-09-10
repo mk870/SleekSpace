@@ -1,13 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 
-import { ISearchLocation } from "@/src/GlobalTypes/Types";
 import ButtonSpinner from "../../Spinners/ButtonSpinner";
 import { dark, gray, light, primary, red } from "@/src/Theme/Colors";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import { family, medium, small } from "@/src/Theme/Font";
 import Row from "../../Row/Row";
-import { getLocation, shortenString } from "@/src/Utils/Funcs";
+import { getLocation } from "@/src/Utils/Funcs";
+import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 
 type Props = {
   suggestions: ISearchLocation[] | null;
