@@ -1,1 +1,1 @@
-export { default } from "../../../../../../src/Screens/Account/Screens/Preferences/Profile/Screens/Location/LocationUpdate"
+export { default } from "../../../../../../src/Screens/Account/Screens/Preferences/Profile/Screens/UpdateAccount/Location/LocationUpdate"

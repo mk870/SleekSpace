@@ -1,1 +1,1 @@
-export { default } from "../../../../../../src/Screens/Account/Screens/Preferences/Profile/Screens/Contacts/ContactsUpdate"
+export { default } from "../../../../../../src/Screens/Account/Screens/Preferences/Profile/Screens/UpdateAccount/Contacts/ContactsUpdate"

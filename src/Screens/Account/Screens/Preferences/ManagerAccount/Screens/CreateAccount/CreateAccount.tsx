@@ -5,23 +5,31 @@ import { useMutation } from "@tanstack/react-query";
 
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
-import { BUTTON_MAX_WIDTH, MAX_INPUT_WIDTH, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
-import { emailValidator, handleLayout } from "@/src/Utils/Funcs";
+import {
+  BUTTON_MAX_WIDTH,
+  MAX_INPUT_WIDTH,
+  SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
+import {
+  emailValidator,
+  generateRandomSixDigitNumber,
+  getContactNumber,
+  handleLayout,
+} from "@/src/Utils/Funcs";
 import PhoneNumberField from "@/src/Components/PhoneNumberField/PhoneNumberField";
 import { IPhoneNumberDetails } from "../../../Profile/Screens/Types";
 import { family, small } from "@/src/Theme/Font";
-import { red } from "@/src/Theme/Colors";
+import { gray, red } from "@/src/Theme/Colors";
 import InputField from "@/src/Components/InputField/InputField";
-import Avatar from "@/src/Components/Avatar/Avatar";
+import ProfilePicture from "@/src/Components/ProfilePicture/ProfilePicture";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
-import { CreateManager } from "@/src/HttpServices/Mutations/ManagerHttpFunctions";
+import { CreateManager } from "@/src/HttpServices/Mutations/Manager/ManagerHttpFunctions";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import RegularText from "@/src/Components/RegularText/RegularText";
 
 const CreateAccount = () => {
-  const [viewHeight, setHeightView] = useState<number>(0);
   const user = useAppSelector((state) => state.user.value);
   const [email, setEmail] = useState<string>(user.email);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -31,25 +39,56 @@ const CreateAccount = () => {
   const [isEmailValidationError, setIsEmailValidationError] =
     useState<boolean>(false);
   const [phoneNumberDetails, setPhoneNumberDetails] =
-    useState<IPhoneNumberDetails>({
-      number: "",
-      countryCode: "263",
-      countryAbbrv: "ZW",
-    });
+    useState<IPhoneNumberDetails>(
+      user.contactNumbers.length > 0
+        ? {
+            number: user.contactNumbers.filter(
+              (contact) => contact.type === "phone"
+            )[0].number,
+            countryAbbrv: user.contactNumbers.filter(
+              (contact) => contact.type === "phone"
+            )[0].countryAbbrv,
+            countryCode: user.contactNumbers.filter(
+              (contact) => contact.type === "phone"
+            )[0].countryCode,
+          }
+        : {
+            number: "",
+            countryCode: "263",
+            countryAbbrv: "ZW",
+          }
+    );
   const [whatsAppNumberDetails, setWhatsAppNumberDetails] =
-    useState<IPhoneNumberDetails>({
-      number: "",
-      countryCode: "263",
-      countryAbbrv: "ZW",
-    });
+    useState<IPhoneNumberDetails>(
+      user.contactNumbers.length > 0
+        ? {
+            number: user.contactNumbers.filter(
+              (contact) => contact.type === "whatsapp"
+            )[0].number,
+            countryAbbrv: user.contactNumbers.filter(
+              (contact) => contact.type === "whatsapp"
+            )[0].countryAbbrv,
+            countryCode: user.contactNumbers.filter(
+              (contact) => contact.type === "whatsapp"
+            )[0].countryCode,
+          }
+        : {
+            number: "",
+            countryCode: "263",
+            countryAbbrv: "ZW",
+          }
+    );
   const [httpError, setHttpError] = useState<string>("");
   const [ommissionError, setOmmissionError] = useState<boolean>(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState<boolean>(true);
   const [image, setImage] = useState<string>("");
+  const [imageBase64, setImageBase64] = useState<string>("");
+  const [imageType, setImageType] = useState<string>("");
+  const [imageSize, setImageSize] = useState<number>(0);
   const [isWhatsAppNumberValid, setIsWhatsAppNumberValid] =
     useState<boolean>(true);
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const dispatch = useAppDispatch();
   const { accessToken, id } = useAppSelector((state) => state.user.value);
 
@@ -89,13 +128,16 @@ const CreateAccount = () => {
     onSettled: () => setIsLoading(false),
   });
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     setOmmissionError(false);
     if (
       name &&
       !isNameValidationError &&
+      !isEmailValidationError &&
       whatsAppNumberDetails.number &&
-      phoneNumberDetails.number
+      phoneNumberDetails.number &&
+      isWhatsAppNumberValid &&
+      isPhoneNumberValid
     ) {
       setIsLoading(true);
       createManagerAccount.mutate({
@@ -104,7 +146,22 @@ const CreateAccount = () => {
           name,
           email,
           userId: id,
-          avatar: image,
+          profilePicture:
+            image && imageBase64
+              ? {
+                  name: `${generateRandomSixDigitNumber()}${name}`,
+                  image: imageBase64,
+                  contentType: "image",
+                  fileType: imageType,
+                  size: imageSize,
+                }
+              : {
+                  name: "",
+                  image: "",
+                  contentType: "",
+                  fileType: "",
+                  size: 0,
+                },
           contacts: [
             {
               number: whatsAppNumberDetails.number
@@ -152,9 +209,14 @@ const CreateAccount = () => {
               styles.inputWrapper,
               { width: width > SCREEN_BREAK_POINT ? MAX_INPUT_WIDTH : "100%" },
             ]}
-            onLayout={(e) => handleLayout(e, setHeightView)}
           >
-            <Avatar avatar={image} setImage={setImage} />
+            <ProfilePicture
+              uri={image}
+              setImage={setImage}
+              setImageBase64={setImageBase64}
+              setImageSize={setImageSize}
+              setImageType={setImageType}
+            />
             <InputField
               textValue={name}
               placeHolder="company/personal name"
@@ -164,7 +226,7 @@ const CreateAccount = () => {
               contentType="givenName"
               type="givenName"
               label="Name"
-              borderColor={isNameValidationError ? red : undefined}
+              borderColor={isNameValidationError ? red : gray}
               isRequired
             />
             {isNameValidationError && (
@@ -183,7 +245,7 @@ const CreateAccount = () => {
               contentType="emailAddress"
               type="emailAddress"
               label="Email"
-              borderColor={isEmailValidationError ? red : undefined}
+              borderColor={isEmailValidationError ? red : gray}
             />
             {isEmailValidationError && (
               <View style={styles.errorContainer}>
@@ -195,7 +257,7 @@ const CreateAccount = () => {
             <PhoneNumberField
               setPhoneNumberDetails={setPhoneNumberDetails}
               label="Phone Number"
-              initialValue={""}
+              initialValue={getContactNumber("phone",user.contactNumbers)}
               isNumberValid={isPhoneNumberValid}
               setIsNumberValid={setIsPhoneNumberValid}
               phoneNumberDetails={phoneNumberDetails}
@@ -211,7 +273,7 @@ const CreateAccount = () => {
             <PhoneNumberField
               setPhoneNumberDetails={setWhatsAppNumberDetails}
               label="Whatsapp Number"
-              initialValue={""}
+              initialValue={getContactNumber("whatsapp",user.contactNumbers)}
               isNumberValid={isWhatsAppNumberValid}
               setIsNumberValid={setIsWhatsAppNumberValid}
               phoneNumberDetails={whatsAppNumberDetails}
@@ -239,7 +301,6 @@ const CreateAccount = () => {
             style={[
               {
                 width: width > SCREEN_BREAK_POINT ? BUTTON_MAX_WIDTH : "100%",
-                height: ommissionError ? "auto" : height - viewHeight - 70,
               },
               styles.btnContainer,
             ]}
@@ -259,7 +320,7 @@ const CreateAccount = () => {
           <MessageModal
             header="Account Created!"
             message={
-              "you have successfully created a property manager account, you can now add properties to our platform"
+              "you have successfully created a property management account, you can now add properties to our platform."
             }
             type="success"
             isModalVisible={isSuccessModalOpen}
@@ -278,12 +339,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     gap: 20,
     alignItems: "center",
-    justifyContent: "center",
+    flex: 1,
   },
   inputWrapper: {
     alignItems: "center",
-    justifyContent: "center",
     gap: 10,
+    flex: 1,
   },
   errorText: {
     fontFamily: family,
@@ -300,6 +361,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     justifyContent: "flex-end",
     paddingBottom: 20,
+    marginTop: 20,
   },
   errorContainer: {
     width: "100%",

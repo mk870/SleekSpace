@@ -10,15 +10,20 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
 
 import { family, medium, small } from "@/src/Theme/Font";
-import { red } from "@/src/Theme/Colors";
+import { gray, red } from "@/src/Theme/Colors";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import InputField from "@/src/Components/InputField/InputField";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import { passwordGuideLines, passwordValidator } from "@/src/Utils/Funcs";
-import { changePasswordHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
+import { changePasswordHttpFunc } from "@/src/HttpServices/Mutations/Auth/AuthHttpFunctions";
 import MessageModal from "@/src/Components/Modals/MessageModal";
-import { BUTTON_MAX_WIDTH, BUTTON_SIZE_SCREEN_BREAK_POINT, MAX_INPUT_WIDTH, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
+import {
+  BUTTON_MAX_WIDTH,
+  BUTTON_SIZE_SCREEN_BREAK_POINT,
+  MAX_INPUT_WIDTH,
+  SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 
 const ResetPassword = () => {
   const { id } = useLocalSearchParams();
@@ -131,6 +136,7 @@ const ResetPassword = () => {
             contentType="password"
             type="password"
             label="Password"
+            borderColor={isPasswordValidationError ? red : gray}
           />
           <InputField
             textValue={passwords.confirmPassword}
@@ -143,6 +149,7 @@ const ResetPassword = () => {
             contentType="password"
             type="password"
             label="Confirm Password"
+            borderColor={isPasswordValidationError ? red : gray}
           />
           {isPasswordConfirmationError && (
             <View style={styles.errorContainer}>
@@ -161,11 +168,17 @@ const ResetPassword = () => {
               ))}
             </View>
           )}
-          <View style={[styles.btnWrapper,
-          {
-            width: width > BUTTON_SIZE_SCREEN_BREAK_POINT ? BUTTON_MAX_WIDTH : "100%",
-          }
-          ]}>
+          <View
+            style={[
+              styles.btnWrapper,
+              {
+                width:
+                  width > BUTTON_SIZE_SCREEN_BREAK_POINT
+                    ? BUTTON_MAX_WIDTH
+                    : "100%",
+              },
+            ]}
+          >
             <CustomButton
               title={isLoading ? "loading" : "Reset Password"}
               onPressFunc={handleReset}

@@ -21,22 +21,21 @@ import InputField from "@/src/Components/InputField/InputField";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { styles } from "./Styles";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import { dark, light, red } from "@/src/Theme/Colors";
+import { dark, gray, light, red } from "@/src/Theme/Colors";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import AuthDivider from "@/src/Components/AuthButtonsDivider/AuthDivider";
 import FacebookButton from "@/src/Components/Buttons/SocialMediaAuth/FacebookButton";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
-import { nativeRegisterHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
-import { IUserRegistrationData } from "./Types";
+import { nativeRegisterHttpFunc } from "@/src/HttpServices/Mutations/Auth/AuthHttpFunctions";
 import {
   BUTTON_MAX_WIDTH,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
-  faceBookAuthClientId,
   MAX_INPUT_WIDTH,
   SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
+import { IUserRegistrationData } from "@/src/GlobalTypes/User/UserTypes";
 
 const Register = () => {
   const [signUpData, setSignUpData] = useState<IUserRegistrationData>({
@@ -280,7 +279,8 @@ const Register = () => {
               contentType="givenName"
               type="givenName"
               label="Given Name"
-              borderColor={isGivenNameValidationError ? red : undefined}
+              backgroundColor="transparent"
+              borderColor={isGivenNameValidationError ? red : gray}
             />
             {isGivenNameValidationError && (
               <View style={errorContainer}>
@@ -296,7 +296,8 @@ const Register = () => {
               contentType="familyName"
               type="familyName"
               label="Family Name"
-              borderColor={isFamilyNameValidationError ? red : undefined}
+              backgroundColor="transparent"
+              borderColor={isFamilyNameValidationError ? red : gray}
             />
             {isFamilyNameValidationError && (
               <View style={errorContainer}>
@@ -312,7 +313,8 @@ const Register = () => {
               contentType="emailAddress"
               type="emailAddress"
               label="Email"
-              borderColor={isEmailValidationError ? red : undefined}
+              backgroundColor="transparent"
+              borderColor={isEmailValidationError ? red : gray}
             />
             {isEmailValidationError && (
               <View style={errorContainer}>
@@ -330,7 +332,8 @@ const Register = () => {
               contentType="password"
               type="password"
               label="Password"
-              borderColor={isPasswordValidationError ? red : undefined}
+              backgroundColor="transparent"
+              borderColor={isPasswordValidationError ? red : gray}
             />
             {isPasswordValidationError && (
               <View style={errorContainer}>

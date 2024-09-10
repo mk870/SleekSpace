@@ -10,10 +10,11 @@ const black = "black";
 const Colors = {
   red: "#FF2700",
   primary: "#4D09CD",
-  white:"aliceblue",
-  pureWhite:"#fff",
-  lightPrimary: "rgba(77, 9, 205,0.5)",
-  gray:"gray",
+  white: "aliceblue",
+  pureWhite: "#fff",
+  lightPrimary: "#d1c0e3",
+  purple: "#b400a6",
+  gray: "#7c7484",
   light: {
     text: black,
     background: "#eaeaea",
@@ -21,7 +22,7 @@ const Colors = {
     icon: "#687076",
     tabIconDefault: "#687076",
     tabIconSelected: tintColorLight,
-    darkGray: "#c6c7c7"
+    darkGray: "#c6c7c7",
   },
   dark: {
     darkGray: "#1B1B1C",
@@ -35,4 +36,14 @@ const Colors = {
   },
 };
 
-export const { dark, light, primary, lightPrimary, red, white, pureWhite,gray } = Colors;
+export const {
+  dark,
+  light,
+  primary,
+  lightPrimary,
+  red,
+  white,
+  pureWhite,
+  gray,
+  purple,
+} = Colors;

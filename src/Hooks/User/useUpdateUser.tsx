@@ -1,16 +1,23 @@
-import React, { useEffect } from "react";
-import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
+import { useEffect } from "react";
+
 import { useAppDispatch } from "@/src/Redux/Hooks/Config";
 import {
   addAccessToken,
-  addAvatar,
   addContactNumbers,
   addEmailAddress,
   addFamilyName,
+  addFavoriteCommercialForSaleProperties,
+  addFavoriteCommercialRentalProperties,
+  addFavoriteLandProperties,
+  addFavoriteResidentialForSaleProperties,
+  addFavoriteResidentialRentalProperties,
+  addFavoriteStands,
   addGivenName,
   addLocation,
+  addProfilePicture,
   addUserId,
 } from "@/src/Redux/Slices/UserSlice/User";
+import { IUser } from "@/src/GlobalTypes/User/UserTypes";
 
 const useUpdateUser = (user: IUser | null) => {
   const dispatch = useAppDispatch();
@@ -22,8 +29,14 @@ const useUpdateUser = (user: IUser | null) => {
       dispatch(addUserId(user.id));
       dispatch(addLocation(user.location));
       dispatch(addContactNumbers(user.contactNumbers));
-      dispatch(addAvatar(user.avatar))
+      dispatch(addProfilePicture(user.profilePicture))
       dispatch(addAccessToken(user.accessToken))
+      dispatch(addFavoriteCommercialForSaleProperties(user.favoriteCommercialForSaleProperties))
+      dispatch(addFavoriteCommercialRentalProperties(user.favoriteCommercialRentalProperties))
+      dispatch(addFavoriteResidentialForSaleProperties(user.favoriteResidentialForSaleProperties))
+      dispatch(addFavoriteResidentialRentalProperties(user.favoriteResidentialRentalProperties))
+      dispatch(addFavoriteStands(user.favoriteStands))
+      dispatch(addFavoriteLandProperties(user.favoriteLandProperties))
     }
   }, [user]);
 };

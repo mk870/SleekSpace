@@ -1,25 +1,36 @@
-import * as FileSystem from 'expo-file-system';
-import { decode } from 'base64-arraybuffer';
+import * as FileSystem from "expo-file-system";
+import { decode } from "base64-arraybuffer";
 
 import { supabase } from "@/src/Supabase/Config";
 
 const bucketId = "storage";
-const imageProcessing = async(fileUri:string)=>{
-  const base64 = await FileSystem.readAsStringAsync(fileUri,{encoding:"base64"})
-  console.log(decode(base64))
-  return base64
-}
+const imageProcessing = async (fileUri: string) => {
+  try {
+    const response = await fetch(fileUri);
+    const blob = await response.blob();
+    const fileExt = fileUri.split(".").pop();
+    //console.log("ext: ", fileExt);
+    return { blob, fileExt };
+  } catch (error) {
+    throw new Error("failed to get the image blob");
+  }
+};
 
-export const supabaseCreateFile = async(requestData: {
+export const supabaseCreateFile = async (requestData: {
   path: string;
   fileBody: string;
 }) => {
-
   return supabase.storage
     .from(bucketId)
-    .upload(requestData.path, await imageProcessing(requestData.fileBody), {
-      contentType: "image/png",
-    });
+    .upload(
+      requestData.path +
+        "." +
+        (await imageProcessing(requestData.fileBody)).fileExt,
+      (await imageProcessing(requestData.fileBody)).blob,
+      {
+        contentType: "image/jpeg",
+      }
+    );
 };
 
 export const supabaseUpdateFile = (requestData: {

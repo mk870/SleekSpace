@@ -40,8 +40,7 @@ const ManagerLayout = () => {
       <Stack.Screen
         name="manager/update"
         options={{
-          headerTitle: "Update Account",
-          headerTitleAlign: "center",
+          headerShown: false
         }}
       />
       <Stack.Screen

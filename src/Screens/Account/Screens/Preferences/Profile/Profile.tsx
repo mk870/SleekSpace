@@ -13,14 +13,14 @@ import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
-import Avatar from "../../../../../Components/Avatar/Avatar";
+import ProfilePicture from "../../../../../Components/ProfilePicture/ProfilePicture";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { dark, light, primary, red } from "@/src/Theme/Colors";
 import { styles } from "./Styles";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import MessageModal from "@/src/Components/Modals/MessageModal";
-import { createVerificationCodeForSecurityHttpFunc } from "@/src/HttpServices/Mutations/AuthHttpFunctions";
-import { deleteUserHttpFunc } from "@/src/HttpServices/Mutations/UserHttpFunctions";
+import { createVerificationCodeForSecurityHttpFunc } from "@/src/HttpServices/Mutations/Auth/AuthHttpFunctions";
+import { deleteUserHttpFunc } from "@/src/HttpServices/Mutations/User/UserHttpFunctions";
 import {
   getContactNumber,
   saveSecureValue,
@@ -44,7 +44,7 @@ const Profile: INoPropsReactComponent = () => {
     location,
     id,
     accessToken,
-    avatar
+    profilePicture
   } = useAppSelector((state) => state.user.value);
   const theme = useAppSelector((state) => state.theme.value);
   const [resetLoader, setResetLoader] = useState<boolean>(false);
@@ -64,7 +64,7 @@ const Profile: INoPropsReactComponent = () => {
   const iconColor = primary;
   const { width } = useWindowDimensions();
   const dispatch = useAppDispatch();
-
+  console.log("location:",location)
   const personalDetails = [
     {
       name: "Email",
@@ -164,7 +164,7 @@ const Profile: INoPropsReactComponent = () => {
         {accessToken && (
           <View style={styles.container}>
             <View style={styles.userDetails}>
-              <Avatar avatar={avatar} hideCameraOptions/>
+              <ProfilePicture uri={profilePicture.uri} hideCameraOptions/>
               <ThemedText type="header">{`${givenName} ${familyName}`}</ThemedText>
               <Text
                 style={[
@@ -253,7 +253,7 @@ const Profile: INoPropsReactComponent = () => {
             <MessageModal
               handleCancel={() => setOpenDeleteAccountConfirmation(false)}
               isModalVisible={openDeleteAccountConfirmation}
-              message="Are your sure you want to delete your account"
+              message="Are your sure you want to delete your account?"
               header="Delete Account?"
               type="confirmation"
               handleConfirm={handleDeleteAccount}
@@ -278,7 +278,7 @@ const Profile: INoPropsReactComponent = () => {
               handleCancel={() => setResetPasswordError("")}
               isModalVisible={resetPasswordError ? true : false}
               message={resetPasswordError}
-              header="Verification Email Failed"
+              header="Verification Email Failed!"
               type="error"
             />
             <MessageModal

@@ -1,1 +1,0 @@
-export { default } from "../../../../../../src/Screens/Account/Screens/Preferences/ManagerAccount/Screens/UpdateAccount/UpdateAccount";

@@ -6,24 +6,19 @@ import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import RegularText from "@/src/Components/RegularText/RegularText";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
-import { handleLayout } from "@/src/Utils/Funcs";
 
 const ManagerSignUpBtns: INoPropsReactComponent = () => {
-  const [ViewHeight, setViewHeight] = useState<number>(0);
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   const handleCreateAccount = () =>
     router.replace("account/manager/createAccount");
 
   return (
     <View style={styles.container}>
-      <View
-        style={styles.subHeader}
-        onLayout={(e) => handleLayout(e, setViewHeight)}
-      >
+      <View style={styles.subHeader}>
         <Image source={require("./Assets/manager.png")} style={styles.image} />
         <ThemedText type="header">
-          You do not have a property manager account.
+          You do not have a property management account.
         </ThemedText>
         <RegularText>
           Please create an account now and add your own properties to our
@@ -34,7 +29,6 @@ const ManagerSignUpBtns: INoPropsReactComponent = () => {
         style={[
           {
             width: width > 500 ? 400 : "100%",
-            height: height - ViewHeight - 100,
           },
           styles.btnContainer,
         ]}
@@ -59,7 +53,7 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingBottom: 20,
   },
-  subHeader: { alignSelf: "center", alignItems: "center", gap: 10 },
+  subHeader: { alignSelf: "center", alignItems: "center", gap: 10, flex: 1 },
   image: {
     height: 200,
     width: 200,

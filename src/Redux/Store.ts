@@ -15,6 +15,10 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
+      immutableCheck: {
+        warnAfter: 100,
+        ignoredPaths: ["largeData"],
+      },
     }),
 });
 export type RootState = ReturnType<typeof store.getState>;

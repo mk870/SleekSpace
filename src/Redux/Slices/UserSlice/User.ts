@@ -1,15 +1,29 @@
+import { IUser } from "@/src/GlobalTypes/User/UserTypes";
 import { createSlice } from "@reduxjs/toolkit";
-import { IUser } from "./Type/Type";
 
 const user: IUser = {
   email: "",
   givenName: "",
   familyName: "",
-  avatar: "",
   contactNumbers: [],
   location: null,
   id: 0,
-  accessToken:""
+  accessToken: "",
+  profilePicture: {
+    name: "",
+    id: 0,
+    userId: 0,
+    contentType: "",
+    size: 0,
+    fileType: "",
+    uri: "",
+  },
+  favoriteCommercialForSaleProperties: [],
+  favoriteCommercialRentalProperties: [],
+  favoriteLandProperties: [],
+  favoriteResidentialForSaleProperties: [],
+  favoriteResidentialRentalProperties: [],
+  favoriteStands: [],
 };
 export const userSlice = createSlice({
   name: "user",
@@ -41,10 +55,10 @@ export const userSlice = createSlice({
         id: action.payload,
       };
     },
-    addAvatar: (state, action) => {
+    addProfilePicture: (state, action) => {
       state.value = {
         ...state.value,
-        avatar: action.payload,
+        profilePicture: action.payload,
       };
     },
     addContactNumbers: (state, action) => {
@@ -65,6 +79,42 @@ export const userSlice = createSlice({
         accessToken: action.payload,
       };
     },
+    addFavoriteResidentialForSaleProperties: (state, action) => {
+      state.value = {
+        ...state.value,
+        favoriteResidentialForSaleProperties: action.payload,
+      };
+    },
+    addFavoriteResidentialRentalProperties: (state, action) => {
+      state.value = {
+        ...state.value,
+        favoriteResidentialRentalProperties: action.payload,
+      };
+    },
+    addFavoriteCommercialRentalProperties: (state, action) => {
+      state.value = {
+        ...state.value,
+        favoriteCommercialRentalProperties: action.payload,
+      };
+    },
+    addFavoriteCommercialForSaleProperties: (state, action) => {
+      state.value = {
+        ...state.value,
+        favoriteCommercialForSaleProperties: action.payload,
+      };
+    },
+    addFavoriteStands: (state, action) => {
+      state.value = {
+        ...state.value,
+        favoriteStands: action.payload,
+      };
+    },
+    addFavoriteLandProperties: (state, action) => {
+      state.value = {
+        ...state.value,
+        favoriteLandProperties: action.payload,
+      };
+    },
   },
 });
 export const {
@@ -72,9 +122,15 @@ export const {
   addEmailAddress,
   addFamilyName,
   addUserId,
-  addAvatar,
+  addProfilePicture,
   addContactNumbers,
   addLocation,
-  addAccessToken
+  addAccessToken,
+  addFavoriteCommercialForSaleProperties,
+  addFavoriteCommercialRentalProperties,
+  addFavoriteLandProperties,
+  addFavoriteResidentialForSaleProperties,
+  addFavoriteResidentialRentalProperties,
+  addFavoriteStands,
 } = userSlice.actions;
 export default userSlice.reducer;

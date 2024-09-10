@@ -1,13 +1,21 @@
-import { IManagerAccount } from "@/src/GlobalTypes/Types";
+import { IManagerAccount } from "@/src/GlobalTypes/Manager/ManagerTypes";
 import { createSlice } from "@reduxjs/toolkit";
 
 const managerAccount: IManagerAccount = {
-  name: "Mkh Agency",
-  email: "mkhue47@gmail.com",
+  name: "",
+  email: "",
   id: 0,
   userId: 0,
-  avatar:"",
   contacts: [],
+  profilePicture: {
+    size: 0,
+    contentType: "",
+    fileType: "",
+    managerId: 0,
+    id: 0,
+    uri: "",
+    name: "",
+  },
 };
 export const managerAccountSlice = createSlice({
   name: "managerAccount",
