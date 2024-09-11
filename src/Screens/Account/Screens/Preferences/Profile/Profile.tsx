@@ -26,7 +26,11 @@ import {
   saveSecureValue,
   shortenString,
 } from "@/src/Utils/Funcs";
-import { BUTTON_MAX_WIDTH, expoSecureValueKeyNames, SCREEN_BREAK_POINT } from "@/src/Utils/Constants";
+import {
+  BUTTON_MAX_WIDTH,
+  expoSecureValueKeyNames,
+  SCREEN_BREAK_POINT,
+} from "@/src/Utils/Constants";
 import ButtonSpinner from "@/src/Components/Spinners/ButtonSpinner";
 import { addAccessToken } from "@/src/Redux/Slices/UserSlice/User";
 import SigninAndSignupBtn from "@/src/Components/SigninAndSignupBtns/SigninAndSignupBtn";
@@ -44,7 +48,7 @@ const Profile: INoPropsReactComponent = () => {
     location,
     id,
     accessToken,
-    profilePicture
+    profilePicture,
   } = useAppSelector((state) => state.user.value);
   const theme = useAppSelector((state) => state.theme.value);
   const [resetLoader, setResetLoader] = useState<boolean>(false);
@@ -64,7 +68,7 @@ const Profile: INoPropsReactComponent = () => {
   const iconColor = primary;
   const { width } = useWindowDimensions();
   const dispatch = useAppDispatch();
-  console.log("location:",location)
+
   const personalDetails = [
     {
       name: "Email",
@@ -131,18 +135,17 @@ const Profile: INoPropsReactComponent = () => {
     deleteAccountMutation.mutate({ id, accessToken });
   };
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     setOpenLogoutConfirmation(false);
     setLogoutLoader(true);
-    saveSecureValue(expoSecureValueKeyNames.accessToken, "")
-      .then((_) => {
-        dispatch(addAccessToken(""));
-        setOpenLogoutSuccessModal(true);
-      })
-      .catch((_) => {
-        setLogoutError("oops, failed to log you out, please try again.");
-      })
-      .finally(() => setLogoutLoader(false));
+    try {
+      await saveSecureValue(expoSecureValueKeyNames.accessToken, "");
+      setOpenLogoutSuccessModal(true);
+    } catch (error) {
+      setLogoutError("oops, failed to log you out, please try again.");
+    } finally {
+      () => setLogoutLoader(false);
+    }
   };
 
   const handleCancelDeleteAccountSuccessModal = () => {
@@ -164,7 +167,7 @@ const Profile: INoPropsReactComponent = () => {
         {accessToken && (
           <View style={styles.container}>
             <View style={styles.userDetails}>
-              <ProfilePicture uri={profilePicture.uri} hideCameraOptions/>
+              <ProfilePicture uri={profilePicture.uri} hideCameraOptions />
               <ThemedText type="header">{`${givenName} ${familyName}`}</ThemedText>
               <Text
                 style={[
@@ -176,7 +179,10 @@ const Profile: INoPropsReactComponent = () => {
               </Text>
             </View>
             <View
-              style={[styles.wrapper, { width: width > SCREEN_BREAK_POINT ? 600 : "100%" }]}
+              style={[
+                styles.wrapper,
+                { width: width > SCREEN_BREAK_POINT ? 600 : "100%" },
+              ]}
             >
               <View style={styles.row}>
                 <Text
@@ -217,7 +223,9 @@ const Profile: INoPropsReactComponent = () => {
             <View
               style={[
                 styles.btnContainer,
-                { width: width > SCREEN_BREAK_POINT ? BUTTON_MAX_WIDTH : "100%" },
+                {
+                  width: width > SCREEN_BREAK_POINT ? BUTTON_MAX_WIDTH : "100%",
+                },
               ]}
             >
               <TouchableOpacity
@@ -233,7 +241,7 @@ const Profile: INoPropsReactComponent = () => {
               </TouchableOpacity>
               {accessToken ? (
                 <CustomButton
-                  title={logoutLoader ? "loading" : "Logout"}
+                  title={"Logout"}
                   onPressFunc={() => setOpenLogoutConfirmation(true)}
                   isDisabled={logoutLoader}
                 />
@@ -310,6 +318,7 @@ const Profile: INoPropsReactComponent = () => {
               handleCancel={() => {
                 setOpenLogoutSuccessModal(false);
                 router.replace("/home");
+                dispatch(addAccessToken(""));
               }}
               isModalVisible={openLogoutSuccessModal}
               message={

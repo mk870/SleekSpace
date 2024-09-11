@@ -13,4 +13,5 @@ export const managerRoutes = {
   getManagerResidentialPropertiesForSaleByManagerId: `${backEndUrl}${baseRouteName}/residential/onsale`,
   updateManagerContactNumbers: `${backEndUrl}${baseRouteName}/contacts`,
   updateManagerProfilePicture: `${backEndUrl}${baseRouteName}/profile-picture`,
+  removeManagerProfilePicture: `${backEndUrl}${baseRouteName}/profile-picture/remove`,
 };

@@ -28,3 +28,15 @@ export const updateUserProfilePictureHttpFunc = (requestData: {
     }
   );
 };
+
+export const removeUserProfilePictureHttpFunc = (requestData: {
+  profilePictureId: number;
+  accessToken: string;
+}) => {
+  return axios.delete(
+    `${userRoutes.removeUserProfilePicture}/${requestData.profilePictureId}`,
+    {
+      headers: { Authorization: `Bearer ${requestData.accessToken}` },
+    }
+  );
+};

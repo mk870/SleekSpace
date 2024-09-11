@@ -108,6 +108,7 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
               setImageSize={setImageSize}
               setImageType={setImageType}
               size="large"
+              belongsTo="manager"
             />
           </View>
           <View

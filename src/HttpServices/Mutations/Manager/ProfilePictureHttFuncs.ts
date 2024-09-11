@@ -18,3 +18,19 @@ export const UpdateManagerProfilePicture = (requestData: {
       }
     );
   };
+
+  export const removeManagerProfilePicture = (requestData: {
+    accessToken: string;
+    managerId: number;
+    managerProfilePicture: IManagerProfilePictureUpdateAndCreation;
+  }) => {
+    return axios.put(
+      managerRoutes.removeManagerProfilePicture + `/${requestData.managerId}`,
+      requestData.managerProfilePicture,
+      {
+        headers: {
+          Authorization: `Bearer ${requestData.accessToken}`,
+        },
+      }
+    );
+  };

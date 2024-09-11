@@ -1,33 +1,123 @@
 import {
+  GestureResponderEvent,
   StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Feather, AntDesign } from "@expo/vector-icons";
+import { useMutation } from "@tanstack/react-query";
 
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import { primary, pureWhite, dark, light, gray } from "@/src/Theme/Colors";
 import { family, small } from "@/src/Theme/Font";
-import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
+import { IVoidFunc } from "@/src/GlobalTypes/Types";
+import ButtonSpinner from "@/src/Components/Spinners/ButtonSpinner";
+import { removeUserProfilePictureHttpFunc } from "@/src/HttpServices/Mutations/User/ProfilePictureHttpFuncs";
+import { IUser } from "@/src/GlobalTypes/User/UserTypes";
+import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
+import { removeManagerProfilePicture } from "@/src/HttpServices/Mutations/Manager/ProfilePictureHttFuncs";
+import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
+import MessageModal from "../../MessageModal";
 
 type Props = {
   type: "profile-Photo" | "property-Photo";
+  uri: string;
   openCamera: () => Promise<void>;
   openGallery: () => Promise<void>;
+  handleCloseModal: IVoidFunc;
+  belongsTo?: "manager" | "user";
 };
 
 const GrantedPermissionView: React.FC<Props> = ({
   type,
   openCamera,
   openGallery,
+  uri,
+  belongsTo,
+  handleCloseModal,
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [userData, setUserData] = useState<IUser | null>(null);
+  const [updateError, setUpdateError] = useState<string>("");
+  const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const theme = useAppSelector((state) => state.theme.value);
+  const user = useAppSelector((state) => state.user.value);
+  const manager = useAppSelector((state) => state.managerAccount.value);
   const { width } = useWindowDimensions();
+  const dispatch = useAppDispatch();
   const iconSize = 27;
   const color = primary;
+
+  useUpdateUser(userData);
+
+  const removeUserProfileImageMutation = useMutation({
+    mutationFn: removeUserProfilePictureHttpFunc,
+    onSuccess: (res) => {
+      setUserData(res.data.response);
+      setOpenSuccessModal(true);
+    },
+    onError: (error: any) => {
+      if (error.response?.data?.error !== "") {
+        setUpdateError(error.response?.data?.error);
+      } else {
+        setUpdateError("Something went wrong");
+      }
+    },
+    onSettled: () => setIsLoading(false),
+  });
+
+  const removeManagerProfileImageMutation = useMutation({
+    mutationFn: removeManagerProfilePicture,
+    onSuccess: (res) => {
+      dispatch(addManagerAccount(res.data.response));
+      setOpenSuccessModal(true);
+    },
+    onError: (error: any) => {
+      if (error.response?.data?.error !== "") {
+        setUpdateError(error.response?.data?.error);
+      } else {
+        setUpdateError("Something went wrong");
+      }
+    },
+    onSettled: () => setIsLoading(false),
+  });
+
+  const removeImage = (e: GestureResponderEvent) => {
+    e.stopPropagation();
+    if (belongsTo === "manager") {
+      setIsLoading(true);
+      removeManagerProfileImageMutation.mutate({
+        accessToken: user.accessToken,
+        managerId: manager.id,
+        managerProfilePicture: {
+          id: manager.profilePicture.id,
+          fileType: manager.profilePicture.fileType,
+          contentType: manager.profilePicture.contentType,
+          name: manager.profilePicture.name,
+          managerId: manager.profilePicture.managerId,
+          image: manager.profilePicture.uri,
+          size: manager.profilePicture.size,
+        },
+      });
+    }
+    if (belongsTo === "user") {
+      setIsLoading(true);
+      removeUserProfileImageMutation.mutate({
+        accessToken: user.accessToken,
+        profilePictureId: user.profilePicture.id,
+      });
+    }
+  };
+
+  const handleCloseSuccessModal = () => {
+    setOpenSuccessModal(false);
+    handleCloseModal();
+  };
+
   return (
     <View
       style={[
@@ -68,19 +158,47 @@ const GrantedPermissionView: React.FC<Props> = ({
           <AntDesign name="picture" size={iconSize} color={color} />
           <Text style={styles.mediaOptionText}>gallery</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.mediaOption,
-            {
-              backgroundColor:
-                theme === "light" ? light.darkGray : dark.darkGray,
-            },
-          ]}
-        >
-          <AntDesign name="delete" size={iconSize} color={color} />
-          <Text style={styles.mediaOptionText}>remove</Text>
-        </TouchableOpacity>
+        {uri && (
+          <TouchableOpacity
+            onPress={(e: GestureResponderEvent) => {
+              removeImage(e);
+            }}
+            style={[
+              styles.mediaOption,
+              {
+                backgroundColor:
+                  theme === "light" ? light.darkGray : dark.darkGray,
+              },
+            ]}
+          >
+            {isLoading ? (
+              <ButtonSpinner />
+            ) : (
+              <>
+                <AntDesign name="delete" size={iconSize} color={color} />
+                <Text style={styles.mediaOptionText}>remove</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        )}
       </View>
+      <MessageModal
+        isModalVisible={openSuccessModal}
+        header="Removal Successful"
+        message="your profile picture was removed successfully, it will take a few moments to reflect."
+        type="success"
+        handleCancel={handleCloseSuccessModal}
+      />
+      <MessageModal
+        isModalVisible={updateError ? true : false}
+        header="Update Failed!"
+        message={updateError}
+        type="error"
+        handleCancel={() => {
+          setUpdateError("");
+          handleCloseModal();
+        }}
+      />
     </View>
   );
 };
@@ -108,9 +226,10 @@ const styles = StyleSheet.create({
   mediaOption: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 10,
+    height: 70,
     width: 65,
     borderRadius: 7,
+    paddingTop: 6,
   },
   mediaOptionText: {
     fontFamily: family,

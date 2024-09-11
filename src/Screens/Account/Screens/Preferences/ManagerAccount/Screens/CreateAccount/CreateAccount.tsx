@@ -14,7 +14,6 @@ import {
   emailValidator,
   generateRandomSixDigitNumber,
   getContactNumber,
-  handleLayout,
 } from "@/src/Utils/Funcs";
 import PhoneNumberField from "@/src/Components/PhoneNumberField/PhoneNumberField";
 import { IPhoneNumberDetails } from "../../../Profile/Screens/Types";
