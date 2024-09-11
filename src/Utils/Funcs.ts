@@ -1,5 +1,8 @@
 import * as SecureStore from "expo-secure-store";
-import { IUserContactNumber, IUserLocation } from "../GlobalTypes/User/UserTypes";
+import {
+  IUserContactNumber,
+  IUserLocation,
+} from "../GlobalTypes/User/UserTypes";
 import { IManagerContactNumber } from "../GlobalTypes/Manager/ManagerTypes";
 import { ISearchLocation } from "../GlobalTypes/LocationIQ/LocationIQTypes";
 
@@ -96,6 +99,26 @@ export const getContactNumber = (
   } else return "";
 };
 
+export const getUserContactNumberCountryCode = (
+  contacts: IUserContactNumber[],
+  type: "phone" | "whatsapp"
+) => {
+  if (contacts && contacts.length > 0) {
+    const contact = contacts.filter((number) => number.type === type);
+    return contact[0].countryCode;
+  } else return "263";
+};
+
+export const getUserContactNumberCountryAbbrv = (
+  contacts: IUserContactNumber[],
+  type: "phone" | "whatsapp"
+) => {
+  if (contacts && contacts.length > 0) {
+    const contact = contacts.filter((number) => number.type === type);
+    return contact[0].countryAbbrv;
+  } else return "ZW";
+};
+
 export const getManagerContactNumber = (
   contacts: IManagerContactNumber[],
   type: "phone" | "whatsapp"
@@ -123,7 +146,7 @@ export const getManagerContactNumberCountryAbbrv = (
   if (contacts && contacts.length > 0) {
     const contact = contacts.filter((number) => number.type === type);
     return contact[0].countryAbbrv;
-  } else return "";
+  } else return "ZW";
 };
 
 export const getLocationFromUserData = (location: IUserLocation | null) => {

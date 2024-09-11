@@ -1,3 +1,5 @@
+import { ICountryCodes } from "../Types";
+
 export type IManagerProfilePictureUpdateAndCreation = {
   id?: number;
   managerId?: number;
@@ -41,7 +43,7 @@ export type IManagerContactNumber = {
   number: string;
   type: "whatsapp" | "phone";
   countryCode: string;
-  countryAbbrv: string;
+  countryAbbrv: ICountryCodes;
 };
 
 export type IUpdateManagerAccountEmailAndName = {

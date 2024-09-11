@@ -61,7 +61,7 @@ const PhoneNumberField: React.FC<Props> = ({
         ...phoneNumberDetails,
         number: getNumber ? getNumber.number : initialValue,
         countryCode: state ? (state.code ? state.code : "") : "",
-        countryAbbrv: state ? state.countryCode : "",
+        countryAbbrv: state ? state.countryCode : "ZW",
       });
     }
   }, [value]);
@@ -88,7 +88,7 @@ const PhoneNumberField: React.FC<Props> = ({
             phoneNumberDetails.countryCode ? phoneNumberDetails.countryCode : ""
           )[1]
         }
-        defaultCode="ZW"
+        defaultCode={phoneNumberDetails.countryAbbrv}
         layout="first"
         onChangeText={(text) => {
           setValue(text);

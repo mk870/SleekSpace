@@ -1,3 +1,5 @@
+import { ICountryCodes } from "../Types";
+
 export type IUser = {
     email: string;
     givenName: string;
@@ -57,7 +59,7 @@ export type IUser = {
     number: string;
     type: "whatsapp" | "phone";
     countryCode: string;
-    countryAbbrv: string;
+    countryAbbrv: ICountryCodes;
     userId: number;
   };
   
