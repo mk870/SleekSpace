@@ -12,7 +12,11 @@ import { red } from "@/src/Theme/Colors";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { family } from "@/src/Theme/Font";
-import { getManagerContactNumber } from "@/src/Utils/Funcs";
+import {
+  getManagerContactNumber,
+  getManagerContactNumberCountryAbbrv,
+  getManagerContactNumberCountryCode,
+} from "@/src/Utils/Funcs";
 import {
   BUTTON_MAX_WIDTH,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
@@ -39,14 +43,26 @@ const Contacts: INoPropsReactComponent = () => {
   const [phoneNumberDetails, setPhoneNumberDetails] =
     useState<IPhoneNumberDetails>({
       number: getManagerContactNumber(manager.contacts, "phone"),
-      countryCode: "263",
-      countryAbbrv: "ZW",
+      countryCode: getManagerContactNumberCountryCode(
+        manager.contacts,
+        "phone"
+      ),
+      countryAbbrv: getManagerContactNumberCountryAbbrv(
+        manager.contacts,
+        "phone"
+      ),
     });
   const [whatsAppNumberDetails, setWhatsAppNumberDetails] =
     useState<IPhoneNumberDetails>({
       number: getManagerContactNumber(manager.contacts, "whatsapp"),
-      countryCode: "263",
-      countryAbbrv: "ZW",
+      countryCode: getManagerContactNumberCountryCode(
+        manager.contacts,
+        "whatsapp"
+      ),
+      countryAbbrv: getManagerContactNumberCountryAbbrv(
+        manager.contacts,
+        "whatsapp"
+      ),
     });
   const router = useRouter();
   const { width } = useWindowDimensions();
@@ -85,7 +101,7 @@ const Contacts: INoPropsReactComponent = () => {
             number: phoneNumberDetails.number ? phoneNumberDetails.number : "",
             countryAbbrv: phoneNumberDetails.countryAbbrv
               ? phoneNumberDetails.countryAbbrv
-              : "",
+              : "ZW",
             countryCode: phoneNumberDetails.countryCode
               ? phoneNumberDetails.countryCode
               : "",
@@ -99,7 +115,7 @@ const Contacts: INoPropsReactComponent = () => {
               : "",
             countryAbbrv: whatsAppNumberDetails.countryAbbrv
               ? whatsAppNumberDetails.countryAbbrv
-              : "",
+              : "ZW",
             countryCode: whatsAppNumberDetails.countryCode
               ? whatsAppNumberDetails.countryCode
               : "",

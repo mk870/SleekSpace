@@ -14,7 +14,6 @@ import {
   emailValidator,
   generateRandomSixDigitNumber,
   getContactNumber,
-  handleLayout,
 } from "@/src/Utils/Funcs";
 import PhoneNumberField from "@/src/Components/PhoneNumberField/PhoneNumberField";
 import { IPhoneNumberDetails } from "../../../Profile/Screens/Types";
@@ -158,7 +157,7 @@ const CreateAccount = () => {
               : {
                   name: "",
                   image: "",
-                  contentType: "",
+                  contentType: "image",
                   fileType: "",
                   size: 0,
                 },
@@ -169,7 +168,7 @@ const CreateAccount = () => {
                 : "",
               countryAbbrv: whatsAppNumberDetails.countryAbbrv
                 ? whatsAppNumberDetails.countryAbbrv
-                : "",
+                : "ZW",
               countryCode: whatsAppNumberDetails.countryCode
                 ? whatsAppNumberDetails.countryCode
                 : "",
@@ -181,7 +180,7 @@ const CreateAccount = () => {
                 : "",
               countryAbbrv: phoneNumberDetails.countryAbbrv
                 ? phoneNumberDetails.countryAbbrv
-                : "",
+                : "ZW",
               countryCode: phoneNumberDetails.countryCode
                 ? phoneNumberDetails.countryCode
                 : "",

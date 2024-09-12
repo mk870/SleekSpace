@@ -16,6 +16,7 @@ const ProfilePicture: React.FC<{
   setImageSize?: React.Dispatch<React.SetStateAction<number>>;
   hideCameraOptions?: boolean;
   size?: "large" | "small";
+  belongsTo?:"manager"|"user"
 }> = ({
   uri,
   setImage,
@@ -24,10 +25,12 @@ const ProfilePicture: React.FC<{
   setImageBase64,
   setImageSize,
   setImageType,
+  belongsTo
 }) => {
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const theme = useAppSelector((state) => state.theme.value);
   const [timeStamp, setTimeStamp] = useState<number | null>(null);
+  
   useEffect(() => {
     if (uri) {
       setTimeStamp(Date.now());
@@ -71,6 +74,8 @@ const ProfilePicture: React.FC<{
           isModalVisible={openEditModal}
           handleCancel={() => setOpenEditModal(false)}
           type="profile-Photo"
+          belongsTo={belongsTo}
+          uri={uri}
           setImage={setImage}
           setImageBase64={setImageBase64}
           setMediaSize={setImageSize}

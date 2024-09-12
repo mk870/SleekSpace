@@ -14,7 +14,11 @@ import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { family } from "@/src/Theme/Font";
 import { IPhoneNumberDetails } from "../../Types";
-import { getContactNumber } from "@/src/Utils/Funcs";
+import {
+  getContactNumber,
+  getUserContactNumberCountryAbbrv,
+  getUserContactNumberCountryCode,
+} from "@/src/Utils/Funcs";
 import { updateAndCreateContactNumberHttpFunc } from "@/src/HttpServices/Mutations/User/ContactNumberHttpFuncs";
 import {
   BUTTON_MAX_WIDTH,
@@ -37,14 +41,26 @@ const ProfileUpdate: INoPropsReactComponent = () => {
   const [phoneNumberDetails, setPhoneNumberDetails] =
     useState<IPhoneNumberDetails>({
       number: getContactNumber("phone", user.contactNumbers),
-      countryCode: "263",
-      countryAbbrv: "ZW",
+      countryCode: getUserContactNumberCountryCode(
+        user.contactNumbers,
+        "phone"
+      ),
+      countryAbbrv: getUserContactNumberCountryAbbrv(
+        user.contactNumbers,
+        "phone"
+      ),
     });
   const [whatsAppNumberDetails, setWhatsAppNumberDetails] =
     useState<IPhoneNumberDetails>({
       number: getContactNumber("whatsapp", user.contactNumbers),
-      countryCode: "263",
-      countryAbbrv: "ZW",
+      countryCode: getUserContactNumberCountryCode(
+        user.contactNumbers,
+        "whatsapp"
+      ),
+      countryAbbrv: getUserContactNumberCountryAbbrv(
+        user.contactNumbers,
+        "whatsapp"
+      ),
     });
   const [userData, setUserData] = useState<IUser | null>(null);
   const router = useRouter();
@@ -86,7 +102,7 @@ const ProfileUpdate: INoPropsReactComponent = () => {
                 : "",
               countryAbbrv: phoneNumberDetails.countryAbbrv
                 ? phoneNumberDetails.countryAbbrv
-                : "",
+                : "ZW",
               countryCode: phoneNumberDetails.countryCode
                 ? phoneNumberDetails.countryCode
                 : "",
@@ -99,7 +115,7 @@ const ProfileUpdate: INoPropsReactComponent = () => {
                 : "",
               countryAbbrv: whatsAppNumberDetails.countryAbbrv
                 ? whatsAppNumberDetails.countryAbbrv
-                : "",
+                : "ZW",
               countryCode: whatsAppNumberDetails.countryCode
                 ? whatsAppNumberDetails.countryCode
                 : "",
@@ -119,7 +135,7 @@ const ProfileUpdate: INoPropsReactComponent = () => {
                 : "",
               countryAbbrv: whatsAppNumberDetails.countryAbbrv
                 ? whatsAppNumberDetails.countryAbbrv
-                : "",
+                : "ZW",
               countryCode: whatsAppNumberDetails.countryCode
                 ? whatsAppNumberDetails.countryCode
                 : "",
@@ -135,7 +151,7 @@ const ProfileUpdate: INoPropsReactComponent = () => {
                 : "",
               countryAbbrv: phoneNumberDetails.countryAbbrv
                 ? phoneNumberDetails.countryAbbrv
-                : "",
+                : "ZW",
               countryCode: phoneNumberDetails.countryCode
                 ? phoneNumberDetails.countryCode
                 : "",

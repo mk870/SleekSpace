@@ -12,10 +12,12 @@ type Props = {
   handleCancel: IVoidFunc;
   isModalVisible: boolean;
   type: "profile-Photo"|"property-Photo";
+  uri: string;
   setImage?: React.Dispatch<React.SetStateAction<string>>;
   setImageBase64?: React.Dispatch<React.SetStateAction<string>>;
   setMediaType?: React.Dispatch<React.SetStateAction<string>>;
   setMediaSize?: React.Dispatch<React.SetStateAction<number>>;
+  belongsTo?:"manager"|"user"
 };
 
 const MediaModal: React.FC<Props> = ({
@@ -26,6 +28,8 @@ const MediaModal: React.FC<Props> = ({
   setImageBase64,
   setMediaSize,
   setMediaType,
+  belongsTo,
+  uri
 }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const theme = useAppSelector((state) => state.theme.value);
@@ -40,11 +44,13 @@ const MediaModal: React.FC<Props> = ({
       setImageBase64(result.assets[0].base64 as string);
       if (setMediaSize) {
         setMediaSize(result.assets[0].fileSize ? result.assets[0].fileSize : 0);
+        handleCancel()
       }
       if (setMediaType) {
         setMediaType(
           result.assets[0].mimeType ? result.assets[0].mimeType : ""
         );
+        handleCancel()
       }
     }
   }
@@ -79,11 +85,10 @@ const MediaModal: React.FC<Props> = ({
       animationType="slide"
     >
       <View
-        onTouchEnd={handleCancel}
         style={[
           styles.container,
           {
-            backgroundColor: theme === "light" ? "#000000b3" : "#1b1b1cb3",
+            backgroundColor: theme === "light" ? "#000000b3" : "#333333b3",
           },
         ]}
       >
@@ -92,6 +97,9 @@ const MediaModal: React.FC<Props> = ({
             openCamera={openCamera}
             openGallery={openGallery}
             type={type}
+            uri={uri}
+            handleCloseModal={handleCancel}
+            belongsTo={belongsTo}
           />
         ) : (
           <DeniedPermissionView handleCancel={handleCancel} />
