@@ -11,10 +11,11 @@ import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import ScreenSpinner from "@/src/Components/Spinners/ScreenSpinner";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { switchTheme } from "@/src/Redux/Slices/Theme/Theme";
-import { IUser } from "@/src/Redux/Slices/UserSlice/Type/Type";
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import { addAccessToken } from "@/src/Redux/Slices/UserSlice/User";
 import { userRoutes } from "@/src/BackendRoutes/UserRoutes";
+import { IUser } from "@/src/GlobalTypes/User/UserTypes";
+import { updatePayWall } from "@/src/Redux/Slices/payWallSlice/PayWallState";
 
 const index = () => {
   const [userData, setUserData] = useState<IUser | null>(null);
@@ -56,7 +57,7 @@ const index = () => {
                   })
                   .then((res) => {
                     setUserData(res.data.response);
-                    dispatch(addAccessToken(res.data.response.accessToken));
+                    dispatch(updatePayWall(res.data.hasPayWall))
                   })
                   .catch((error) => {
                     if (error.response?.data?.error !== "") {

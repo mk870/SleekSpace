@@ -1,10 +1,16 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
-import { router } from "expo-router";
 import { Image } from "expo-image";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
-import { primary, pureWhite } from "@/src/Theme/Colors";
+import { dark, gray, primary, pureWhite } from "@/src/Theme/Colors";
 import { family, small } from "@/src/Theme/Font";
 import { imageBlurhash } from "@/src/Utils/Constants";
 
@@ -12,13 +18,17 @@ type Props = {
   tintColor?: string;
   pressColor?: string;
   pressOpacity?: number;
+  handleOnPress: () => void | undefined;
 };
 
-const TabsRightHeader: React.FC<Props> = () => {
+const TabsRightHeader: React.FC<Props> = ({ handleOnPress }) => {
   const [timeStamp, setTimeStamp] = useState<number | null>(null);
+  const theme = useAppSelector((state) => state.theme.value);
   const { accessToken, profilePicture, givenName, familyName } = useAppSelector(
     (state) => state.user.value
   );
+
+  const underLayColor = theme === "light" ? "#DDDBDE" : dark.darkGray;
 
   useEffect(() => {
     if (profilePicture.uri) {
@@ -28,11 +38,17 @@ const TabsRightHeader: React.FC<Props> = () => {
 
   return (
     <View style={styles.container}>
-      {accessToken && (
-        <TouchableOpacity
-          style={styles.subContainer}
-          onPress={() => router.push("/account/profile")}
+      {!accessToken && (
+        <TouchableHighlight
+          onPress={handleOnPress}
+          underlayColor={underLayColor}
+          style={styles.dotsContainer}
         >
+          <MaterialCommunityIcons name="dots-vertical" size={24} color={gray} />
+        </TouchableHighlight>
+      )}
+      {accessToken && (
+        <TouchableOpacity style={styles.subContainer} onPress={handleOnPress}>
           {profilePicture.uri ? (
             <Image
               source={{ uri: `${profilePicture.uri}?timestamp=${timeStamp}` }}
@@ -59,6 +75,14 @@ const styles = StyleSheet.create({
   subContainer: {
     alignItems: "center",
     justifyContent: "center",
+  },
+  dotsContainer: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    marginRight:5
   },
   image: {
     height: 40,
