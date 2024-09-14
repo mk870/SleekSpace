@@ -10,8 +10,10 @@ export const backEndUrl = "http://192.168.158.196:8080";
 
 export const managerAccountUpdateMsg =
   "Remember, if you update your information, all your properties will also be updated, so make sure it is accurate.";
+
 export const imageBlurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+
 export const tabsMenu = {
   home: "Home",
   account: "Account",
@@ -20,6 +22,15 @@ export const tabsMenu = {
   search: "Search",
   chats: "Chats",
 };
+
+export const propertyListType: IPropertyType[] = [
+  "Residential Rentals",
+  "Residential ForSale",
+  "Commercial Rentals",
+  "Commercial ForSale",
+  "Stands",
+  "Land",
+];
 
 export const SCREEN_BREAK_POINT = 700;
 export const BUTTON_MAX_WIDTH = 400;

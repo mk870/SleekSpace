@@ -22,7 +22,7 @@ import { styles } from "./Styles";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
-import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { dark, gray, light, red } from "@/src/Theme/Colors";
 import GoogleButton from "@/src/Components/Buttons/SocialMediaAuth/GoogleButton";
@@ -39,6 +39,7 @@ import {
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import { IUser, IUserLogin } from "@/src/GlobalTypes/User/UserTypes";
+import { updatePayWall } from "@/src/Redux/Slices/payWallSlice/PayWallState";
 
 const Login = () => {
   const { width } = useWindowDimensions();
@@ -55,7 +56,9 @@ const Login = () => {
     useState<boolean>(false);
   const router = useRouter();
   const theme = useAppSelector((state) => state.theme.value);
+  const dispatch = useAppDispatch()
   useUpdateUser(userData);
+
   const {
     container,
     inputWrapper,
@@ -79,6 +82,7 @@ const Login = () => {
       )
         .then((_data) => {
           setUserData(data.data.response);
+          dispatch(updatePayWall(data.data.hasPayWall))
           router.dismissAll();
           router.replace("/home");
         })
@@ -97,6 +101,7 @@ const Login = () => {
       setLoginUserData({ ...loginUserData, email: "", password: "" });
     },
   });
+
   const handlePost: IVoidFunc = () => {
     if (!isEmailValidationError && !isPasswordValidationError) {
       setIsLoading(true);
@@ -115,6 +120,7 @@ const Login = () => {
       }
     }
   };
+
   useEffect(() => {
     if (loginUserData.password !== "") {
       passwordValidator(setIsPasswordValidationError, loginUserData.password);
@@ -122,6 +128,7 @@ const Login = () => {
       setIsPasswordValidationError(false);
     }
   }, [loginUserData.password]);
+
   useEffect(() => {
     if (loginUserData.email !== "") {
       emailValidator(setIsEmailValidationError, loginUserData.email);

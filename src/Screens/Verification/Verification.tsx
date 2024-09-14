@@ -35,6 +35,8 @@ import {
 import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import { IUser } from "@/src/GlobalTypes/User/UserTypes";
+import { useAppDispatch } from "@/src/Redux/Hooks/Config";
+import { updatePayWall } from "@/src/Redux/Slices/payWallSlice/PayWallState";
 
 const Verification: INoPropsReactComponent = () => {
   const { id, isNewUser } = useLocalSearchParams();
@@ -53,6 +55,7 @@ const Verification: INoPropsReactComponent = () => {
   const [typingError, setTypingError] = useState<IStringOrNull>(null);
   const [httpError, setHttpError] = useState<string>("");
   const { width } = useWindowDimensions();
+  const dispatch = useAppDispatch()
 
   useUpdateUser(userData);
   useEffect(() => {
@@ -91,6 +94,7 @@ const Verification: INoPropsReactComponent = () => {
       )
         .then((_data) => {
           setUserData(data.data.response);
+          dispatch(updatePayWall(data.data.hasPayWall))
           setIsVerificationSuccesful(true);
         })
         .catch((e) => {

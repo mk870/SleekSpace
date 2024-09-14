@@ -9,6 +9,7 @@ import { landRoutes } from "@/src/BackendRoutes/Properties/Land/LandRoutes";
 import { propertyInsightsRoutes } from "@/src/BackendRoutes/Properties/Insights/PropertyInsightsRoutes";
 import { propertyLocationRoutes } from "@/src/BackendRoutes/Properties/Location/PropertyLocationRoutes";
 import { propertyMediaRoutes } from "@/src/BackendRoutes/Properties/Media/PropertyMediaRoutes";
+import { reportRoutes } from "@/src/BackendRoutes/Properties/Report/ReportRoutes";
 
 export const getCommercialPropertyForSaleHttpFunc = (requestData: {
   propertyId: number;
@@ -182,6 +183,42 @@ export const getPropertyImageOrVideoHttpFunc = (requestData: {
 }) => {
   return axios.get(
     `${propertyMediaRoutes.postGetDeleteAndUpdatePropertyMedia}/${requestData.imageOrVideoId}`,
+    {
+      headers: { Authorization: `Bearer ${requestData.accessToken}` },
+    }
+  );
+};
+
+export const getPropertyReportyByIdHttpFunc = (requestData: {
+  reportId: number;
+  accessToken: string;
+}) => {
+  return axios.get(
+    `${reportRoutes.getAllGetOnePostDeleteAndUpdateReport}/${requestData.reportId}`,
+    {
+      headers: { Authorization: `Bearer ${requestData.accessToken}` },
+    }
+  );
+};
+
+export const getPropertyReportyByPropertyIdHttpFunc = (requestData: {
+  propertyId: number;
+  accessToken: string;
+}) => {
+  return axios.get(
+    `${reportRoutes.getReportsByPropertyId}/${requestData.propertyId}`,
+    {
+      headers: { Authorization: `Bearer ${requestData.accessToken}` },
+    }
+  );
+};
+
+export const getPropertyReportyByManagerIdHttpFunc = (requestData: {
+  managerId: number;
+  accessToken: string;
+}) => {
+  return axios.get(
+    `${reportRoutes.getReportsByManagerId}/${requestData.managerId}`,
     {
       headers: { Authorization: `Bearer ${requestData.accessToken}` },
     }

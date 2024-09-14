@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, useSegments } from "expo-router";
 import { StyleSheet } from "react-native";
 
@@ -11,10 +11,13 @@ import TabsLabels from "@/src/Components/TabsLabels/TabsLabels";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import StackWrapper from "@/src/HOCs/StackWrapper";
 import TabsRightHeader from "@/src/Components/TabsRightHeader/TabsRightHeader";
+import BottomSheetView from "@/src/Components/BottomSheetContents/BottomSheet";
 
 const TabsLayout = () => {
+  const [openBottomSheet, setOpenBottomSheet] = useState<boolean>(false);
   const theme = useAppSelector((state) => state.theme.value);
   const segments = useSegments();
+
   return (
     <Screen>
       <Tabs
@@ -26,10 +29,14 @@ const TabsLayout = () => {
             textAlign: "left",
           },
           headerTitleAlign: "left",
+          headerShadowVisible: false,
           headerStyle: {
             backgroundColor: theme === "light" ? pureWhite : dark.background,
+            height:100
           },
-          headerRight:()=><TabsRightHeader />,
+          headerRight: () => (
+            <TabsRightHeader handleOnPress={() => setOpenBottomSheet(true)} />
+          ),
           tabBarStyle: [
             styles.tabStyles,
             {
@@ -134,6 +141,11 @@ const TabsLayout = () => {
           }}
         />
       </Tabs>
+      <BottomSheetView
+        onCloseFunc={() => setOpenBottomSheet(false)}
+        openBottomSheet={openBottomSheet}
+        type="profile"
+      />
     </Screen>
   );
 };
@@ -142,7 +154,8 @@ export default StackWrapper(TabsLayout);
 
 const styles = StyleSheet.create({
   tabStyles: {
-    borderTopWidth: 1,
+    borderTopWidth: 0,
     paddingTop: 2,
+    elevation:0
   },
 });
