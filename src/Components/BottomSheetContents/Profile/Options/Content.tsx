@@ -1,7 +1,8 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import { gray } from "@/src/Theme/Colors";
 import { router } from "expo-router";
+
+import { gray } from "@/src/Theme/Colors";
 
 const iconSize = 28;
 const iconColor = gray;
@@ -52,7 +53,11 @@ export const signedOutContent = [
   {
     name: "Register",
     icon: (
-      <MaterialCommunityIcons name="account-check-outline" size={iconSize} color={iconColor} />
+      <MaterialCommunityIcons
+        name="account-check-outline"
+        size={iconSize}
+        color={iconColor}
+      />
     ),
     onPressFunc: () => {
       router.push("/register");

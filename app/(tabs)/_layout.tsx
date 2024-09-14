@@ -29,8 +29,10 @@ const TabsLayout = () => {
             textAlign: "left",
           },
           headerTitleAlign: "left",
+          headerShadowVisible: false,
           headerStyle: {
             backgroundColor: theme === "light" ? pureWhite : dark.background,
+            height:100
           },
           headerRight: () => (
             <TabsRightHeader handleOnPress={() => setOpenBottomSheet(true)} />
@@ -142,6 +144,7 @@ const TabsLayout = () => {
       <BottomSheetView
         onCloseFunc={() => setOpenBottomSheet(false)}
         openBottomSheet={openBottomSheet}
+        type="profile"
       />
     </Screen>
   );
@@ -151,7 +154,8 @@ export default StackWrapper(TabsLayout);
 
 const styles = StyleSheet.create({
   tabStyles: {
-    borderTopWidth: 1,
+    borderTopWidth: 0,
     paddingTop: 2,
+    elevation:0
   },
 });

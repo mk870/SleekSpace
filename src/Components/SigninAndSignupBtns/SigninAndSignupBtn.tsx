@@ -10,6 +10,7 @@ import LottieView from "lottie-react-native";
 import { router } from "expo-router";
 
 import profile from "@/src/Components/Lotties/user-account.json";
+import property from "@/src/Components/Lotties/house.json";
 import ThemedText from "../ThemedText/ThemedText";
 import RegularText from "../RegularText/RegularText";
 import CustomButton from "../Buttons/Custom/CustomButton";
@@ -21,8 +22,15 @@ import {
 } from "@/src/Utils/Constants";
 
 type Props = {
-  screenType: "profile" | "favorites" | "chats" | "property";
+  screenType: "profile" | "favorites" | "chats" | "property" | "post_property";
 };
+
+const profileHeading = "There's no profile to show";
+const postPropertyHeading = "There's no user to post";
+const postPropertyContent =
+  "Please login or create an account to post a property.";
+const profileContent =
+  "Please login or create an account to view and update your profile.";
 
 const SigninAndSignupBtn: React.FC<Props> = ({ screenType }) => {
   const { width } = useWindowDimensions();
@@ -30,7 +38,7 @@ const SigninAndSignupBtn: React.FC<Props> = ({ screenType }) => {
     <View style={styles.container}>
       <View style={{ alignSelf: "center" }}>
         <LottieView
-          source={profile}
+          source={screenType === "profile" ? profile : property}
           autoPlay
           loop
           style={{
@@ -39,9 +47,11 @@ const SigninAndSignupBtn: React.FC<Props> = ({ screenType }) => {
           }}
         />
       </View>
-      <ThemedText type="header">There is no profile to show</ThemedText>
+      <ThemedText type="header">
+        {screenType === "profile" ? profileHeading : postPropertyHeading}
+      </ThemedText>
       <RegularText>
-        Please login or create an account to view and update your profile.
+        {screenType === "profile" ? profileContent : postPropertyContent}
       </RegularText>
       <View
         style={[

@@ -1,30 +1,38 @@
-import { StyleSheet } from "react-native";
-import React, { useEffect, useMemo, useRef } from "react";
+import { StyleSheet, useWindowDimensions } from "react-native";
+import React, { useEffect, useRef } from "react";
 import { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { ScrollView } from "react-native-gesture-handler";
 
 import ProfileContent from "./Profile/ProfileContent";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
 import { dark, pureWhite } from "@/src/Theme/Colors";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
-import { ScrollView } from "react-native-gesture-handler";
+import PropertyOptions from "./PropertyOptions/PropertyOptions";
 
 type Props = {
   openBottomSheet: boolean;
   onCloseFunc: IVoidFunc;
+  type: "profile" | "property";
 };
 
-const BottomSheetView: React.FC<Props> = ({ openBottomSheet, onCloseFunc }) => {
+const BottomSheetView: React.FC<Props> = ({
+  openBottomSheet,
+  onCloseFunc,
+  type,
+}) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["25%", "30%"], []);
+  const {height}= useWindowDimensions()
+  const snapPoint2 = ((230/height) * 100).toFixed(0)
+  const snapPoints = ["25%", `${snapPoint2}%`]
   const theme = useAppSelector((state) => state.theme.value);
 
   useEffect(() => {
     if (openBottomSheet) {
       bottomSheetRef.current?.expand();
     }
-  }, [openBottomSheet]);
-
+  }, [openBottomSheet]); 
+  
   const renderBackdrop = (props: any) => (
     <BottomSheetBackdrop
       {...props}
@@ -48,9 +56,16 @@ const BottomSheetView: React.FC<Props> = ({ openBottomSheet, onCloseFunc }) => {
       }}
     >
       <ScrollView>
-        <ProfileContent
-          closeBottomSheetFunc={() => bottomSheetRef.current?.close()}
-        />
+        {type === "profile" && (
+          <ProfileContent
+            closeBottomSheetFunc={() => bottomSheetRef.current?.close()}
+          />
+        )}
+        {type === "property" && (
+          <PropertyOptions
+            closeBottomSheetFunc={() => bottomSheetRef.current?.close()}
+          />
+        )}
       </ScrollView>
     </BottomSheet>
   );
