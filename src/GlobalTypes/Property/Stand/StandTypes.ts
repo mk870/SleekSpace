@@ -24,6 +24,7 @@ export type IStandProperty = {
   sizeDimensions: string;
   otherDetails: string;
   postedTime: string;
+  currency: string;
   insights: IPropertyInsights;
   propertyLocation: IPropertyLocation;
   media: IPropertyImageOrVideo[];
@@ -39,6 +40,7 @@ export type IStandPropertyCreation = {
   status: "on the market" | "off the market";
   level: string;
   type: string;
+  currency: string;
   sizeDimensions: string;
   otherDetails: string;
   propertyLocation: IPropertyLocationCreation;
@@ -57,6 +59,7 @@ export type IStandPropertyWithManager = {
   status: "on the market"|"off the market";
   level: string;
   type: string;
+  currency: string;
   sizeDimensions: string;
   otherDetails: string;
   postedTime: string;
@@ -78,6 +81,7 @@ export type IStandPropertyUpdate = {
   status: "on the market"|"off the market";
   level: string;
   type: string;
+  currency: string;
   sizeDimensions: string;
   otherDetails: string;
 };

@@ -13,6 +13,7 @@ export type ICommercialRentalPropertyCreation = {
     isFullSpace:boolean;
     status: "on the market"|"off the market";
     yearBuilt: string;
+    currency: string;
     stories: string;
     type: string;
     sizeDimensions: string;
@@ -36,6 +37,7 @@ export type ICommercialRentalProperty = {
     status: "on the market"|"off the market";
     yearBuilt: string;
     stories: string;
+    currency: string;
     type: string;
     sizeDimensions: string;
     interiorFeatures: string;
@@ -60,6 +62,7 @@ export type ICommercialRentalPropertyWithManager = {
     status: "on the market"|"off the market";
     yearBuilt: string;
     stories: string;
+    currency: string;
     type: string;
     sizeDimensions: string;
     interiorFeatures: string;
@@ -84,6 +87,7 @@ export type ICommercialRentalPropertyUpdate = {
     status: "on the market"|"off the market";
     yearBuilt: string;
     stories: string;
+    currency: string;
     type: string;
     sizeDimensions: string;
     interiorFeatures: string;

@@ -15,6 +15,7 @@ const Colors = {
   lightPrimary: "#d1c0e3",
   purple: "#b400a6",
   gray: "#7c7484",
+  green:"#1dac08",
   light: {
     text: black,
     background: "#eaeaea",
@@ -46,4 +47,5 @@ export const {
   pureWhite,
   gray,
   purple,
+  green,
 } = Colors;

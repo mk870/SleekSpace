@@ -21,6 +21,7 @@ export type ILandProperty = {
   status: "on the market" | "off the market";
   type: string;
   sizeDimensions: string;
+  currency: string;
   otherDetails: string;
   postedTime: string;
   insights: IPropertyInsights;
@@ -37,6 +38,7 @@ export type ILandPropertyCreation = {
   isNegotiable: boolean;
   status: "on the market" | "off the market";
   type: string;
+  currency: string;
   sizeDimensions: string;
   otherDetails: string;
   propertyLocation: IPropertyLocationCreation;
@@ -57,6 +59,7 @@ export type ILandPropertyWithManager = {
   sizeDimensions: string;
   otherDetails: string;
   postedTime: string;
+  currency: string;
   insights: IPropertyInsights;
   propertyLocation: IPropertyLocation;
   media: IPropertyImageOrVideo[];
@@ -71,6 +74,7 @@ export type ILandPropertyUpdate = {
   sizeNumber: number;
   areaHasElectricity: boolean;
   isServiced: boolean;
+  currency: string;
   isNegotiable: boolean;
   status: "on the market" | "off the market";
   type: string;

@@ -1,10 +1,13 @@
 import * as SecureStore from "expo-secure-store";
+import * as ImagePicker from "expo-image-picker";
+
 import {
   IUserContactNumber,
   IUserLocation,
 } from "../GlobalTypes/User/UserTypes";
 import { IManagerContactNumber } from "../GlobalTypes/Manager/ManagerTypes";
 import { ISearchLocation } from "../GlobalTypes/LocationIQ/LocationIQTypes";
+import { IPropertyImageOrVideoCreationOrUpdate } from "../GlobalTypes/Property/Media/ImageOrVideoTypes";
 
 export const saveSecureValue = async (key: string, value: string) => {
   await SecureStore.setItemAsync(key, value);
@@ -239,4 +242,23 @@ export const handleLayout = (
 ) => {
   const { height } = event.nativeEvent.layout;
   setViewHeight(height);
+};
+
+export const convertImagePickerAssetsListToUploadableImages: (
+  images: ImagePicker.ImagePickerAsset[]
+) => IPropertyImageOrVideoCreationOrUpdate[] = (
+  images: ImagePicker.ImagePickerAsset[]
+) => {
+  const propertyImages: IPropertyImageOrVideoCreationOrUpdate[] = [];
+  for (let i = 0; i < images.length; i++) {
+    const propertyImage: IPropertyImageOrVideoCreationOrUpdate = {
+      name: generateRandomSixDigitNumber() + images[0].fileName,
+      size: images[i].fileSize ? (images[i].fileSize as number) : 0,
+      fileType: images[i].mimeType ? images[i].mimeType : "",
+      contentType: "image",
+      file: images[i].base64 as string,
+    };
+    propertyImages.push(propertyImage);
+  }
+  return propertyImages;
 };

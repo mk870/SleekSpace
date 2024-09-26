@@ -1,4 +1,4 @@
-import { backEndUrl } from "../../Utils/Constants";
+import { backEndUrl } from "@/src/Utils/Constants";
 
 const baseRouteName = "/property/residential/rentals";
 

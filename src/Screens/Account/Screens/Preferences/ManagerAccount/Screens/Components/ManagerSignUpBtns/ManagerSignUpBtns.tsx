@@ -1,5 +1,5 @@
 import { Image, StyleSheet, useWindowDimensions, View } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { router } from "expo-router";
 
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";

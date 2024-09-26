@@ -7,43 +7,43 @@ import SigninAndSignupBtn from "@/src/Components/SigninAndSignupBtns/SigninAndSi
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { getManagerByUserId } from "@/src/HttpServices/Queries/Manager/ManagerHttpFuncs";
 import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
-import MessageModal from "@/src/Components/Modals/MessageModal";
 import ManagerProfile from "./Screens/Components/ManagerProfile/ManagerProfile";
 import ManagerSignUpBtns from "./Screens/Components/ManagerSignUpBtns/ManagerSignUpBtns";
 import ManagerLoader from "./Screens/Components/Loaders/ManagerLoader";
+import { noManagerError } from "@/src/Utils/Constants";
+import HttpError from "@/src/Components/HttpError/HttpError";
 
 const ManagerAccount: INoPropsReactComponent = () => {
   const user = useAppSelector((state) => state.user.value);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [httpError, setHttpError] = useState<string>("");
-  const [hasManagerAccount, setHasManagerAccount] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+
+  const fetchManager = () => {
+    getManagerByUserId(user)
+      .then((res) => {
+        dispatch(addManagerAccount(res.data.response));
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        if (error.response?.data?.error) {
+          if (error.response?.data?.error === noManagerError) {
+            setHttpError(error.response.data.error);
+            setIsLoading(false);
+          } else {
+            setHttpError(error.response.data.error);
+            setIsLoading(false);
+          }
+        } else {
+          setHttpError("Something went wrong");
+          setIsLoading(false);
+        }
+      });
+  };
 
   useEffect(() => {
     if (user.accessToken) {
-      getManagerByUserId(user)
-        .then((res) => {
-          dispatch(addManagerAccount(res.data.response));
-          setHasManagerAccount(true);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          if (error.response?.data?.error !== "") {
-            if (
-              error.response?.data?.error ===
-              "this property management account does not exist"
-            ) {
-              setHasManagerAccount(false);
-              setIsLoading(false);
-            } else {
-              setHttpError(error.response?.data?.error);
-              setIsLoading(false);
-            }
-          } else {
-            setHttpError("Something went wrong");
-            setIsLoading(false);
-          }
-        });
+      fetchManager();
     }
   }, [user.accessToken]);
 
@@ -53,19 +53,20 @@ const ManagerAccount: INoPropsReactComponent = () => {
         {!user.accessToken && <SigninAndSignupBtn screenType={"profile"} />}
         {user.accessToken && (
           <>
-            {isLoading && (
-              <ManagerLoader/>
+            {isLoading && <ManagerLoader />}
+            {httpError && httpError !== noManagerError && (
+              <HttpError
+                retryFunc={() => {
+                  setHttpError("");
+                  setIsLoading(true);
+                  fetchManager();
+                }}
+              />
             )}
-            {!isLoading &&
-              (hasManagerAccount ? <ManagerProfile /> : <ManagerSignUpBtns />)}
+            {httpError === noManagerError && <ManagerSignUpBtns />}
+            {!isLoading && !httpError && <ManagerProfile />}
           </>
         )}
-        <MessageModal
-          message={httpError}
-          type="error"
-          isModalVisible={httpError ? true : false}
-          handleCancel={() => setHttpError("")}
-        />
       </StackScreen>
     </Screen>
   );

@@ -3,6 +3,7 @@ import React from "react";
 
 import { dark, pureWhite } from "@/src/Theme/Colors";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { StatusBar } from "expo-status-bar";
 
 type Props = {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ const Screen: React.FC<Props> = ({ children }) => {
         },
       ]}
     >
+      <StatusBar style={theme === "light" ? "dark" : "light"} />
       {children}
     </View>
   );
