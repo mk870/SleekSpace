@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 
 import ButtonSpinner from "../../Spinners/ButtonSpinner";
@@ -13,6 +13,7 @@ type Props = {
   color?: string;
   borderRadius?: number;
   isDisabled?: boolean;
+  icon?: React.ReactNode;
 };
 
 const CustomButton: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const CustomButton: React.FC<Props> = ({
   isDisabled,
   height,
   borderRadius,
+  icon,
 }) => {
   const { container, textStyles } = styles;
   return (
@@ -42,7 +44,10 @@ const CustomButton: React.FC<Props> = ({
       {title === "loading" ? (
         <ButtonSpinner backGroundColor={white} />
       ) : (
-        <Text style={textStyles}>{title}</Text>
+        <View style={styles.innerContainer}>
+          {icon}
+          <Text style={textStyles}>{title}</Text>
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -54,6 +59,10 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
+  },
+  innerContainer: {
+    flexDirection: "row",
+    gap: 5,
   },
   textStyles: {
     color: white,

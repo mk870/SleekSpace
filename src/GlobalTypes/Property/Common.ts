@@ -5,3 +5,6 @@ type IPropertyType =
   | "Commercial ForSale"
   | "Stands"
   | "Land";
+
+type ICurrency = "US$"|"R"|"ZIG"
+type IStatus = "on the market"|"off the market";

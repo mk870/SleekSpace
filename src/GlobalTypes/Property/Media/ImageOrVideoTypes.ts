@@ -11,7 +11,7 @@ export type IPropertyImageOrVideo = {
 export type IPropertyImageOrVideoCreationOrUpdate = {
   id?: number;
   propertyId?: number;
-  File: string;
+  file: string;
   name: string;
   contentType: string | undefined;
   size: number;

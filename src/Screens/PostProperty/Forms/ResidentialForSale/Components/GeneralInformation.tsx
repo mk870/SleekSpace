@@ -3,14 +3,14 @@ import React from 'react'
 
 type Props = {}
 
-const ResidentialRental = (props: Props) => {
+const GeneralInformation = (props: Props) => {
   return (
     <View>
-      <Text>ResidentialRental</Text>
+      <Text>GeneralInformation</Text>
     </View>
   )
 }
 
-export default ResidentialRental
+export default GeneralInformation
 
 const styles = StyleSheet.create({})

@@ -1,0 +1,128 @@
+import { IManagerAccount } from "@/src/GlobalTypes/Manager/ManagerTypes";
+import {
+  IExteriorInfoFormError,
+  IGeneralInfoFormError,
+  IInteriorInfoFormError,
+  IResidentialRentalExteriorInfo,
+  IResidentialRentalGeneralInfo,
+  IResidentialRentalInteriorInfo,
+  IResidentialRentalOtherInfo,
+} from "../Types/FormTypes";
+import { convertImagePickerAssetsListToUploadableImages } from "@/src/Utils/Funcs";
+
+export const processGeneralPropertyDetails = (
+  generalPropertyDetails: IResidentialRentalGeneralInfo,
+  setPageNumber: React.Dispatch<React.SetStateAction<number>>,
+  setGeneralInfoFormError: React.Dispatch<
+    React.SetStateAction<IGeneralInfoFormError>
+  >
+) => {
+  if (+generalPropertyDetails.rentAmount < 10) {
+    setGeneralInfoFormError("rentAmount");
+  } else if (+generalPropertyDetails.sizeNumber < 0) {
+    setGeneralInfoFormError("propertySize");
+  } else if (+generalPropertyDetails.totalNumberOfRooms < 2) {
+    setGeneralInfoFormError("totalNumberOfpropertyRooms");
+  } else if (+generalPropertyDetails.stories < 1) {
+    setGeneralInfoFormError("stories");
+  } else if (
+    generalPropertyDetails.yearBuilt &&
+    (+generalPropertyDetails.yearBuilt > new Date().getFullYear() ||
+      +generalPropertyDetails.yearBuilt < 1920)
+  ) {
+    setGeneralInfoFormError("yearBuilt");
+  } else setPageNumber((prev) => prev + 1);
+};
+
+export const processInteriorPropertyDetails = (
+  interiorPropertyDetails: IResidentialRentalInteriorInfo,
+  setPageNumber: React.Dispatch<React.SetStateAction<number>>,
+  generalPropertyDetails: IResidentialRentalGeneralInfo,
+  setInteriorInfoFormError: React.Dispatch<
+    React.SetStateAction<IInteriorInfoFormError>
+  >
+) => {
+  if (
+    +interiorPropertyDetails.bedrooms < 1 ||
+    +interiorPropertyDetails.bedrooms >=
+      +generalPropertyDetails.totalNumberOfRooms
+  ) {
+    setInteriorInfoFormError("bedrooms");
+  } else if (
+    +interiorPropertyDetails.bathrooms < 1 ||
+    +interiorPropertyDetails.bathrooms >=
+      +generalPropertyDetails.totalNumberOfRooms
+  ) {
+    setInteriorInfoFormError("bathrooms");
+  } else setPageNumber((prev) => prev + 1);
+};
+
+export const processExteriorPropertyDetails = (
+  exteriorPropertyDetails: IResidentialRentalExteriorInfo,
+  setPageNumber: React.Dispatch<React.SetStateAction<number>>,
+  setExteriorInfoFormError: React.Dispatch<
+    React.SetStateAction<IExteriorInfoFormError>
+  >
+) => {
+  if (
+    +exteriorPropertyDetails.numberOfGarages < 0 ||
+    !exteriorPropertyDetails.numberOfGarages ||
+    +exteriorPropertyDetails.numberOfGarages > 7
+  ) {
+    setExteriorInfoFormError("numberOfGarages");
+  } else setPageNumber((prev) => prev + 1);
+};
+
+export const createPropertyToBeSubmitted = (
+  propertyGeneralDetails: IResidentialRentalGeneralInfo,
+  propertyInteriorInfo: IResidentialRentalInteriorInfo,
+  propertyExteriorInfo: IResidentialRentalExteriorInfo,
+  otherPropertyInfo: IResidentialRentalOtherInfo,
+  manager: IManagerAccount
+) => {
+  return {
+    managerId: manager.id,
+    status: "on the Market",
+    sizeDimensions: propertyGeneralDetails.sizeDimensions,
+    sizeNumber: +propertyGeneralDetails.sizeNumber,
+    stories: +propertyGeneralDetails.stories,
+    rentAmount: +propertyGeneralDetails.rentAmount,
+    currency: propertyGeneralDetails.currency,
+    totalNumberOfRooms: +propertyGeneralDetails.totalNumberOfRooms,
+    numberOfRoomsToLet: +propertyGeneralDetails.numberOfRoomsToLet,
+    bedrooms: +propertyInteriorInfo.bedrooms,
+    bathooms: +propertyInteriorInfo.bathrooms,
+    isFullHouse:
+      propertyGeneralDetails.numberOfRoomsToLet === "fullHouse" ? true : false,
+    isTiled: propertyInteriorInfo.isTiled,
+    isPaved: propertyExteriorInfo.isPaved,
+    isPlustered: propertyInteriorInfo.isPlustered,
+    isPainted: propertyInteriorInfo.isPainted,
+    hasBoreHole: propertyExteriorInfo.hasBoreHole,
+    hasSwimmingPool: propertyExteriorInfo.hasSwimmingPool,
+    otherInteriorFeatures: propertyInteriorInfo.otherInteriorFeatures,
+    otherExteriorFeatures: propertyExteriorInfo.otherExteriorFeatures,
+    hasCeiling: propertyInteriorInfo.hasCeiling,
+    hasElectricity: propertyInteriorInfo.hasElectricity,
+    hasWater: propertyInteriorInfo.hasWater,
+    media: convertImagePickerAssetsListToUploadableImages(otherPropertyInfo.images),
+    typeOfExteriorSecurity: propertyExteriorInfo.typeOfExteriorSecurity,
+    marketingStatement: otherPropertyInfo.marketingStatement,
+    tenantRequirements: otherPropertyInfo.tenantRequirements,
+    type: propertyGeneralDetails.type,
+    yearBuilt: +propertyGeneralDetails.yearBuilt,
+    numberOfGarages: +propertyExteriorInfo.numberOfGarages,
+    propertyLocation: {
+      lat: "",
+      lon: "",
+      displayName: "",
+      boundingbox: [],
+      city: "",
+      country: "",
+      countryCode: "",
+      county: "",
+      surburb: "",
+      province: "",
+    },
+  };
+};

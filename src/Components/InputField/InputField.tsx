@@ -35,7 +35,8 @@ type Props = {
   isFocused?: boolean;
   backgroundColor?: string;
   borderColor?: string;
-  isRequired?:boolean
+  isRequired?:boolean;
+  multiLine?:boolean
 };
 
 const InputField: React.FC<Props> = ({
@@ -51,7 +52,8 @@ const InputField: React.FC<Props> = ({
   backgroundColor,
   handleOnEnter,
   borderColor,
-  isRequired
+  isRequired,
+  multiLine
 }) => {
   const [ispassWordHidden, setIsPassWordHidden] = useState<boolean>(true);
   const iconSize = 20;
@@ -160,6 +162,7 @@ const InputField: React.FC<Props> = ({
           value={textValue}
           onChangeText={handleOnChangeText}
           placeholder={placeHolder}
+          multiline={multiLine}
           textContentType={contentType}
           placeholderTextColor={"gray"}
           keyboardType={keyboardAppearance()}

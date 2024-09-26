@@ -18,6 +18,7 @@ export type ICommercialPropertyForSale = {
   stories: string;
   type: string;
   sizeDimensions: string;
+  currency: string;
   interiorFeatures: string;
   exteriorFeatures: string;
   otherDetails: string;
@@ -38,6 +39,7 @@ export type ICommercialPropertyForSaleCreation = {
     status: "on the market"|"off the market";
     yearBuilt: string;
     stories: string;
+    currency: string;
     type: string;
     sizeDimensions: string;
     interiorFeatures: string;
@@ -61,6 +63,7 @@ export type ICommercialPropertyForSaleWithManager = {
     yearBuilt: string;
     stories: string;
     type: string;
+    currency: string;
     sizeDimensions: string;
     interiorFeatures: string;
     exteriorFeatures: string;
@@ -86,6 +89,7 @@ export type ICommercialPropertyForSaleUpdate = {
     yearBuilt: string;
     stories: string;
     type: string;
+    currency: string;
     sizeDimensions: string;
     interiorFeatures: string;
     exteriorFeatures: string;
