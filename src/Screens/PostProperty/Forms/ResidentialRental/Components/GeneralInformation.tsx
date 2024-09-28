@@ -1,9 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect } from "react";
 
 import CustomPicker from "@/src/Components/CustomPicker/CustomPicker";
@@ -16,8 +11,8 @@ import {
   IGeneralInfoFormError,
   IResidentialRentalGeneralInfo,
 } from "../Types/FormTypes";
-import MyCurrentLocation from "@/src/Components/CurrentLocation/MyCurrentLocation";
-import { Feather } from "@expo/vector-icons";
+import PropertyLocationInput from "@/src/Components/PropertyLocationInput/PropertyLocationInput";
+import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 
 type Props = {
   formError: IGeneralInfoFormError;
@@ -34,7 +29,6 @@ const GeneralInformation: React.FC<Props> = ({
   formError,
   setFormError,
 }) => {
-
   useEffect(() => {
     if (formError) {
       setFormError("");
@@ -42,9 +36,7 @@ const GeneralInformation: React.FC<Props> = ({
   }, [propertyDetails]);
 
   return (
-    <View
-      style={styles.inputWrapper}
-    >
+    <View style={styles.inputWrapper}>
       <View style={styles.featuresContainer}>
         <View style={{ width: "100%" }}>
           <ThemedText type="subHeader" styles={{ textAlign: "left" }}>
@@ -167,58 +159,43 @@ const GeneralInformation: React.FC<Props> = ({
             },
           ]}
         />
-        
-          <View>
-            <InputField
-              textValue={propertyDetails?.totalNumberOfRooms}
-              placeHolder=""
-              width={160}
-              handleOnChangeText={(e) =>
-                setPropertyDetails({
-                  ...propertyDetails,
-                  totalNumberOfRooms: e,
-                })
-              }
-              height={57}
-              contentType="none"
-              type="number"
-              label="Total number of rooms"
-              backgroundColor="transparent"
-              borderColor={
-                formError === "totalNumberOfpropertyRooms" ? red : gray
-              }
-            />
-            {formError === "totalNumberOfpropertyRooms" && (
-              <Text style={styles.errorText}>invalid size</Text>
-            )}
-          </View>
-        
+
         <View>
           <InputField
-            textValue={propertyDetails?.location as string}
+            textValue={propertyDetails?.totalNumberOfRooms}
             placeHolder=""
-            width={"100%"}
+            width={160}
             handleOnChangeText={(e) =>
-              setPropertyDetails({ ...propertyDetails, location: e })
+              setPropertyDetails({
+                ...propertyDetails,
+                totalNumberOfRooms: e,
+              })
             }
             height={57}
             contentType="none"
-            type="none"
-            label="Location"
+            type="number"
+            label="Total number of rooms"
             backgroundColor="transparent"
-            borderColor={formError === "propertySize" ? red : gray}
-            isRequired
+            borderColor={
+              formError === "totalNumberOfpropertyRooms" ? red : gray
+            }
           />
-          {formError === "propertySize" && (
+          {formError === "totalNumberOfpropertyRooms" && (
             <Text style={styles.errorText}>invalid size</Text>
           )}
-          <Row style={styles.locationOptions}>
-            <MyCurrentLocation setLocation={() => setPropertyDetails} />
-            <TouchableOpacity style={styles.mapContainer}>
-              <Feather name="map" size={20} color={primary} />
-              <ThemedText type="regular">use map</ThemedText>
-            </TouchableOpacity>
-          </Row>
+        </View>
+
+        <View>
+          <PropertyLocationInput
+            location={propertyDetails.location}
+            borderColor={formError === "location" ? red : gray}
+            setLocation={(e: string | ISearchLocation) =>
+              setPropertyDetails({ ...propertyDetails, location: e })
+            }
+          />
+          {formError === "location" && (
+            <Text style={styles.errorText}>invalid location</Text>
+          )}
         </View>
         <Row style={styles.row}>
           <View>
@@ -322,7 +299,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 12,
-    width:"100%"
+    width: "100%",
   },
   featuresContainer: {
     width: "100%",
@@ -331,15 +308,6 @@ const styles = StyleSheet.create({
   row: {
     gap: 8,
     width: "100%",
-  },
-  locationOptions: {
-    width: "100%",
-    justifyContent: "space-between",
-    marginTop: 10,
-  },
-  mapContainer: {
-    flexDirection: "row",
-    gap: 5,
   },
   errorText: {
     fontFamily: family,

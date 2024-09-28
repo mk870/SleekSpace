@@ -8,7 +8,9 @@ import {
   IResidentialRentalInteriorInfo,
   IResidentialRentalOtherInfo,
 } from "../Types/FormTypes";
-import { convertImagePickerAssetsListToUploadableImages } from "@/src/Utils/Funcs";
+import {
+  convertImagePickerAssetsListToUploadableImages,
+} from "@/src/Utils/Funcs";
 
 export const processGeneralPropertyDetails = (
   generalPropertyDetails: IResidentialRentalGeneralInfo,
@@ -23,7 +25,9 @@ export const processGeneralPropertyDetails = (
     setGeneralInfoFormError("propertySize");
   } else if (+generalPropertyDetails.totalNumberOfRooms < 2) {
     setGeneralInfoFormError("totalNumberOfpropertyRooms");
-  } else if (+generalPropertyDetails.stories < 1) {
+  }else if (!generalPropertyDetails.location) {
+    setGeneralInfoFormError("location"); 
+  }else if (+generalPropertyDetails.stories < 1) {
     setGeneralInfoFormError("stories");
   } else if (
     generalPropertyDetails.yearBuilt &&
@@ -105,7 +109,9 @@ export const createPropertyToBeSubmitted = (
     hasCeiling: propertyInteriorInfo.hasCeiling,
     hasElectricity: propertyInteriorInfo.hasElectricity,
     hasWater: propertyInteriorInfo.hasWater,
-    media: convertImagePickerAssetsListToUploadableImages(otherPropertyInfo.images),
+    media: convertImagePickerAssetsListToUploadableImages(
+      otherPropertyInfo.images
+    ),
     typeOfExteriorSecurity: propertyExteriorInfo.typeOfExteriorSecurity,
     marketingStatement: otherPropertyInfo.marketingStatement,
     tenantRequirements: otherPropertyInfo.tenantRequirements,
@@ -113,16 +119,46 @@ export const createPropertyToBeSubmitted = (
     yearBuilt: +propertyGeneralDetails.yearBuilt,
     numberOfGarages: +propertyExteriorInfo.numberOfGarages,
     propertyLocation: {
-      lat: "",
-      lon: "",
-      displayName: "",
-      boundingbox: [],
-      city: "",
-      country: "",
-      countryCode: "",
-      county: "",
-      surburb: "",
-      province: "",
+      lat:
+        typeof propertyGeneralDetails.location === "object"
+          ? propertyGeneralDetails.location.lat
+          : "",
+      lon:
+        typeof propertyGeneralDetails.location === "object"
+          ? propertyGeneralDetails.location.lon
+          : "",
+      displayName:
+        typeof propertyGeneralDetails.location === "object"
+          ? propertyGeneralDetails.location.display_name
+          : "",
+      boundingbox:
+        typeof propertyGeneralDetails.location === "object"
+          ? propertyGeneralDetails.location.boundingbox
+          : [],
+      city:
+        typeof propertyGeneralDetails.location === "object"
+          ? propertyGeneralDetails.location.address.city
+          : "",
+      country:
+        typeof propertyGeneralDetails.location === "object"
+          ? propertyGeneralDetails.location.address.country
+          : "",
+      countryCode:
+        typeof propertyGeneralDetails.location === "object"
+          ? propertyGeneralDetails.location.address.country_code
+          : "",
+      county:
+        typeof propertyGeneralDetails.location === "object"
+          ? propertyGeneralDetails.location.address.county
+          : "",
+      surburb:
+        typeof propertyGeneralDetails.location === "object"
+          ? propertyGeneralDetails.location.address.surburb
+          : "",
+      province:
+        typeof propertyGeneralDetails.location === "object"
+          ? propertyGeneralDetails.location.address.state
+          : "",
     },
   };
 };

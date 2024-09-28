@@ -1,10 +1,10 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { FontAwesome } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 
-import { primary } from "@/src/Theme/Colors";
+import { dark, gray, light, primary } from "@/src/Theme/Colors";
 import Row from "../Row/Row";
 import MessageModal from "../Modals/MessageModal";
 import ButtonSpinner from "../Spinners/ButtonSpinner";
@@ -12,17 +12,27 @@ import { numberToString } from "@/src/Utils/Funcs";
 import ThemedText from "../ThemedText/ThemedText";
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { locationReverseGeoCodingHttpFunc } from "@/src/HttpServices/Mutations/LocationIQ/LocationIQHttpFuncs";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { family, small } from "@/src/Theme/Font";
+import { IVoidFunc } from "@/src/GlobalTypes/Types";
 
 type Props = {
-  setLocation: React.Dispatch<React.SetStateAction<string | ISearchLocation>>;
+  setLocation: (location: string | ISearchLocation) => void;
+  isInModal?: boolean;
+  closeModal?: IVoidFunc;
 };
 
-const MyCurrentLocation: React.FC<Props> = ({ setLocation }) => {
+const MyCurrentLocation: React.FC<Props> = ({
+  setLocation,
+  isInModal,
+  closeModal,
+}) => {
   const [getDeviceLocation, setGetDeviceLocation] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [locationDeviceError, setLocationDeviceError] =
     useState<boolean>(false);
   const [locationHttpError, setLocationHttpError] = useState<string>("");
+  const theme = useAppSelector((state) => state.theme.value);
 
   const reverseGeocodingMutation = useMutation({
     mutationFn: locationReverseGeoCodingHttpFunc,
@@ -43,11 +53,13 @@ const MyCurrentLocation: React.FC<Props> = ({ setLocation }) => {
         type: "",
       };
       setLocation(currentLocation);
+      if (closeModal) closeModal();
     },
     onError: (error: any) => {
-      console.log(error);
-      if (error.response?.data?.error !== "") {
-        setLocationHttpError(error.response?.data?.error);
+      if (error.response?.data?.error) {
+        if (error.response?.data?.error !== "") {
+          setLocationHttpError(error.response?.data?.error);
+        } else setLocationHttpError("Something went wrong");
       } else setLocationHttpError("Something went wrong");
     },
     onSettled: () => {
@@ -83,22 +95,45 @@ const MyCurrentLocation: React.FC<Props> = ({ setLocation }) => {
     setGetDeviceLocation(false);
     setLocationHttpError("");
   };
-  
+
   return (
     <View>
-      <TouchableOpacity
-        onPress={() => setGetDeviceLocation(true)}
-        style={{ paddingLeft: isLoading ? 10 : 0 }}
-      >
-        {isLoading ? (
-          <ButtonSpinner backGroundColor={primary} />
-        ) : (
-          <Row style={styles.row}>
-            <FontAwesome name="location-arrow" size={24} color={primary} />
-            <ThemedText type="regular">use current location</ThemedText>
-          </Row>
-        )}
-      </TouchableOpacity>
+      {isInModal && (
+        <TouchableOpacity
+          onPress={() => setGetDeviceLocation(true)}
+          style={[
+            styles.mediaOption,
+            {
+              backgroundColor:
+                theme === "light" ? light.darkGray : dark.darkGray,
+            },
+          ]}
+        >
+          {isLoading ? (
+            <ButtonSpinner backGroundColor={primary} />
+          ) : (
+            <View style={styles.mediaOptionSubContainer}>
+              <FontAwesome name="location-arrow" size={32} color={primary} />
+              <Text style={styles.mediaOptionText}>current</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      )}
+      {!isInModal && (
+        <TouchableOpacity
+          onPress={() => setGetDeviceLocation(true)}
+          style={{ paddingLeft: isLoading ? 10 : 0 }}
+        >
+          {isLoading ? (
+            <ButtonSpinner backGroundColor={primary} />
+          ) : (
+            <Row style={styles.row}>
+              <FontAwesome name="location-arrow" size={24} color={primary} />
+              <ThemedText type="regular">use current location</ThemedText>
+            </Row>
+          )}
+        </TouchableOpacity>
+      )}
       <MessageModal
         message="sorry, we do not have permission to get your device location, please allow Sleek Space to have access to your location on your device settings."
         header="Permission Denied!"
@@ -123,5 +158,23 @@ const styles = StyleSheet.create({
   container: {},
   row: {
     gap: 5,
+  },
+  mediaOption: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 70,
+    width: 65,
+    borderRadius: 7,
+    paddingTop: 6,
+  },
+  mediaOptionText: {
+    fontFamily: family,
+    fontSize: small,
+    color: gray,
+  },
+  mediaOptionSubContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
 });

@@ -23,7 +23,8 @@ export type IGeneralInfoFormError =
   | ""
   | "propertySize"
   | "totalNumberOfpropertyRooms"
-  | "numberOfRoomsToLet";
+  | "numberOfRoomsToLet"
+  | "location";
 
 
   export type IResidentialRentalInteriorInfo = {
