@@ -41,6 +41,8 @@ import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { IUser } from "@/src/GlobalTypes/User/UserTypes";
+import SearchLocationModal from "@/src/Components/Modals/Location/SearchLocationModal";
+import MapView from "react-native-maps";
 
 const LocationUpdate: INoPropsReactComponent = () => {
   const user = useAppSelector((state) => state.user.value);
@@ -48,6 +50,7 @@ const LocationUpdate: INoPropsReactComponent = () => {
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
   const [userData, setUserData] = useState<IUser | null>(null);
+  const [openMap, setOpenMap] = useState<boolean>(false);
   const [
     unSelectedSuggestedLocationsError,
     setUnSelectedSuggestedLocationsError,
@@ -183,13 +186,16 @@ const LocationUpdate: INoPropsReactComponent = () => {
             />
             {unSelectedSuggestedLocationsError && (
               <Text style={styles.errorText}>
-                please press the search button on your keyboard and select suggested
-                locations, this helps with accuracy.
+                please press the search button on your keyboard and select
+                suggested locations, this helps with accuracy.
               </Text>
             )}
             <Row style={styles.row}>
               <MyCurrentLocation setLocation={setLocation} />
-              <TouchableOpacity style={styles.mapContainer}>
+              <TouchableOpacity
+                style={styles.mapContainer}
+                onPress={() => setOpenMap(true)}
+              >
                 <Feather name="map" size={20} color={primary} />
                 <ThemedText type="regular">use map</ThemedText>
               </TouchableOpacity>

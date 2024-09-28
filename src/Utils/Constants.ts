@@ -1,3 +1,4 @@
+import { IMapRegion } from "../Components/Map/Types/MapTypes";
 import { ISearchLocation } from "../GlobalTypes/LocationIQ/LocationIQTypes";
 
 export const expoSecureValueKeyNames = {
@@ -37,9 +38,29 @@ export const BUTTON_MAX_WIDTH = 400;
 export const BUTTON_SIZE_SCREEN_BREAK_POINT = 500;
 export const MAX_INPUT_WIDTH = 600;
 
-export const noManagerError = "this property management account does not exist"
+export const noManagerError = "this property management account does not exist";
 
-export const maxPropertyImages = 20
+export const maxPropertyImages = 20;
+
+export const harareMapRegion: IMapRegion = {
+  latitude: -17.824858,
+  latitudeDelta: 0.04,
+  longitude: 31.053028,
+  longitudeDelta: 0.04,
+};
+
+export const zimbabweMapRegion: IMapRegion = {
+  latitude: -19.0169,
+  latitudeDelta: 0.1,
+  longitude: 29.1528,
+  longitudeDelta: 0.1,
+};
+
+export const searchPropertyLocationTutorialText =
+  "long press and drag the map marker to your property's location, then press done when you are finished";
+
+export const searchUserLocationTutorialText =
+  "long press and drag the map marker to your home location, then press done when you are finished";
 
 export const emptyLocation: ISearchLocation = {
   display_address: "",

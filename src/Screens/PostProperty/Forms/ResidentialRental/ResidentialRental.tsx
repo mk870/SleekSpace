@@ -7,7 +7,6 @@ import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import {
   BUTTON_SIZE_SCREEN_BREAK_POINT,
   BUTTON_MAX_WIDTH,
-  emptyLocation,
 } from "@/src/Utils/Constants";
 import {
   createPropertyToBeSubmitted,
@@ -62,7 +61,7 @@ const ResidentialRental: INoPropsReactComponent = () => {
       yearBuilt: "",
       stories: "1",
       currency: "US$",
-      location: emptyLocation,
+      location: "",
     });
 
   const [propertyInteriorInfo, setPropertyInteriorInfo] =
@@ -143,7 +142,7 @@ const ResidentialRental: INoPropsReactComponent = () => {
   });
 
   const handleSubmitProperty = () => {
-    //setIsLoading(true);
+    setIsLoading(true);
     const propertyToBeSubmitted: IResidentialRentalPropertyCreation =
       createPropertyToBeSubmitted(
         propertyGeneralDetails,
@@ -152,11 +151,10 @@ const ResidentialRental: INoPropsReactComponent = () => {
         otherPropertyInfo,
         manager
       );
-    // submitPropertyMutation.mutate({
-    //   property: propertyToBeSubmitted,
-    //   accessToken,
-    // });
-    console.log("media", propertyToBeSubmitted);
+    submitPropertyMutation.mutate({
+      property: propertyToBeSubmitted,
+      accessToken,
+    });
   };
 
   return (
