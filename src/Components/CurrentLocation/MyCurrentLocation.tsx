@@ -12,27 +12,25 @@ import { numberToString } from "@/src/Utils/Funcs";
 import ThemedText from "../ThemedText/ThemedText";
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { locationReverseGeoCodingHttpFunc } from "@/src/HttpServices/Mutations/LocationIQ/LocationIQHttpFuncs";
-import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { family, small } from "@/src/Theme/Font";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
+import { addMapLocation } from "@/src/Redux/Slices/MapLocationSlice/MapLocationSlice";
 
 type Props = {
-  setLocation: (location: string | ISearchLocation) => void;
   isInModal?: boolean;
   closeModal?: IVoidFunc;
+  setLocation?: React.Dispatch<React.SetStateAction<ISearchLocation | string>>;
 };
 
-const MyCurrentLocation: React.FC<Props> = ({
-  setLocation,
-  isInModal,
-  closeModal,
-}) => {
+const MyCurrentLocation: React.FC<Props> = ({ isInModal, closeModal,setLocation }) => {
   const [getDeviceLocation, setGetDeviceLocation] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [locationDeviceError, setLocationDeviceError] =
     useState<boolean>(false);
   const [locationHttpError, setLocationHttpError] = useState<string>("");
   const theme = useAppSelector((state) => state.theme.value);
+  const dipatch = useAppDispatch();
 
   const reverseGeocodingMutation = useMutation({
     mutationFn: locationReverseGeoCodingHttpFunc,
@@ -52,7 +50,8 @@ const MyCurrentLocation: React.FC<Props> = ({
         place_id: res.data.response.place_id,
         type: "",
       };
-      setLocation(currentLocation);
+      dipatch(addMapLocation(currentLocation));
+      if(setLocation) setLocation(currentLocation)
       if (closeModal) closeModal();
     },
     onError: (error: any) => {
@@ -68,21 +67,29 @@ const MyCurrentLocation: React.FC<Props> = ({
     },
   });
 
+  const deviceLocationPermissions = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setLocationDeviceError(true);
+      if (closeModal) closeModal();
+      return;
+    }
+    try {
+      let location = await Location.getCurrentPositionAsync({});
+      reverseGeocodingMutation.mutate({
+        lat: numberToString(location.coords.latitude),
+        lon: numberToString(location.coords.longitude),
+      });
+    } catch (error) {
+      setIsLoading(false)
+      setLocationDeviceError(true);
+    }
+  };
+
   useEffect(() => {
     if (getDeviceLocation) {
       setIsLoading(true);
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setLocationDeviceError(true);
-          return;
-        }
-        let location = await Location.getCurrentPositionAsync({});
-        reverseGeocodingMutation.mutate({
-          lat: numberToString(location.coords.latitude),
-          lon: numberToString(location.coords.longitude),
-        });
-      })();
+      deviceLocationPermissions();
     }
   }, [getDeviceLocation]);
 

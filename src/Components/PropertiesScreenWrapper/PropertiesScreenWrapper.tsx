@@ -9,11 +9,15 @@ import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
   children: React.ReactNode[];
+  propertyType?: IPropertyType;
 };
 
-const PropertiesScreenWrapper: React.FC<Props> = ({ children }) => {
+const PropertiesScreenWrapper: React.FC<Props> = ({
+  children,
+  propertyType,
+}) => {
   const [propertyTypeOpened, setPropertyTypeOpened] = useState<IPropertyType>(
-    propertyListType[0]
+    propertyType ? propertyType : propertyListType[0]
   );
   const pagerRef = useRef<PagerView>(null);
   const flatListRef = useRef<FlatList<IPropertyType>>(null);
@@ -24,7 +28,7 @@ const PropertiesScreenWrapper: React.FC<Props> = ({ children }) => {
   };
 
   return (
-    <View style={{ flex: 1,width:"100%",height:"100%" }}>
+    <View style={{ flex: 1, width: "100%", height: "100%" }}>
       <View>
         <FlatList
           data={propertyListType}

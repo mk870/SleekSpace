@@ -5,37 +5,36 @@ import ThemedText from "../ThemedText/ThemedText";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Row from "../Row/Row";
 import { gray, red } from "@/src/Theme/Colors";
-import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { family, small } from "@/src/Theme/Font";
 import { shortenString } from "@/src/Utils/Funcs";
 import SearchLocationModal from "../Modals/Location/SearchLocationModal";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
-  setLocation: (location: string | ISearchLocation) => void;
-  location: string | ISearchLocation;
   borderColor: string;
+  propertType: IPropertyType;
 };
 
 const PropertyLocationInput: React.FC<Props> = ({
-  setLocation,
-  location,
   borderColor,
+  propertType,
 }) => {
   const [openLocationModal, setOpenLocationModal] = useState<boolean>(false);
+  const location = useAppSelector((state) => state.mapLocation.value);
+
+  const processDisplayName = (diplayPlace: string) => {
+    return diplayPlace.split(",")[0] + "," + diplayPlace.split(",")[1];
+  };
+
   const getPropertyInputValue = () => {
-    if (location) {
-      if (typeof location !== "string") {
-        return shortenString(
-          location.display_place
-            ? location.display_place
-            : location.display_name,
-          37
-        );
-      } else {
-        return location;
-      }
+    if (location.lat && location.lon) {
+      return shortenString(
+        processDisplayName(location.display_name),
+        37
+      );
     } else return "Enter Property Location";
   };
+
   return (
     <View style={styles.container}>
       <Row style={styles.row}>
@@ -57,8 +56,8 @@ const PropertyLocationInput: React.FC<Props> = ({
       </Pressable>
       <SearchLocationModal
         isModalVisible={openLocationModal}
+        propertyType={propertType}
         handleCancel={() => setOpenLocationModal(false)}
-        setLocation={setLocation}
       />
     </View>
   );

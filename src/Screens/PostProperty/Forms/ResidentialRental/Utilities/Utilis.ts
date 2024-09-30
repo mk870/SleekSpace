@@ -11,13 +11,15 @@ import {
 import {
   convertImagePickerAssetsListToUploadableImages,
 } from "@/src/Utils/Funcs";
+import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 
 export const processGeneralPropertyDetails = (
   generalPropertyDetails: IResidentialRentalGeneralInfo,
   setPageNumber: React.Dispatch<React.SetStateAction<number>>,
   setGeneralInfoFormError: React.Dispatch<
-    React.SetStateAction<IGeneralInfoFormError>
-  >
+  React.SetStateAction<IGeneralInfoFormError>
+  >,
+  location:ISearchLocation,
 ) => {
   if (+generalPropertyDetails.rentAmount < 10) {
     setGeneralInfoFormError("rentAmount");
@@ -25,7 +27,7 @@ export const processGeneralPropertyDetails = (
     setGeneralInfoFormError("propertySize");
   } else if (+generalPropertyDetails.totalNumberOfRooms < 2) {
     setGeneralInfoFormError("totalNumberOfpropertyRooms");
-  }else if (!generalPropertyDetails.location) {
+  }else if (!location.lat) {
     setGeneralInfoFormError("location"); 
   }else if (+generalPropertyDetails.stories < 1) {
     setGeneralInfoFormError("stories");
@@ -82,7 +84,8 @@ export const createPropertyToBeSubmitted = (
   propertyInteriorInfo: IResidentialRentalInteriorInfo,
   propertyExteriorInfo: IResidentialRentalExteriorInfo,
   otherPropertyInfo: IResidentialRentalOtherInfo,
-  manager: IManagerAccount
+  manager: IManagerAccount,
+  location:ISearchLocation
 ) => {
   return {
     managerId: manager.id,
@@ -119,46 +122,16 @@ export const createPropertyToBeSubmitted = (
     yearBuilt: +propertyGeneralDetails.yearBuilt,
     numberOfGarages: +propertyExteriorInfo.numberOfGarages,
     propertyLocation: {
-      lat:
-        typeof propertyGeneralDetails.location === "object"
-          ? propertyGeneralDetails.location.lat
-          : "",
-      lon:
-        typeof propertyGeneralDetails.location === "object"
-          ? propertyGeneralDetails.location.lon
-          : "",
-      displayName:
-        typeof propertyGeneralDetails.location === "object"
-          ? propertyGeneralDetails.location.display_name
-          : "",
-      boundingbox:
-        typeof propertyGeneralDetails.location === "object"
-          ? propertyGeneralDetails.location.boundingbox
-          : [],
-      city:
-        typeof propertyGeneralDetails.location === "object"
-          ? propertyGeneralDetails.location.address.city
-          : "",
-      country:
-        typeof propertyGeneralDetails.location === "object"
-          ? propertyGeneralDetails.location.address.country
-          : "",
-      countryCode:
-        typeof propertyGeneralDetails.location === "object"
-          ? propertyGeneralDetails.location.address.country_code
-          : "",
-      county:
-        typeof propertyGeneralDetails.location === "object"
-          ? propertyGeneralDetails.location.address.county
-          : "",
-      surburb:
-        typeof propertyGeneralDetails.location === "object"
-          ? propertyGeneralDetails.location.address.surburb
-          : "",
-      province:
-        typeof propertyGeneralDetails.location === "object"
-          ? propertyGeneralDetails.location.address.state
-          : "",
+      lat:location.lat,
+      lon:location.lon,
+      displayName:location.display_name,
+      boundingbox:location.boundingbox,
+      city:location.address.city,
+      country:location.address.country,
+      countryCode:location.address.country_code,
+      county:location.address.county,
+      surburb:location.address.surburb,
+      province:location.address.state
     },
   };
 };

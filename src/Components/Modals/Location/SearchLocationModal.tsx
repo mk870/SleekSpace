@@ -1,84 +1,44 @@
-import { Modal, StyleSheet, View } from "react-native";
-import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import React from "react";
+import { router } from "expo-router";
 
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
-import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
-import Map from "../../Map/Map";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import {
-  harareMapRegion,
-  searchPropertyLocationTutorialText,
-} from "@/src/Utils/Constants";
-import { IMapCoordinates } from "../../Map/Types/MapTypes";
-import LocationOptions from "./Options/LocationOptions";
-import { locationReverseGeoCodingHttpFunc } from "@/src/HttpServices/Mutations/LocationIQ/LocationIQHttpFuncs";
-import MessageModal from "../MessageModal";
-import { numberToString } from "@/src/Utils/Funcs";
+  pureWhite,
+  dark,
+  white,
+  light,
+  primary,
+  gray,
+} from "@/src/Theme/Colors";
+import { family, small } from "@/src/Theme/Font";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
+import MyCurrentLocation from "../../CurrentLocation/MyCurrentLocation";
+import Row from "../../Row/Row";
+import ThemedText from "../../ThemedText/ThemedText";
+import { PropertyTypesEnum } from "@/src/Utils/Constants";
 
 type Props = {
   handleCancel: IVoidFunc;
   isModalVisible: boolean;
-  setLocation: (location: string | ISearchLocation) => void;
+  propertyType?: IPropertyType
 };
 
 const SearchLocationModal: React.FC<Props> = ({
   isModalVisible,
+  propertyType,
   handleCancel,
-  setLocation,
 }) => {
-  const [openMap, setOpenMap] = useState<boolean>(false);
-  const { location } = useAppSelector((state) => state.user.value);
-  const [coordinates, setCoordinates] = useState<IMapCoordinates>({
-    latitude: location?.lat ? +location.lat : harareMapRegion.latitude,
-    longitude: location?.lat ? +location.lon : harareMapRegion.longitude,
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [locationHttpError, setLocationHttpError] = useState<string>("");
-
+  const { width } = useWindowDimensions();
   const theme = useAppSelector((state) => state.theme.value);
-
-  const reverseGeocodingMutation = useMutation({
-    mutationFn: locationReverseGeoCodingHttpFunc,
-    onSuccess: (res) => {
-      let currentLocation: ISearchLocation = {
-        address: res.data.response.address,
-        boundingbox: res.data.response.boundingbox,
-        class: "",
-        display_address: "",
-        display_name: res.data.response.display_name,
-        display_place: res.data.response.display_name.split(",")[0],
-        lat: res.data.response.lat,
-        licence: res.data.response.licence,
-        lon: res.data.response.lon,
-        osm_id: res.data.response.osm_id,
-        osm_type: res.data.response.osm_type,
-        place_id: res.data.response.place_id,
-        type: "",
-      };
-      setLocation(currentLocation);
-      handleCancel();
-    },
-    onError: (error: any) => {
-      if (error.response?.data?.error) {
-        if (error.response?.data?.error !== "") {
-          setLocationHttpError(error.response?.data?.error);
-        } else setLocationHttpError("Something went wrong");
-      } else setLocationHttpError("Something went wrong");
-    },
-    onSettled: () => {
-      setIsLoading(false);
-    },
-  });
-
-  const handleDone = () => {
-    setOpenMap(false);
-    setIsLoading(true);
-    reverseGeocodingMutation.mutate({
-      lat: coordinates ? numberToString(coordinates?.latitude) : "",
-      lon: coordinates ? numberToString(coordinates?.longitude) : "",
-    });
-  };
 
   return (
     <Modal
@@ -95,44 +55,46 @@ const SearchLocationModal: React.FC<Props> = ({
           },
         ]}
       >
-        {!openMap && (
-          <LocationOptions
-            setLocation={setLocation}
-            setOpenMap={setOpenMap}
-            handleCloseModal={handleCancel}
-            isLoading={isLoading}
-          />
-        )}
-        {openMap && (
-          <Map
-            onDragFunc={setCoordinates}
-            handleCloseMap={() => setOpenMap(false)}
-            type="get_location"
-            tutorialText={searchPropertyLocationTutorialText}
-            handleDoneFunc={handleDone}
-            region={
-              location?.lat
-                ? {
-                    latitude: +location.lat,
-                    longitude: +location.lon,
-                    latitudeDelta: 0.09,
-                    longitudeDelta: 0.03,
-                  }
-                : harareMapRegion
-            }
-          />
-        )}
+        <View
+          style={[
+            styles.subContainer,
+            {
+              width: width > 500 ? 280 : 250,
+              backgroundColor: theme === "light" ? pureWhite : dark.background,
+            },
+          ]}
+        >
+          <View style={styles.iconContainer}>
+            <FontAwesome6 name="map-location-dot" size={30} color={white} />
+          </View>
+          <ThemedText type="header">Location Options</ThemedText>
+          <Row style={styles.row}>
+            <MyCurrentLocation isInModal closeModal={handleCancel} />
+            <TouchableOpacity
+              onPress={() =>{
+                handleCancel()
+                router.push({
+                  pathname: "/map",
+                  params: {
+                    from: "post property",
+                    propertyType
+                  },
+                })}
+              }
+              style={[
+                styles.mediaOption,
+                {
+                  backgroundColor:
+                    theme === "light" ? light.darkGray : dark.darkGray,
+                },
+              ]}
+            >
+              <Ionicons name="map" size={27} color={primary} />
+              <Text style={styles.mediaOptionText}>map</Text>
+            </TouchableOpacity>
+          </Row>
+        </View>
       </View>
-      <MessageModal
-        message="sorry, we could not get your location data, please try again."
-        header="Location data retrievial failed!"
-        type="error"
-        handleCancel={() => {
-          setLocationHttpError("");
-          handleCancel();
-        }}
-        isModalVisible={locationHttpError ? true : false}
-      />
     </Modal>
   );
 };
@@ -148,5 +110,47 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: "center",
     justifyContent: "center",
+  },
+  subContainer: {
+    paddingHorizontal: 10,
+    borderTopWidth: 3,
+    borderTopColor: primary,
+    paddingBottom: 15,
+    paddingTop: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    height: 150,
+    gap: 10,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  mediaOption: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 70,
+    width: 65,
+    borderRadius: 7,
+    paddingTop: 6,
+  },
+  mediaOptionText: {
+    fontFamily: family,
+    fontSize: small,
+    color: gray,
+  },
+  iconContainer: {
+    position: "absolute",
+    top: -25,
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: primary,
   },
 });

@@ -140,6 +140,17 @@ const TabsLayout = () => {
             },
           }}
         />
+        <Tabs.Screen
+          name="map"
+          options={{
+            title: "none",
+            href: null,
+            headerShown: false,
+            tabBarStyle: {
+              display: "none",
+            },
+          }}
+        />
       </Tabs>
       <BottomSheetView
         onCloseFunc={() => setOpenBottomSheet(false)}

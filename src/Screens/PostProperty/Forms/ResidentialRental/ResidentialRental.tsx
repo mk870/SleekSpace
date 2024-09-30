@@ -7,6 +7,7 @@ import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import {
   BUTTON_SIZE_SCREEN_BREAK_POINT,
   BUTTON_MAX_WIDTH,
+  emptyLocation,
 } from "@/src/Utils/Constants";
 import {
   createPropertyToBeSubmitted,
@@ -31,15 +32,17 @@ import OtherInformation from "./Components/OtherInformation";
 import { postResidentialRentalPropertyHttpFunc } from "@/src/HttpServices/Mutations/Property/Residential/ForRental";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { IResidentialRentalPropertyCreation } from "@/src/GlobalTypes/Property/Residential/RentalTypes";
-import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import PropertyTypeScreenWrapper from "../Shared/PropertyTypeScreenWrapper";
+import { addMapLocation } from "@/src/Redux/Slices/MapLocationSlice/MapLocationSlice";
 
 const ResidentialRental: INoPropsReactComponent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string>("");
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const location = useAppSelector((state)=>state.mapLocation.value)
 
   const [generalInfoFormError, setGeneralInfoFormError] =
     useState<IGeneralInfoFormError>("");
@@ -60,8 +63,7 @@ const ResidentialRental: INoPropsReactComponent = () => {
       sizeDimensions: "Square meters",
       yearBuilt: "",
       stories: "1",
-      currency: "US$",
-      location: "",
+      currency: "US$"
     });
 
   const [propertyInteriorInfo, setPropertyInteriorInfo] =
@@ -97,13 +99,15 @@ const ResidentialRental: INoPropsReactComponent = () => {
   const manager = useAppSelector((state) => state.managerAccount.value);
   const { accessToken } = useAppSelector((state) => state.user.value);
   const { width } = useWindowDimensions();
+  const dispatch = useAppDispatch()
 
   const handleProcessGeneralInfo = () => {
     setGeneralInfoFormError("");
     processGeneralPropertyDetails(
       propertyGeneralDetails,
       setPageNumber,
-      setGeneralInfoFormError
+      setGeneralInfoFormError,
+      location
     );
   };
 
@@ -130,6 +134,7 @@ const ResidentialRental: INoPropsReactComponent = () => {
     mutationFn: postResidentialRentalPropertyHttpFunc,
     onSuccess(_data) {
       setOpenSuccessModal(true);
+      dispatch(addMapLocation(emptyLocation))
     },
     onError(error: any) {
       if (error.response?.data?.error !== "") {
@@ -149,7 +154,8 @@ const ResidentialRental: INoPropsReactComponent = () => {
         propertyInteriorInfo,
         propertyExteriorInfo,
         otherPropertyInfo,
-        manager
+        manager,
+        location
       );
     submitPropertyMutation.mutate({
       property: propertyToBeSubmitted,

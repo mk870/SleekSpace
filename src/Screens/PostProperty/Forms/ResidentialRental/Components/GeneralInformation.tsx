@@ -1,18 +1,19 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
 
 import CustomPicker from "@/src/Components/CustomPicker/CustomPicker";
 import InputField from "@/src/Components/InputField/InputField";
 import Row from "@/src/Components/Row/Row";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import { red, gray, primary } from "@/src/Theme/Colors";
+import { red, gray } from "@/src/Theme/Colors";
 import { family } from "@/src/Theme/Font";
 import {
   IGeneralInfoFormError,
   IResidentialRentalGeneralInfo,
 } from "../Types/FormTypes";
 import PropertyLocationInput from "@/src/Components/PropertyLocationInput/PropertyLocationInput";
-import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
+import { PropertyTypesEnum } from "@/src/Utils/Constants";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
 
 type Props = {
   formError: IGeneralInfoFormError;
@@ -29,11 +30,15 @@ const GeneralInformation: React.FC<Props> = ({
   formError,
   setFormError,
 }) => {
+  const location = useAppSelector((state)=>state.mapLocation.value)
   useEffect(() => {
     if (formError) {
       setFormError("");
     }
-  }, [propertyDetails]);
+    if(formError && !location.lat){
+      setFormError("")
+    }
+  }, [propertyDetails,location]);
 
   return (
     <View style={styles.inputWrapper}>
@@ -100,6 +105,10 @@ const GeneralInformation: React.FC<Props> = ({
             {
               label: "Single family home",
               value: "Single family home",
+            },
+            {
+              label: "Multi family complex",
+              value: "Multi family complex",
             },
             {
               label: "Boys khaya/Cottage",
@@ -187,11 +196,8 @@ const GeneralInformation: React.FC<Props> = ({
 
         <View>
           <PropertyLocationInput
-            location={propertyDetails.location}
             borderColor={formError === "location" ? red : gray}
-            setLocation={(e: string | ISearchLocation) =>
-              setPropertyDetails({ ...propertyDetails, location: e })
-            }
+            propertType={PropertyTypesEnum.ResidentialRentals}
           />
           {formError === "location" && (
             <Text style={styles.errorText}>invalid location</Text>

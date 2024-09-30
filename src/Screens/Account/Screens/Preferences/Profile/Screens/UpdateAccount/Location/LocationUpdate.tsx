@@ -14,7 +14,7 @@ import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import StackScreen from "@/src/Components/StackScreenWrapper/StackScreen";
 import LocationInputField from "@/src/Components/LocationInputField/LocationInputField";
-import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import {
   BUTTON_MAX_WIDTH,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
@@ -41,8 +41,7 @@ import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { IUser } from "@/src/GlobalTypes/User/UserTypes";
-import SearchLocationModal from "@/src/Components/Modals/Location/SearchLocationModal";
-import MapView from "react-native-maps";
+import { addMapLocation } from "@/src/Redux/Slices/MapLocationSlice/MapLocationSlice";
 
 const LocationUpdate: INoPropsReactComponent = () => {
   const user = useAppSelector((state) => state.user.value);
@@ -50,19 +49,27 @@ const LocationUpdate: INoPropsReactComponent = () => {
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
   const [userData, setUserData] = useState<IUser | null>(null);
-  const [openMap, setOpenMap] = useState<boolean>(false);
   const [
     unSelectedSuggestedLocationsError,
     setUnSelectedSuggestedLocationsError,
   ] = useState<boolean>(false);
+  const mapLocation = useAppSelector((state) => state.mapLocation.value);
   const [location, setLocation] = useState<ISearchLocation | string>(
     user.location
       ? convertLocationToSearchableFormat(user.location)
-      : emptyLocation
+      : mapLocation
   );
   const { width } = useWindowDimensions();
+  const dispatch = useAppDispatch();
 
   useUpdateUser(userData);
+
+  useEffect(() => {
+    if (mapLocation.lat && mapLocation.lon) {
+      setLocation(mapLocation);
+    }
+  }, [mapLocation]);
+
   useEffect(() => {
     if (unSelectedSuggestedLocationsError) {
       setTimeout(() => setUnSelectedSuggestedLocationsError(false), 9000);
@@ -103,6 +110,7 @@ const LocationUpdate: INoPropsReactComponent = () => {
         setUpdateError(error.response?.data?.error);
       } else setUpdateError("Something went wrong");
     },
+    onSettled: () => dispatch(addMapLocation(emptyLocation)),
   });
 
   const closeSuccessModal = () => {
@@ -194,7 +202,14 @@ const LocationUpdate: INoPropsReactComponent = () => {
               <MyCurrentLocation setLocation={setLocation} />
               <TouchableOpacity
                 style={styles.mapContainer}
-                onPress={() => setOpenMap(true)}
+                onPress={() =>
+                  router.push({
+                    pathname: "/map",
+                    params: {
+                      from: "profile",
+                    },
+                  })
+                }
               >
                 <Feather name="map" size={20} color={primary} />
                 <ThemedText type="regular">use map</ThemedText>
