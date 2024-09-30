@@ -2,12 +2,11 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
-import React, { useState } from "react";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import React, { useEffect, useRef, useState } from "react";
+import MapView, { MapType, PROVIDER_GOOGLE } from "react-native-maps";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { IMapCoordinates, IMapRegion } from "./Types/MapTypes";
@@ -26,11 +25,14 @@ import {
   BUTTON_SIZE_SCREEN_BREAK_POINT,
   SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
+import ButtonSpinner from "../Spinners/ButtonSpinner";
 
 type Props = {
   type: "get_location" | "property_locations";
   region: IMapRegion;
   tutorialText?: string;
+  mapType?: MapType;
+  doneBtnIsLoading?: boolean;
   handleCloseMap?: IVoidFunc;
   setLocation?: () => void;
   onDragFunc?: (coords: IMapCoordinates) => void;
@@ -42,21 +44,42 @@ const Map: React.FC<Props> = ({
   region,
   onDragFunc,
   handleCloseMap,
-  tutorialText,
   handleDoneFunc,
+  tutorialText,
+  doneBtnIsLoading,
+  mapType,
 }) => {
   const [showGetLocationTutorial, setShowGetLocationTutorial] =
     useState<boolean>(true);
   const { width } = useWindowDimensions();
+  const mapRef = useRef<MapView | undefined>(undefined);
+
+  useEffect(() => {
+    if (mapRef.current) {
+        mapRef.current.animateCamera(
+          {
+            center: {
+              latitude: region.latitude,
+              longitude: region.longitude,
+            },
+            pitch: 2,
+            zoom: 18,
+          },
+          { duration: 2000 }
+        );
+    }
+  }, [mapRef.current, region.latitude, region.longitude]);
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handleCloseMap} style={styles.closeMap}>
+      <Pressable onPress={handleCloseMap} style={styles.closeMap}>
         <MaterialCommunityIcons name="window-close" size={24} color="black" />
-      </TouchableOpacity>
+      </Pressable>
       <MapView
-        initialRegion={region}
         provider={PROVIDER_GOOGLE}
         style={styles.mapStyle}
+        mapType={mapType ? mapType : "hybrid"}
+        ref={mapRef as React.LegacyRef<MapView>}
       >
         {type === "get_location" && (
           <MapMarker
@@ -94,9 +117,17 @@ const Map: React.FC<Props> = ({
         </View>
       )}
       {type === "get_location" && (
-        <TouchableOpacity style={styles.btnOverLay} onPress={handleDoneFunc}>
-          <Text style={[styles.textStyle, { color: white }]}>done</Text>
-        </TouchableOpacity>
+        <Pressable
+          style={styles.btnOverLay}
+          onPress={handleDoneFunc}
+          disabled={doneBtnIsLoading}
+        >
+          {doneBtnIsLoading ? (
+            <ButtonSpinner backGroundColor={white} />
+          ) : (
+            <Text style={[styles.textStyle, { color: white }]}>done</Text>
+          )}
+        </Pressable>
       )}
     </View>
   );
@@ -157,7 +188,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     color: gray,
     borderRadius: 10,
-    borderColor: gray,
     bottom: 10,
     alignSelf: "center",
     height: 40,

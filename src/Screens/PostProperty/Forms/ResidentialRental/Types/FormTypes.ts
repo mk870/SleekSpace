@@ -1,8 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
 
-import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
-import { IPropertyImageOrVideoCreationOrUpdate } from "@/src/GlobalTypes/Property/Media/ImageOrVideoTypes";
-
 export type IResidentialRentalGeneralInfo = {
   numberOfRoomsToLet: string;
   totalNumberOfRooms: string;
@@ -13,7 +10,6 @@ export type IResidentialRentalGeneralInfo = {
   type: string;
   stories: string;
   yearBuilt: string;
-  location: ISearchLocation | string;
 };
 
 export type IGeneralInfoFormError =

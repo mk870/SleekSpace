@@ -4,6 +4,7 @@ import { userSlice } from "./Slices/UserSlice/User";
 import { payWallSlice} from "./Slices/payWallSlice/PayWallState";
 import { themeSlice } from "./Slices/Theme/Theme";
 import { managerAccountSlice } from "./Slices/ManagerAccountSlice/ManagerSlice";
+import { mapLocationSlice } from "./Slices/MapLocationSlice/MapLocationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     hasPayWall: payWallSlice.reducer,
     theme: themeSlice.reducer,
     managerAccount: managerAccountSlice.reducer,
+    mapLocation: mapLocationSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

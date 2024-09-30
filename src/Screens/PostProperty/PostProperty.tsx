@@ -17,12 +17,14 @@ import ManagerSignUpBtns from "../Account/Screens/Preferences/ManagerAccount/Scr
 import HttpError from "@/src/Components/HttpError/HttpError";
 import LoadingSkeleton from "./Forms/Shared/LoadingSkeleton";
 import { noManagerError } from "@/src/Utils/Constants";
+import { useLocalSearchParams } from "expo-router";
 
 const PostProperty: INoPropsReactComponent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [httpError, setHttpError] = useState<string>("");
   const user = useAppSelector((state) => state.user.value);
   const dispatch = useAppDispatch();
+  const { propertType } = useLocalSearchParams();
 
   const fetchManager = () => {
     getManagerByUserId(user)
@@ -32,11 +34,8 @@ const PostProperty: INoPropsReactComponent = () => {
       })
       .catch((error) => {
         if (error.response?.data?.error) {
-          if (
-            error.response?.data?.error ===
-            noManagerError
-          ) {
-            setHttpError(error.response.data.error)
+          if (error.response?.data?.error === noManagerError) {
+            setHttpError(error.response.data.error);
             setIsLoading(false);
           } else {
             setHttpError(error.response.data.error);
@@ -61,26 +60,30 @@ const PostProperty: INoPropsReactComponent = () => {
       {user.accessToken && (
         <>
           {isLoading && <LoadingSkeleton />}
-          {httpError && httpError !== noManagerError  && (
+          {httpError && httpError !== noManagerError && (
             <HttpError
               retryFunc={() => {
-                setHttpError("")
+                setHttpError("");
                 setIsLoading(true);
                 fetchManager();
               }}
             />
           )}
           {!isLoading && !httpError && (
-              <PropertiesScreenWrapper>
-                <ResidentialRental />
-                <ResidentialForSale />
-                <CommercialRental />
-                <CommercialForSale />
-                <Stand />
-                <Land />
-              </PropertiesScreenWrapper>
-            )}
-            {httpError === noManagerError && <ManagerSignUpBtns />}
+            <PropertiesScreenWrapper
+              propertyType={
+                propertType ? (propertType as IPropertyType) : undefined
+              }
+            >
+              <ResidentialRental />
+              <ResidentialForSale />
+              <CommercialRental />
+              <CommercialForSale />
+              <Stand />
+              <Land />
+            </PropertiesScreenWrapper>
+          )}
+          {httpError === noManagerError && <ManagerSignUpBtns />}
         </>
       )}
     </Screen>
