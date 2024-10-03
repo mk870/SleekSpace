@@ -42,6 +42,7 @@ import MessageModal from "@/src/Components/Modals/MessageModal";
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { IUser } from "@/src/GlobalTypes/User/UserTypes";
 import { addMapLocation } from "@/src/Redux/Slices/MapLocationSlice/MapLocationSlice";
+import RegularText from "@/src/Components/RegularText/RegularText";
 
 const LocationUpdate: INoPropsReactComponent = () => {
   const user = useAppSelector((state) => state.user.value);
@@ -215,6 +216,11 @@ const LocationUpdate: INoPropsReactComponent = () => {
                 <ThemedText type="regular">use map</ThemedText>
               </TouchableOpacity>
             </Row>
+            <View style={{ width: "100%" }}>
+              <RegularText style={{ marginTop: -10 }}>
+                We encourage you to use the map for better accuracy.
+              </RegularText>
+            </View>
           </View>
           <View
             style={[

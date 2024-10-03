@@ -14,6 +14,8 @@ type Props = {
   borderRadius?: number;
   isDisabled?: boolean;
   icon?: React.ReactNode;
+  iconPosition?: "left" | "right";
+  textColor?: string;
 };
 
 const CustomButton: React.FC<Props> = ({
@@ -25,12 +27,15 @@ const CustomButton: React.FC<Props> = ({
   height,
   borderRadius,
   icon,
+  textColor,
+  iconPosition,
 }) => {
   const { container, textStyles } = styles;
   return (
     <TouchableOpacity
       onPress={onPressFunc}
       disabled={isDisabled ? isDisabled : false}
+      activeOpacity={0.9}
       style={[
         container,
         {
@@ -45,8 +50,16 @@ const CustomButton: React.FC<Props> = ({
         <ButtonSpinner backGroundColor={white} />
       ) : (
         <View style={styles.innerContainer}>
-          {icon}
-          <Text style={textStyles}>{title}</Text>
+          {iconPosition === "left" && icon}
+          <Text
+            style={[
+              textStyles,
+              { marginTop: icon ? 3 : 0, color: textColor ? textColor : white },
+            ]}
+          >
+            {title}
+          </Text>
+          {iconPosition === "right" && icon}
         </View>
       )}
     </TouchableOpacity>
@@ -62,10 +75,11 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flexDirection: "row",
-    gap: 5,
+    gap: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
   textStyles: {
-    color: white,
     fontFamily: family,
     fontSize: medium,
   },

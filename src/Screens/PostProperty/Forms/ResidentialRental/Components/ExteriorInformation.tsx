@@ -91,12 +91,12 @@ const ExteriorInformation: React.FC<Props> = ({
               value: "Hedge And Jira wall",
             },
             {
-              label: "Fence And Jira hedge",
-              value: "Fence And Jira hedge",
+              label: "Fence And hedge",
+              value: "Fence And hedge",
             },
             {
               label: "All 3 combined",
-              value: "Fence, Hedge And Jira hedge",
+              value: "Fence, Hedge And Jira wall",
             },
             {
               label: "None",

@@ -23,7 +23,11 @@ type Props = {
   setLocation?: React.Dispatch<React.SetStateAction<ISearchLocation | string>>;
 };
 
-const MyCurrentLocation: React.FC<Props> = ({ isInModal, closeModal,setLocation }) => {
+const MyCurrentLocation: React.FC<Props> = ({
+  isInModal,
+  closeModal,
+  setLocation,
+}) => {
   const [getDeviceLocation, setGetDeviceLocation] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [locationDeviceError, setLocationDeviceError] =
@@ -51,7 +55,7 @@ const MyCurrentLocation: React.FC<Props> = ({ isInModal, closeModal,setLocation 
         type: "",
       };
       dipatch(addMapLocation(currentLocation));
-      if(setLocation) setLocation(currentLocation)
+      if (setLocation) setLocation(currentLocation);
       if (closeModal) closeModal();
     },
     onError: (error: any) => {
@@ -75,13 +79,15 @@ const MyCurrentLocation: React.FC<Props> = ({ isInModal, closeModal,setLocation 
       return;
     }
     try {
-      let location = await Location.getCurrentPositionAsync({});
+      let {
+        coords: { latitude, longitude },
+      } = await Location.getCurrentPositionAsync({});
       reverseGeocodingMutation.mutate({
-        lat: numberToString(location.coords.latitude),
-        lon: numberToString(location.coords.longitude),
+        lat: numberToString(latitude),
+        lon: numberToString(longitude),
       });
     } catch (error) {
-      setIsLoading(false)
+      setIsLoading(false);
       setLocationDeviceError(true);
     }
   };
@@ -108,6 +114,7 @@ const MyCurrentLocation: React.FC<Props> = ({ isInModal, closeModal,setLocation 
       {isInModal && (
         <TouchableOpacity
           onPress={() => setGetDeviceLocation(true)}
+          disabled={isLoading}
           style={[
             styles.mediaOption,
             {
@@ -130,6 +137,7 @@ const MyCurrentLocation: React.FC<Props> = ({ isInModal, closeModal,setLocation 
         <TouchableOpacity
           onPress={() => setGetDeviceLocation(true)}
           style={{ paddingLeft: isLoading ? 10 : 0 }}
+          disabled={isLoading}
         >
           {isLoading ? (
             <ButtonSpinner backGroundColor={primary} />

@@ -1,5 +1,5 @@
 import { Modal, StyleSheet, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useCameraPermissions } from "expo-camera";
 
@@ -37,6 +37,7 @@ const MediaModal: React.FC<Props> = ({
 }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const theme = useAppSelector((state) => state.theme.value);
+  const[isLoading,setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
     requestPermission();

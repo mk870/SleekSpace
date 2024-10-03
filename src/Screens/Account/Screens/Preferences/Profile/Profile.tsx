@@ -23,6 +23,7 @@ import { createVerificationCodeForSecurityHttpFunc } from "@/src/HttpServices/Mu
 import { deleteUserHttpFunc } from "@/src/HttpServices/Mutations/User/UserHttpFunctions";
 import {
   getContactNumber,
+  processLocationDisplayName,
   saveSecureValue,
   shortenString,
 } from "@/src/Utils/Funcs";
@@ -87,7 +88,7 @@ const Profile: INoPropsReactComponent = () => {
     },
     {
       name: "Location",
-      value: location ? shortenString(location.displayName, 20) : "",
+      value: location ? shortenString(processLocationDisplayName(location.displayName), 20) : "",
       icon: (
         <Ionicons name="location-outline" size={iconSize} color={iconColor} />
       ),

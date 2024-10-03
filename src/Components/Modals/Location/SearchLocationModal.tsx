@@ -24,12 +24,12 @@ import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import MyCurrentLocation from "../../CurrentLocation/MyCurrentLocation";
 import Row from "../../Row/Row";
 import ThemedText from "../../ThemedText/ThemedText";
-import { PropertyTypesEnum } from "@/src/Utils/Constants";
+import RegularText from "../../RegularText/RegularText";
 
 type Props = {
   handleCancel: IVoidFunc;
   isModalVisible: boolean;
-  propertyType?: IPropertyType
+  propertyType?: IPropertyType;
 };
 
 const SearchLocationModal: React.FC<Props> = ({
@@ -68,19 +68,24 @@ const SearchLocationModal: React.FC<Props> = ({
             <FontAwesome6 name="map-location-dot" size={30} color={white} />
           </View>
           <ThemedText type="header">Location Options</ThemedText>
+          <View style={styles.adviceText}>
+            <RegularText>
+              We encourage you to use the map for better accuracy.
+            </RegularText>
+          </View>
           <Row style={styles.row}>
             <MyCurrentLocation isInModal closeModal={handleCancel} />
             <TouchableOpacity
-              onPress={() =>{
-                handleCancel()
+              onPress={() => {
+                handleCancel();
                 router.push({
                   pathname: "/map",
                   params: {
                     from: "post property",
-                    propertyType
+                    propertyType,
                   },
-                })}
-              }
+                });
+              }}
               style={[
                 styles.mediaOption,
                 {
@@ -121,9 +126,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    height: 150,
+    height: 210,
     gap: 10,
   },
+  adviceText: { width: "100%", alignItems: "center", justifyContent: "center" },
   row: {
     flexDirection: "row",
     alignItems: "center",
