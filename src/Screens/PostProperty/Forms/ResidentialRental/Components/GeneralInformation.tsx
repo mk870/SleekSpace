@@ -185,6 +185,7 @@ const GeneralInformation: React.FC<Props> = ({
             type="number"
             label="Total number of rooms"
             backgroundColor="transparent"
+            isRequired
             borderColor={
               formError === "totalNumberOfpropertyRooms" ? red : gray
             }

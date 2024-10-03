@@ -207,6 +207,17 @@ export const getLocation = (
   } else return "";
 };
 
+export const processLocationDisplayName = (locationDisplayName: string) => {
+  const name = locationDisplayName.split(", ");
+  if (name[1]) {
+    if (name[0] === name[1]) {
+      return name[0];
+    } else {
+      return name[0] + ", " + name[1];
+    }
+  } else return name[0];
+};
+
 export const convertLocationToSearchableFormat: (
   location: IUserLocation
 ) => ISearchLocation = (location: IUserLocation) => {

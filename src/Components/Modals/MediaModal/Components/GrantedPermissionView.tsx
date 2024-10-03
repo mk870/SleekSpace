@@ -47,7 +47,9 @@ const GrantedPermissionView: React.FC<Props> = ({
   belongsTo,
   handleCloseModal,
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRemoveImageLoading, setIsRemoveImageLoading] =
+    useState<boolean>(false);
+  const [isGalleryLoading, setIsGalleryLoading] = useState<boolean>(false);
   const [userData, setUserData] = useState<IUser | null>(null);
   const [updateError, setUpdateError] = useState<string>("");
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
@@ -74,7 +76,7 @@ const GrantedPermissionView: React.FC<Props> = ({
         setUpdateError("Something went wrong");
       }
     },
-    onSettled: () => setIsLoading(false),
+    onSettled: () => setIsRemoveImageLoading(false),
   });
 
   const removeManagerProfileImageMutation = useMutation({
@@ -90,13 +92,13 @@ const GrantedPermissionView: React.FC<Props> = ({
         setUpdateError("Something went wrong");
       }
     },
-    onSettled: () => setIsLoading(false),
+    onSettled: () => setIsRemoveImageLoading(false),
   });
 
   const removeImage = (e: GestureResponderEvent) => {
     e.stopPropagation();
     if (belongsTo === "manager") {
-      setIsLoading(true);
+      setIsRemoveImageLoading(true);
       removeManagerProfileImageMutation.mutate({
         accessToken: user.accessToken,
         managerId: manager.id,
@@ -112,7 +114,7 @@ const GrantedPermissionView: React.FC<Props> = ({
       });
     }
     if (belongsTo === "user") {
-      setIsLoading(true);
+      setIsRemoveImageLoading(true);
       removeUserProfileImageMutation.mutate({
         accessToken: user.accessToken,
         profilePictureId: user.profilePicture.id,
@@ -144,6 +146,7 @@ const GrantedPermissionView: React.FC<Props> = ({
       <View style={styles.row}>
         <TouchableOpacity
           onPress={openCamera}
+          disabled={isGalleryLoading || isRemoveImageLoading ? true : false}
           style={[
             styles.mediaOption,
             {
@@ -156,7 +159,11 @@ const GrantedPermissionView: React.FC<Props> = ({
           <Text style={styles.mediaOptionText}>camera</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={openGallery}
+          onPress={() => {
+            type === "property-Photo" && setIsGalleryLoading(true);
+            openGallery();
+          }}
+          disabled={isGalleryLoading || isRemoveImageLoading ? true : false}
           style={[
             styles.mediaOption,
             {
@@ -165,14 +172,21 @@ const GrantedPermissionView: React.FC<Props> = ({
             },
           ]}
         >
-          <AntDesign name="picture" size={iconSize} color={color} />
-          <Text style={styles.mediaOptionText}>gallery</Text>
+          {isGalleryLoading ? (
+            <ButtonSpinner backGroundColor={primary} />
+          ) : (
+            <>
+              <AntDesign name="picture" size={iconSize} color={color} />
+              <Text style={styles.mediaOptionText}>gallery</Text>
+            </>
+          )}
         </TouchableOpacity>
         {uri && (
           <TouchableOpacity
             onPress={(e: GestureResponderEvent) => {
               removeImage(e);
             }}
+            disabled={isGalleryLoading || isRemoveImageLoading ? true : false}
             style={[
               styles.mediaOption,
               {
@@ -181,8 +195,8 @@ const GrantedPermissionView: React.FC<Props> = ({
               },
             ]}
           >
-            {isLoading ? (
-              <ButtonSpinner />
+            {isRemoveImageLoading ? (
+              <ButtonSpinner backGroundColor={primary} />
             ) : (
               <>
                 <AntDesign name="delete" size={iconSize} color={color} />

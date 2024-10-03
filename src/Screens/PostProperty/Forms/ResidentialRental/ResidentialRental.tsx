@@ -1,6 +1,7 @@
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import GeneralInformation from "./Components/GeneralInformation";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
@@ -11,6 +12,10 @@ import {
 } from "@/src/Utils/Constants";
 import {
   createPropertyToBeSubmitted,
+  exteriorPropertyInfoInitialState,
+  generalPropertyInfoIntialState,
+  interiorPropertyInfoInitialState,
+  otherPropertyInfoInitialState,
   processExteriorPropertyDetails,
   processGeneralPropertyDetails,
   processInteriorPropertyDetails,
@@ -36,13 +41,14 @@ import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import PropertyTypeScreenWrapper from "../Shared/PropertyTypeScreenWrapper";
 import { addMapLocation } from "@/src/Redux/Slices/MapLocationSlice/MapLocationSlice";
+import { primary } from "@/src/Theme/Colors";
 
 const ResidentialRental: INoPropsReactComponent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string>("");
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const location = useAppSelector((state)=>state.mapLocation.value)
+  const location = useAppSelector((state) => state.mapLocation.value);
 
   const [generalInfoFormError, setGeneralInfoFormError] =
     useState<IGeneralInfoFormError>("");
@@ -54,52 +60,21 @@ const ResidentialRental: INoPropsReactComponent = () => {
     useState<IExteriorInfoFormError>("");
 
   const [propertyGeneralDetails, setPropertyGeneralDetails] =
-    useState<IResidentialRentalGeneralInfo>({
-      rentAmount: "0",
-      sizeNumber: "",
-      numberOfRoomsToLet: "1",
-      totalNumberOfRooms: "2",
-      type: "Single family home",
-      sizeDimensions: "Square meters",
-      yearBuilt: "",
-      stories: "1",
-      currency: "US$"
-    });
+    useState<IResidentialRentalGeneralInfo>(generalPropertyInfoIntialState);
 
   const [propertyInteriorInfo, setPropertyInteriorInfo] =
-    useState<IResidentialRentalInteriorInfo>({
-      bathrooms: "1",
-      bedrooms: "1",
-      isTiled: false,
-      isPlustered: false,
-      isPainted: false,
-      hasCeiling: false,
-      hasElectricity: false,
-      hasWater: false,
-      otherInteriorFeatures: "",
-    });
+    useState<IResidentialRentalInteriorInfo>(interiorPropertyInfoInitialState);
 
   const [propertyExteriorInfo, setPropertyExteriorInfo] =
-    useState<IResidentialRentalExteriorInfo>({
-      hasBoreHole: false,
-      hasSwimmingPool: false,
-      typeOfExteriorSecurity: "jiraWall",
-      isPaved: false,
-      numberOfGarages: "0",
-      otherExteriorFeatures: "",
-    });
+    useState<IResidentialRentalExteriorInfo>(exteriorPropertyInfoInitialState);
 
   const [otherPropertyInfo, setOtherPropertyInfo] =
-    useState<IResidentialRentalOtherInfo>({
-      tenantRequirements: "",
-      marketingStatement: "",
-      images: [],
-    });
+    useState<IResidentialRentalOtherInfo>(otherPropertyInfoInitialState);
 
   const manager = useAppSelector((state) => state.managerAccount.value);
   const { accessToken } = useAppSelector((state) => state.user.value);
   const { width } = useWindowDimensions();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const handleProcessGeneralInfo = () => {
     setGeneralInfoFormError("");
@@ -134,7 +109,7 @@ const ResidentialRental: INoPropsReactComponent = () => {
     mutationFn: postResidentialRentalPropertyHttpFunc,
     onSuccess(_data) {
       setOpenSuccessModal(true);
-      dispatch(addMapLocation(emptyLocation))
+      dispatch(addMapLocation(emptyLocation));
     },
     onError(error: any) {
       if (error.response?.data?.error !== "") {
@@ -161,6 +136,15 @@ const ResidentialRental: INoPropsReactComponent = () => {
       property: propertyToBeSubmitted,
       accessToken,
     });
+  };
+
+  const handleCloseSucessModal = () => {
+    setPageNumber(1);
+    setOtherPropertyInfo(otherPropertyInfoInitialState);
+    setPropertyExteriorInfo(exteriorPropertyInfoInitialState);
+    setPropertyInteriorInfo(interiorPropertyInfoInitialState);
+    setPropertyGeneralDetails(generalPropertyInfoIntialState);
+    setOpenSuccessModal(false);
   };
 
   return (
@@ -197,6 +181,7 @@ const ResidentialRental: INoPropsReactComponent = () => {
       {pageNumber === 4 && (
         <OtherInformation
           propertyDetails={otherPropertyInfo}
+          isAddImagesBtnDisabled={isLoading}
           setPropertyDetails={setOtherPropertyInfo}
         />
       )}
@@ -215,6 +200,15 @@ const ResidentialRental: INoPropsReactComponent = () => {
           <OutlinedButton
             title="previous"
             onPressFunc={() => setPageNumber((prev) => prev - 1)}
+            isDisabled={isLoading}
+            iconPosition="left"
+            icon={
+              <MaterialIcons
+                name="keyboard-double-arrow-left"
+                size={24}
+                color={primary}
+              />
+            }
           />
         )}
         <CustomButton
@@ -239,10 +233,7 @@ const ResidentialRental: INoPropsReactComponent = () => {
         type="error"
       />
       <MessageModal
-        handleCancel={() => {
-          setPageNumber(1);
-          setOpenSuccessModal(false);
-        }}
+        handleCancel={handleCloseSucessModal}
         isModalVisible={openSuccessModal}
         message={
           "Your property has been successfully submitted, potential tenants can now view it."

@@ -35,8 +35,8 @@ export type IResidentialPropertyForSaleCreation = {
   marketingStatement: string;
   type: string;
   sizeDimensions: string;
-  otherInteriorFeatures: string;
-  otherExteriorFeatures: string;
+  otherInteriorFeatures: string[];
+  otherExteriorFeatures: string[];
   propertyLocation: IPropertyLocationCreation;
   media: IPropertyImageOrVideoCreationOrUpdate[];
 };
@@ -69,8 +69,8 @@ export type IResidentialPropertyForSale = {
   marketingStatement: string;
   type: string;
   sizeDimensions: string;
-  otherInteriorFeatures: string;
-  otherExteriorFeatures: string;
+  otherInteriorFeatures: string[];
+  otherExteriorFeatures: string[];
   postedTime: string;
   insights: IPropertyInsights;
   propertyLocation: IPropertyLocation;
@@ -105,8 +105,8 @@ export type IResidentialPropertyForSaleWithManager = {
   marketingStatement: string;
   type: string;
   sizeDimensions: string;
-  otherInteriorFeatures: string;
-  otherExteriorFeatures: string;
+  otherInteriorFeatures: string[];
+  otherExteriorFeatures: string[];
   postedTime: string;
   insights: IPropertyInsights;
   propertyLocation: IPropertyLocation;
@@ -141,6 +141,6 @@ export type IResidentialPropertyForSaleUpdate = {
   marketingStatement: string;
   type: string;
   sizeDimensions: string;
-  otherInteriorFeatures: string;
-  otherExteriorFeatures: string;
+  otherInteriorFeatures: string[];
+  otherExteriorFeatures: string[];
 };

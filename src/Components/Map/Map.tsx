@@ -56,7 +56,8 @@ const Map: React.FC<Props> = ({
 
   useEffect(() => {
     if (mapRef.current) {
-        mapRef.current.animateCamera(
+      setTimeout(() => {
+        mapRef.current?.animateCamera(
           {
             center: {
               latitude: region.latitude,
@@ -67,6 +68,7 @@ const Map: React.FC<Props> = ({
           },
           { duration: 2000 }
         );
+      }, 500);
     }
   }, [mapRef.current, region.latitude, region.longitude]);
 

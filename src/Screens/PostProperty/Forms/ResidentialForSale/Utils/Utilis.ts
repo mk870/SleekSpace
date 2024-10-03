@@ -3,29 +3,30 @@ import {
   IExteriorInfoFormError,
   IGeneralInfoFormError,
   IInteriorInfoFormError,
-  IResidentialRentalExteriorInfo,
-  IResidentialRentalGeneralInfo,
-  IResidentialRentalInteriorInfo,
-  IResidentialRentalOtherInfo,
+  IResidentialForSaleExteriorInfo,
+  IResidentialForSaleGeneralInfo,
+  IResidentialForSaleInteriorInfo,
+  IResidentialForSaleOtherInfo,
 } from "../Types/FormTypes";
 import { convertImagePickerAssetsListToUploadableImages } from "@/src/Utils/Funcs";
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { IResidentialRentalPropertyCreation } from "@/src/GlobalTypes/Property/Residential/RentalTypes";
+import { IResidentialPropertyForSaleCreation } from "@/src/GlobalTypes/Property/Residential/ForSaleTypes";
 
 export const processGeneralPropertyDetails = (
-  generalPropertyDetails: IResidentialRentalGeneralInfo,
+  generalPropertyDetails: IResidentialForSaleGeneralInfo,
   setPageNumber: React.Dispatch<React.SetStateAction<number>>,
   setGeneralInfoFormError: React.Dispatch<
     React.SetStateAction<IGeneralInfoFormError>
   >,
   location: ISearchLocation
 ) => {
-  if (+generalPropertyDetails.rentAmount < 10) {
-    setGeneralInfoFormError("rentAmount");
+  if (+generalPropertyDetails.price < 10) {
+    setGeneralInfoFormError("price");
   } else if (+generalPropertyDetails.sizeNumber < 0) {
     setGeneralInfoFormError("propertySize");
-  } else if (+generalPropertyDetails.totalNumberOfRooms < 1) {
-    setGeneralInfoFormError("totalNumberOfpropertyRooms");
+  } else if (+generalPropertyDetails.numberOfRooms < 2) {
+    setGeneralInfoFormError("numberOfRooms");
   } else if (!location.lat) {
     setGeneralInfoFormError("location");
   } else if (+generalPropertyDetails.stories < 1) {
@@ -40,9 +41,9 @@ export const processGeneralPropertyDetails = (
 };
 
 export const processInteriorPropertyDetails = (
-  interiorPropertyDetails: IResidentialRentalInteriorInfo,
+  interiorPropertyDetails: IResidentialForSaleInteriorInfo,
   setPageNumber: React.Dispatch<React.SetStateAction<number>>,
-  generalPropertyDetails: IResidentialRentalGeneralInfo,
+  generalPropertyDetails: IResidentialForSaleGeneralInfo,
   setInteriorInfoFormError: React.Dispatch<
     React.SetStateAction<IInteriorInfoFormError>
   >
@@ -50,20 +51,20 @@ export const processInteriorPropertyDetails = (
   if (
     +interiorPropertyDetails.bedrooms < 1 ||
     +interiorPropertyDetails.bedrooms >=
-      +generalPropertyDetails.totalNumberOfRooms
+      +generalPropertyDetails.numberOfRooms
   ) {
     setInteriorInfoFormError("bedrooms");
   } else if (
     +interiorPropertyDetails.bathrooms < 1 ||
     +interiorPropertyDetails.bathrooms >=
-      +generalPropertyDetails.totalNumberOfRooms
+      +generalPropertyDetails.numberOfRooms
   ) {
     setInteriorInfoFormError("bathrooms");
   } else setPageNumber((prev) => prev + 1);
 };
 
 export const processExteriorPropertyDetails = (
-  exteriorPropertyDetails: IResidentialRentalExteriorInfo,
+  exteriorPropertyDetails: IResidentialForSaleExteriorInfo,
   setPageNumber: React.Dispatch<React.SetStateAction<number>>,
   setExteriorInfoFormError: React.Dispatch<
     React.SetStateAction<IExteriorInfoFormError>
@@ -79,34 +80,32 @@ export const processExteriorPropertyDetails = (
 };
 
 export const createPropertyToBeSubmitted: (
-  propertyGeneralDetails: IResidentialRentalGeneralInfo,
-  propertyInteriorInfo: IResidentialRentalInteriorInfo,
-  propertyExteriorInfo: IResidentialRentalExteriorInfo,
-  otherPropertyInfo: IResidentialRentalOtherInfo,
+  propertyGeneralDetails: IResidentialForSaleGeneralInfo,
+  propertyInteriorInfo: IResidentialForSaleInteriorInfo,
+  propertyExteriorInfo: IResidentialForSaleExteriorInfo,
+  otherPropertyInfo: IResidentialForSaleOtherInfo,
   manager: IManagerAccount,
   location: ISearchLocation
-) => IResidentialRentalPropertyCreation = ({} = (
-  propertyGeneralDetails: IResidentialRentalGeneralInfo,
-  propertyInteriorInfo: IResidentialRentalInteriorInfo,
-  propertyExteriorInfo: IResidentialRentalExteriorInfo,
-  otherPropertyInfo: IResidentialRentalOtherInfo,
+) => IResidentialPropertyForSaleCreation = ({} = (
+  propertyGeneralDetails: IResidentialForSaleGeneralInfo,
+  propertyInteriorInfo: IResidentialForSaleInteriorInfo,
+  propertyExteriorInfo: IResidentialForSaleExteriorInfo,
+  otherPropertyInfo: IResidentialForSaleOtherInfo,
   manager: IManagerAccount,
   location: ISearchLocation
 ) => {
   return {
     managerId: manager.id,
-    status: "on the Market",
+    status: "on the market" as IStatus,
     sizeDimensions: propertyGeneralDetails.sizeDimensions,
     sizeNumber: +propertyGeneralDetails.sizeNumber,
     stories: +propertyGeneralDetails.stories,
-    rentAmount: +propertyGeneralDetails.rentAmount,
+    price: +propertyGeneralDetails.price,
     currency: propertyGeneralDetails.currency,
-    totalNumberOfRooms: +propertyGeneralDetails.totalNumberOfRooms,
-    numberOfRoomsToLet: +propertyGeneralDetails.numberOfRoomsToLet,
+    numberOfRooms: +propertyGeneralDetails.numberOfRooms,
+    isNegotiable: propertyGeneralDetails.isNegotiable,
     bedrooms: +propertyInteriorInfo.bedrooms,
     bathrooms: +propertyInteriorInfo.bathrooms,
-    isFullHouse:
-      propertyGeneralDetails.numberOfRoomsToLet === "fullHouse" ? true : false,
     isTiled: propertyInteriorInfo.isTiled,
     isPaved: propertyExteriorInfo.isPaved,
     isPlustered: propertyInteriorInfo.isPlustered,
@@ -127,9 +126,6 @@ export const createPropertyToBeSubmitted: (
     ),
     typeOfExteriorSecurity: propertyExteriorInfo.typeOfExteriorSecurity,
     marketingStatement: otherPropertyInfo.marketingStatement,
-    tenantRequirements: otherPropertyInfo.tenantRequirements
-      ? otherPropertyInfo.tenantRequirements.split(",")
-      : [],
     type: propertyGeneralDetails.type,
     yearBuilt: +propertyGeneralDetails.yearBuilt,
     numberOfGarages: +propertyExteriorInfo.numberOfGarages,
@@ -147,44 +143,3 @@ export const createPropertyToBeSubmitted: (
     },
   };
 });
-
-export const generalPropertyInfoIntialState: IResidentialRentalGeneralInfo = {
-  rentAmount: "0",
-  sizeNumber: "",
-  numberOfRoomsToLet: "1",
-  totalNumberOfRooms: "1",
-  type: "Single family home",
-  sizeDimensions: "Square meters",
-  yearBuilt: "",
-  stories: "1",
-  currency: "US$",
-};
-
-export const interiorPropertyInfoInitialState: IResidentialRentalInteriorInfo =
-  {
-    bathrooms: "1",
-    bedrooms: "1",
-    isTiled: false,
-    isPlustered: false,
-    isPainted: false,
-    hasCeiling: false,
-    hasElectricity: false,
-    hasWater: false,
-    otherInteriorFeatures: "",
-  };
-
-export const exteriorPropertyInfoInitialState: IResidentialRentalExteriorInfo =
-  {
-    hasBoreHole: false,
-    hasSwimmingPool: false,
-    typeOfExteriorSecurity: "jiraWall",
-    isPaved: false,
-    numberOfGarages: "0",
-    otherExteriorFeatures: "",
-  };
-
-export const otherPropertyInfoInitialState: IResidentialRentalOtherInfo = {
-  tenantRequirements: "",
-  marketingStatement: "",
-  images: [],
-};

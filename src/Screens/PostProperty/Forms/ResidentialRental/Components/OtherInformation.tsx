@@ -1,13 +1,13 @@
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
 import React, { useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as ImagePicker from "expo-image-picker";
+import { AntDesign } from "@expo/vector-icons";
 
 import { IResidentialRentalOtherInfo } from "../Types/FormTypes";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
@@ -17,14 +17,16 @@ import {
   maxPropertyImages,
 } from "@/src/Utils/Constants";
 import InputField from "@/src/Components/InputField/InputField";
-import { dark, gray, light, red } from "@/src/Theme/Colors";
-import { family, medium, small } from "@/src/Theme/Font";
+import { dark, gray, light, red, white } from "@/src/Theme/Colors";
+import { family, small } from "@/src/Theme/Font";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import MediaModal from "@/src/Components/Modals/MediaModal/MediaModal";
 import SelectedPropertyImageList from "@/src/Components/SelectedPropertyImagesList/SelectedPropertyImageList";
+import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 
 type Props = {
   propertyDetails: IResidentialRentalOtherInfo;
+  isAddImagesBtnDisabled: boolean;
   setPropertyDetails: React.Dispatch<
     React.SetStateAction<IResidentialRentalOtherInfo>
   >;
@@ -32,6 +34,7 @@ type Props = {
 
 const OtherInformation: React.FC<Props> = ({
   propertyDetails,
+  isAddImagesBtnDisabled,
   setPropertyDetails,
 }) => {
   const [openMediaModal, setOpenMediaModal] = useState<boolean>(false);
@@ -89,30 +92,46 @@ const OtherInformation: React.FC<Props> = ({
             borderColor={gray}
           />
         </View>
-        <View style={styles.btnContainer}>
+        <View style={styles.subContainer}>
           {propertyDetails.images.length > 0 && (
             <SelectedPropertyImageList images={propertyDetails.images} />
           )}
-          <TouchableOpacity
-            onPress={() => setOpenMediaModal(true)}
+          <View
             style={[
+              styles.btnContainer,
               {
                 width:
                   width > BUTTON_SIZE_SCREEN_BREAK_POINT
                     ? BUTTON_MAX_WIDTH
                     : "100%",
-                backgroundColor:
-                  theme === "light" ? light.background : dark.darkGray,
               },
-              styles.addImages,
             ]}
           >
-            <FontAwesome name="image" size={24} color={gray} />
-            <Text style={styles.text}>Add Property Images</Text>
-          </TouchableOpacity>
-          <Text style={styles.nbText}>
-            {`*You can upload a maximum of ${maxPropertyImages} images`}
-          </Text>
+            {propertyDetails.images.length > 0 && (
+              <CustomButton
+                title="Delete Images"
+                color={red}
+                iconPosition="left"
+                icon={<AntDesign name="delete" size={24} color={white} />}
+                isDisabled={isAddImagesBtnDisabled}
+                onPressFunc={() =>
+                  setPropertyDetails({ ...propertyDetails, images: [] })
+                }
+              />
+            )}
+            <CustomButton
+              title="Add Property Images"
+              textColor={gray}
+              color={theme === "light" ? light.background : dark.darkGray}
+              iconPosition="left"
+              icon={<FontAwesome name="image" size={24} color={gray} />}
+              isDisabled={isAddImagesBtnDisabled}
+              onPressFunc={() => setOpenMediaModal(true)}
+            />
+            <Text style={styles.nbText}>
+              {`*You can upload a maximum of ${maxPropertyImages} images`}
+            </Text>
+          </View>
         </View>
       </View>
       <MediaModal
@@ -153,24 +172,16 @@ const styles = StyleSheet.create({
     color: red,
     fontSize: small,
   },
-  btnContainer: {
+  subContainer: {
     width: "100%",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
-  addImages: {
-    flexDirection: "row",
+  btnContainer: {
+    marginTop: 10,
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
-    height: 50,
-    borderRadius: 7,
-    marginTop: 20,
-  },
-  text: {
-    fontFamily: family,
-    marginTop: 5,
-    color: gray,
-    fontSize: medium,
+    marginBottom: -7,
   },
 });
