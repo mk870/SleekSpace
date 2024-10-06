@@ -1,30 +1,28 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 
+import { ICommercialRentalOtherInfo } from "../Types/FormTypes";
+import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { family, small } from "@/src/Theme/Font";
+import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
 import InputField from "@/src/Components/InputField/InputField";
 import MediaModal from "@/src/Components/Modals/MediaModal/MediaModal";
 import SelectedPropertyImageList from "@/src/Components/SelectedPropertyImagesList/SelectedPropertyImageList";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import { useAppSelector } from "@/src/Redux/Hooks/Config";
-import { gray, light, dark, red, white } from "@/src/Theme/Colors";
-import { family, small, medium } from "@/src/Theme/Font";
-import { maxPropertyImages } from "@/src/Utils/Constants";
-import { IResidentialForSaleOtherInfo } from "../Types/FormTypes";
-import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
+import { gray, red, white, light, dark } from "@/src/Theme/Colors";
+import {
+  BUTTON_SIZE_SCREEN_BREAK_POINT,
+  BUTTON_MAX_WIDTH,
+  maxPropertyImages,
+} from "@/src/Utils/Constants";
 
 type Props = {
-  propertyDetails: IResidentialForSaleOtherInfo;
+  propertyDetails: ICommercialRentalOtherInfo;
   isAddImagesBtnDisabled: boolean;
   setPropertyDetails: React.Dispatch<
-    React.SetStateAction<IResidentialForSaleOtherInfo>
+    React.SetStateAction<ICommercialRentalOtherInfo>
   >;
 };
 
@@ -36,7 +34,6 @@ const OtherInformation: React.FC<Props> = ({
   const [openMediaModal, setOpenMediaModal] = useState<boolean>(false);
   const theme = useAppSelector((state) => state.theme.value);
   const { width } = useWindowDimensions();
-
   return (
     <View style={styles.inputWrapper}>
       <View style={styles.featuresContainer}>
@@ -44,6 +41,29 @@ const OtherInformation: React.FC<Props> = ({
           <ThemedText type="subHeader" styles={{ textAlign: "left" }}>
             Other Information
           </ThemedText>
+        </View>
+        <View>
+          <InputField
+            textValue={propertyDetails?.tenantRequirements}
+            placeHolder=""
+            width={"100%"}
+            multiLine
+            handleOnChangeText={(e) =>
+              setPropertyDetails({
+                ...propertyDetails,
+                tenantRequirements: e,
+              })
+            }
+            height={57}
+            contentType="none"
+            type="default"
+            label="What do you expect or require from tenants?"
+            backgroundColor="transparent"
+            borderColor={gray}
+          />
+          <Text style={styles.nbText}>
+            *Separate the requirements with a comma.
+          </Text>
         </View>
         <View>
           <InputField
@@ -65,34 +85,46 @@ const OtherInformation: React.FC<Props> = ({
             borderColor={gray}
           />
         </View>
-        <View style={styles.btnContainer}>
+        <View style={styles.subContainer}>
           {propertyDetails.images.length > 0 && (
             <SelectedPropertyImageList images={propertyDetails.images} />
           )}
-          {propertyDetails.images.length > 0 && (
+          <View
+            style={[
+              styles.btnContainer,
+              {
+                width:
+                  width > BUTTON_SIZE_SCREEN_BREAK_POINT
+                    ? BUTTON_MAX_WIDTH
+                    : "100%",
+              },
+            ]}
+          >
+            {propertyDetails.images.length > 0 && (
+              <CustomButton
+                title="Delete Images"
+                color={red}
+                iconPosition="left"
+                icon={<AntDesign name="delete" size={24} color={white} />}
+                isDisabled={isAddImagesBtnDisabled}
+                onPressFunc={() =>
+                  setPropertyDetails({ ...propertyDetails, images: [] })
+                }
+              />
+            )}
             <CustomButton
-              title="Delete Images"
-              color={red}
+              title="Add Property Images"
+              textColor={gray}
+              color={theme === "light" ? light.background : dark.darkGray}
               iconPosition="left"
-              icon={<AntDesign name="delete" size={24} color={white} />}
+              icon={<FontAwesome name="image" size={24} color={gray} />}
               isDisabled={isAddImagesBtnDisabled}
-              onPressFunc={() =>
-                setPropertyDetails({ ...propertyDetails, images: [] })
-              }
+              onPressFunc={() => setOpenMediaModal(true)}
             />
-          )}
-          <CustomButton
-            title="Add Property Images"
-            textColor={gray}
-            color={theme === "light" ? light.background : dark.darkGray}
-            iconPosition="left"
-            icon={<FontAwesome name="image" size={24} color={gray} />}
-            isDisabled={isAddImagesBtnDisabled}
-            onPressFunc={() => setOpenMediaModal(true)}
-          />
-          <Text style={styles.nbText}>
-            {`*You can upload a maximum of ${maxPropertyImages} images`}
-          </Text>
+            <Text style={styles.nbText}>
+              {`*You can upload a maximum of ${maxPropertyImages} images`}
+            </Text>
+          </View>
         </View>
       </View>
       <MediaModal
@@ -133,24 +165,16 @@ const styles = StyleSheet.create({
     color: red,
     fontSize: small,
   },
-  btnContainer: {
+  subContainer: {
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
-  addImages: {
-    flexDirection: "row",
+  btnContainer: {
+    marginTop: 10,
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
-    height: 50,
-    borderRadius: 7,
-    marginTop: 20,
-  },
-  text: {
-    fontFamily: family,
-    marginTop: 5,
-    color: gray,
-    fontSize: medium,
+    marginBottom: -7,
   },
 });

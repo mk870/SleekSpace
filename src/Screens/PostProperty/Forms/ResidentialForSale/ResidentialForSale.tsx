@@ -17,6 +17,10 @@ import {
 import { IResidentialPropertyForSaleCreation } from "@/src/GlobalTypes/Property/Residential/ForSaleTypes";
 import {
   createPropertyToBeSubmitted,
+  exteriorPropertyInfoInitialState,
+  generalPropertyInfoIntialState,
+  interiorPropertyInfoInitialState,
+  otherPropertyInfoInitialState,
   processExteriorPropertyDetails,
   processGeneralPropertyDetails,
   processInteriorPropertyDetails,
@@ -36,6 +40,8 @@ import InteriorInformation from "./Components/InteriorInformation";
 import ExteriorInformation from "./Components/ExteriorInformation";
 import OtherInformation from "./Components/OtherInformation";
 import MessageModal from "@/src/Components/Modals/MessageModal";
+import { primary } from "@/src/Theme/Colors";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const ResidentialForSale: INoPropsReactComponent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -54,46 +60,16 @@ const ResidentialForSale: INoPropsReactComponent = () => {
     useState<IExteriorInfoFormError>("");
 
   const [propertyGeneralDetails, setPropertyGeneralDetails] =
-    useState<IResidentialForSaleGeneralInfo>({
-      price: "0",
-      sizeNumber: "",
-      numberOfRooms: "1",
-      type: "Single family home",
-      sizeDimensions: "Square meters",
-      yearBuilt: "",
-      stories: "1",
-      currency: "US$",
-      isNegotiable: true,
-    });
+    useState<IResidentialForSaleGeneralInfo>(generalPropertyInfoIntialState);
 
   const [propertyInteriorInfo, setPropertyInteriorInfo] =
-    useState<IResidentialForSaleInteriorInfo>({
-      bathrooms: "1",
-      bedrooms: "1",
-      isTiled: false,
-      isPlustered: false,
-      isPainted: false,
-      hasCeiling: false,
-      hasElectricity: false,
-      hasWater: false,
-      otherInteriorFeatures: "",
-    });
+    useState<IResidentialForSaleInteriorInfo>(interiorPropertyInfoInitialState);
 
   const [propertyExteriorInfo, setPropertyExteriorInfo] =
-    useState<IResidentialForSaleExteriorInfo>({
-      hasBoreHole: false,
-      hasSwimmingPool: false,
-      typeOfExteriorSecurity: "jiraWall",
-      isPaved: false,
-      numberOfGarages: "0",
-      otherExteriorFeatures: "",
-    });
+    useState<IResidentialForSaleExteriorInfo>(exteriorPropertyInfoInitialState);
 
   const [otherPropertyInfo, setOtherPropertyInfo] =
-    useState<IResidentialForSaleOtherInfo>({
-      marketingStatement: "",
-      images: [],
-    });
+    useState<IResidentialForSaleOtherInfo>(otherPropertyInfoInitialState);
 
   const manager = useAppSelector((state) => state.managerAccount.value);
   const { accessToken } = useAppSelector((state) => state.user.value);
@@ -136,8 +112,10 @@ const ResidentialForSale: INoPropsReactComponent = () => {
       dispatch(addMapLocation(emptyLocation));
     },
     onError(error: any) {
-      if (error.response?.data?.error !== "") {
-        setSubmitError(error.response?.data?.error);
+      if (error.response?.data?.error) {
+        if (error.response?.data?.error !== "") {
+          setSubmitError(error.response?.data?.error);
+        } else setSubmitError("Something went wrong");
       } else setSubmitError("Something went wrong");
     },
     onSettled: () => {
@@ -160,6 +138,15 @@ const ResidentialForSale: INoPropsReactComponent = () => {
       property: propertyToBeSubmitted,
       accessToken,
     });
+  };
+
+  const handleCloseSucessModal = () => {
+    setPageNumber(1);
+    setOtherPropertyInfo(otherPropertyInfoInitialState);
+    setPropertyExteriorInfo(exteriorPropertyInfoInitialState);
+    setPropertyInteriorInfo(interiorPropertyInfoInitialState);
+    setPropertyGeneralDetails(generalPropertyInfoIntialState);
+    setOpenSuccessModal(false);
   };
 
   return (
@@ -196,6 +183,7 @@ const ResidentialForSale: INoPropsReactComponent = () => {
       {pageNumber === 4 && (
         <OtherInformation
           propertyDetails={otherPropertyInfo}
+          isAddImagesBtnDisabled={isLoading}
           setPropertyDetails={setOtherPropertyInfo}
         />
       )}
@@ -214,6 +202,15 @@ const ResidentialForSale: INoPropsReactComponent = () => {
           <OutlinedButton
             title="previous"
             onPressFunc={() => setPageNumber((prev) => prev - 1)}
+            isDisabled={isLoading}
+            iconPosition="left"
+            icon={
+              <MaterialIcons
+                name="keyboard-double-arrow-left"
+                size={24}
+                color={primary}
+              />
+            }
           />
         )}
         <CustomButton
@@ -238,10 +235,7 @@ const ResidentialForSale: INoPropsReactComponent = () => {
         type="error"
       />
       <MessageModal
-        handleCancel={() => {
-          setPageNumber(1);
-          setOpenSuccessModal(false);
-        }}
+        handleCancel={handleCloseSucessModal}
         isModalVisible={openSuccessModal}
         message={
           "Your property has been successfully submitted, potential buyers can now view it."

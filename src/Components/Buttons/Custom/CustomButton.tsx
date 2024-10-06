@@ -35,7 +35,7 @@ const CustomButton: React.FC<Props> = ({
     <TouchableOpacity
       onPress={onPressFunc}
       disabled={isDisabled ? isDisabled : false}
-      activeOpacity={0.9}
+      activeOpacity={0.7}
       style={[
         container,
         {

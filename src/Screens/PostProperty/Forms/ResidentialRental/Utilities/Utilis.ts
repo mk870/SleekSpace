@@ -8,7 +8,10 @@ import {
   IResidentialRentalInteriorInfo,
   IResidentialRentalOtherInfo,
 } from "../Types/FormTypes";
-import { convertImagePickerAssetsListToUploadableImages } from "@/src/Utils/Funcs";
+import {
+  convertImagePickerAssetsListToUploadableImages,
+  removeBlankSpacesFromWordsInAnArray,
+} from "@/src/Utils/Funcs";
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { IResidentialRentalPropertyCreation } from "@/src/GlobalTypes/Property/Residential/RentalTypes";
 
@@ -114,10 +117,14 @@ export const createPropertyToBeSubmitted: (
     hasBoreHole: propertyExteriorInfo.hasBoreHole,
     hasSwimmingPool: propertyExteriorInfo.hasSwimmingPool,
     otherInteriorFeatures: propertyInteriorInfo.otherInteriorFeatures
-      ? propertyInteriorInfo.otherInteriorFeatures.split(",")
+      ? removeBlankSpacesFromWordsInAnArray(
+          propertyInteriorInfo.otherInteriorFeatures.split(",")
+        )
       : [],
     otherExteriorFeatures: propertyExteriorInfo.otherExteriorFeatures
-      ? propertyExteriorInfo.otherExteriorFeatures.split(",")
+      ? removeBlankSpacesFromWordsInAnArray(
+          propertyExteriorInfo.otherExteriorFeatures.split(",")
+        )
       : [],
     hasCeiling: propertyInteriorInfo.hasCeiling,
     hasElectricity: propertyInteriorInfo.hasElectricity,
@@ -128,7 +135,9 @@ export const createPropertyToBeSubmitted: (
     typeOfExteriorSecurity: propertyExteriorInfo.typeOfExteriorSecurity,
     marketingStatement: otherPropertyInfo.marketingStatement,
     tenantRequirements: otherPropertyInfo.tenantRequirements
-      ? otherPropertyInfo.tenantRequirements.split(",")
+      ? removeBlankSpacesFromWordsInAnArray(
+          otherPropertyInfo.tenantRequirements.split(",")
+        )
       : [],
     type: propertyGeneralDetails.type,
     yearBuilt: +propertyGeneralDetails.yearBuilt,

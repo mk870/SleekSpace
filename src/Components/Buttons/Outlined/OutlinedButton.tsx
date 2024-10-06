@@ -33,6 +33,7 @@ const OutlinedButton: React.FC<Props> = ({
       onPress={onPressFunc}
       style={[styles.container, { width: width ? width : "100%" }]}
       disabled={isDisabled ? isDisabled : false}
+      activeOpacity={0.7}
     >
       <View style={styles.innerContainer}>
         {iconPosition === "left" && icon}
