@@ -1,44 +1,55 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
+import { family } from "@/src/Theme/Font";
+import { red, gray } from "@/src/Theme/Colors";
+import CheckBoxField from "@/src/Components/CheckBox/CheckBoxField";
 import CustomPicker from "@/src/Components/CustomPicker/CustomPicker";
 import InputField from "@/src/Components/InputField/InputField";
+import PropertyLocationInput from "@/src/Components/PropertyLocationInput/PropertyLocationInput";
 import Row from "@/src/Components/Row/Row";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import { red, gray } from "@/src/Theme/Colors";
-import { family } from "@/src/Theme/Font";
-import {
-  IGeneralInfoFormError,
-  IResidentialRentalGeneralInfo,
-} from "../Types/FormTypes";
-import PropertyLocationInput from "@/src/Components/PropertyLocationInput/PropertyLocationInput";
-import { PropertyTypesEnum } from "@/src/Utils/Constants";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { PropertyTypesEnum } from "@/src/Utils/Constants";
+import {
+  ICommercialForSaleGeneralInfo,
+  IGeneralInfoFormError,
+} from "../Types/FormTypes";
 
 type Props = {
   formError: IGeneralInfoFormError;
   setFormError: React.Dispatch<React.SetStateAction<IGeneralInfoFormError>>;
-  propertyDetails: IResidentialRentalGeneralInfo;
+  propertyDetails: ICommercialForSaleGeneralInfo;
   setPropertyDetails: React.Dispatch<
-    React.SetStateAction<IResidentialRentalGeneralInfo>
+    React.SetStateAction<ICommercialForSaleGeneralInfo>
   >;
 };
 
 const GeneralInformation: React.FC<Props> = ({
-  propertyDetails,
-  setPropertyDetails,
   formError,
   setFormError,
+  setPropertyDetails,
+  propertyDetails,
 }) => {
-  const location = useAppSelector((state)=>state.mapLocation.value)
+  const location = useAppSelector((state) => state.mapLocation.value);
+  const [showOtherPropertyTypeInput, setShowOtherPropertyTypeInput] =
+    useState<boolean>(false);
+
   useEffect(() => {
     if (formError) {
       setFormError("");
     }
-    if(formError && !location.lat){
-      setFormError("")
+    if (formError && !location.lat) {
+      setFormError("");
     }
-  }, [propertyDetails,location]);
+  }, [propertyDetails, location]);
+
+  useEffect(() => {
+    if (propertyDetails.type === "Other") {
+      setShowOtherPropertyTypeInput(true);
+    } else {
+      setShowOtherPropertyTypeInput(false);
+    }
+  }, [propertyDetails.type]);
 
   return (
     <View style={styles.inputWrapper}>
@@ -76,21 +87,21 @@ const GeneralInformation: React.FC<Props> = ({
           />
           <View>
             <InputField
-              textValue={propertyDetails?.rentAmount}
+              textValue={propertyDetails.price}
               isRequired
               placeHolder=""
               width={120}
               handleOnChangeText={(e) =>
-                setPropertyDetails({ ...propertyDetails, rentAmount: e })
+                setPropertyDetails({ ...propertyDetails, price: e })
               }
               height={57}
               contentType="none"
               type="number"
-              label="Rent per month"
+              label="Price"
               backgroundColor="transparent"
-              borderColor={formError === "rentAmount" ? red : gray}
+              borderColor={formError === "price" ? red : gray}
             />
-            {formError === "rentAmount" && (
+            {formError === "price" && (
               <Text style={styles.errorText}>invalid amount</Text>
             )}
           </View>
@@ -103,97 +114,78 @@ const GeneralInformation: React.FC<Props> = ({
           }
           pickerList={[
             {
-              label: "Single family home",
-              value: "Single family home",
+              label: "Shop",
+              value: "Shop",
             },
             {
-              label: "Multi family complex",
-              value: "Multi family complex",
+              label: "Land",
+              value: "Land",
             },
             {
-              label: "Boys khaya/Cottage",
-              value: "Cottage",
+              label: "Building",
+              value: "Building",
             },
             {
-              label: "Apartment/Flat",
-              value: "Apartment",
-            },
-            {
-              label: "Duplex",
-              value: "Duplex",
-            },
-            {
-              label: "Triplex",
-              value: "Triplex",
+              label: "Other",
+              value: "Other",
             },
           ]}
         />
-        <CustomPicker
-          label="Number of rooms to Let"
-          initialValue={propertyDetails.numberOfRoomsToLet}
-          setValue={(value) =>
-            setPropertyDetails({
-              ...propertyDetails,
-              numberOfRoomsToLet: value as string,
-            })
-          }
-          pickerList={[
-            {
-              label: "One",
-              value: "1",
-            },
-            {
-              label: "Two",
-              value: "2",
-            },
-            {
-              label: "Three",
-              value: "3",
-            },
-            {
-              label: "Four",
-              value: "4",
-            },
-            {
-              label: "Five",
-              value: "5",
-            },
-            {
-              label: "Six",
-              value: "6",
-            },
-            {
-              label: "Full house",
-              value: "fullHouse",
-            },
-          ]}
-        />
-
+        {showOtherPropertyTypeInput && (
+          <View>
+            <InputField
+              textValue={propertyDetails.otherType}
+              placeHolder=""
+              width={"100%"}
+              handleOnChangeText={(e) =>
+                setPropertyDetails({
+                  ...propertyDetails,
+                  otherType: e,
+                })
+              }
+              height={57}
+              contentType="none"
+              type="default"
+              label="Other Property Type"
+              backgroundColor="transparent"
+              isRequired
+              borderColor={formError === "type" ? red : gray}
+            />
+            {formError === "type" && (
+              <Text style={styles.errorText}>invalid property type</Text>
+            )}
+          </View>
+        )}
         <View>
           <InputField
-            textValue={propertyDetails?.totalNumberOfRooms}
+            textValue={propertyDetails?.numberOfRooms}
             placeHolder=""
             width={160}
             handleOnChangeText={(e) =>
               setPropertyDetails({
                 ...propertyDetails,
-                totalNumberOfRooms: e,
+                numberOfRooms: e,
               })
             }
             height={57}
             contentType="none"
             type="number"
-            label="Total number of rooms"
+            label="Number of rooms"
             backgroundColor="transparent"
-            isRequired
-            borderColor={
-              formError === "totalNumberOfpropertyRooms" ? red : gray
-            }
+            borderColor={formError === "numberOfRooms" ? red : gray}
           />
-          {formError === "totalNumberOfpropertyRooms" && (
+          {formError === "numberOfRooms" && (
             <Text style={styles.errorText}>invalid size</Text>
           )}
         </View>
+
+        <CheckBoxField
+          label="Is Negotiable"
+          value={propertyDetails.isNegotiable}
+          setChecked={(value: boolean) =>
+            setPropertyDetails({ ...propertyDetails, isNegotiable: value })
+          }
+        />
 
         <View>
           <PropertyLocationInput
@@ -253,8 +245,7 @@ const GeneralInformation: React.FC<Props> = ({
         <Row style={styles.row}>
           <View>
             <InputField
-              textValue={propertyDetails?.storeys}
-              isRequired
+              textValue={propertyDetails.storeys}
               placeHolder=""
               width={100}
               handleOnChangeText={(e) =>

@@ -8,12 +8,12 @@ export type IResidentialForSaleGeneralInfo = {
   sizeNumber: string;
   sizeDimensions: string;
   type: string;
-  stories: string;
+  storeys: string;
   yearBuilt: string;
 };
 
 export type IGeneralInfoFormError =
-  | "stories"
+  | "storeys"
   | "price"
   | "yearBuilt"
   | ""

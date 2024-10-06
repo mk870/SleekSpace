@@ -217,21 +217,21 @@ const GeneralInformation: React.FC<Props> = ({
         <Row style={styles.row}>
           <View>
             <InputField
-              textValue={propertyDetails?.stories}
+              textValue={propertyDetails?.storeys}
               isRequired
               placeHolder=""
               width={100}
               handleOnChangeText={(e) =>
-                setPropertyDetails({ ...propertyDetails, stories: e })
+                setPropertyDetails({ ...propertyDetails, storeys: e })
               }
               height={57}
               contentType="none"
               type="number"
               label="Storeys"
               backgroundColor="transparent"
-              borderColor={formError === "stories" ? red : gray}
+              borderColor={formError === "storeys" ? red : gray}
             />
-            {formError === "stories" && (
+            {formError === "storeys" && (
               <Text style={styles.errorText}>invalid size</Text>
             )}
           </View>

@@ -9,7 +9,7 @@ export type ICommercialRentalPropertyCreation = {
     rentAmount: number;
     sizeNumber: number;
     yearBuilt: number;
-    stories: number;
+    storeys: number;
     hasElectricity: boolean;
     hasWater: boolean;
     isFullSpace:boolean;
@@ -33,7 +33,7 @@ export type ICommercialRentalProperty = {
     rentAmount: number;
     sizeNumber: number;
     yearBuilt: number;
-    stories: number;
+    storeys: number;
     hasElectricity: boolean;
     hasWater: boolean;
     isFullSpace:boolean;
@@ -59,7 +59,7 @@ export type ICommercialRentalPropertyWithManager = {
     rentAmount: number;
     sizeNumber: number;
     yearBuilt: number;
-    stories: number;
+    storeys: number;
     hasElectricity: boolean;
     hasWater: boolean;
     isFullSpace:boolean;
@@ -85,7 +85,7 @@ export type ICommercialRentalPropertyUpdate = {
     rentAmount: number;
     sizeNumber: number;
     yearBuilt: number;
-    stories: number;
+    storeys: number;
     hasElectricity: boolean;
     hasWater: boolean;
     isFullSpace:boolean;

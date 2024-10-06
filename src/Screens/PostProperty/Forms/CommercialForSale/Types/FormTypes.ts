@@ -1,8 +1,8 @@
 import * as ImagePicker from "expo-image-picker";
 
-export type ICommercialRentalGeneralInfo = {
+export type ICommercialForSaleGeneralInfo = {
   numberOfRooms: string;
-  rentAmount: string;
+  price: string;
   currency: ICurrency;
   sizeNumber: string;
   sizeDimensions: string;
@@ -10,12 +10,12 @@ export type ICommercialRentalGeneralInfo = {
   otherType: string;
   storeys: string;
   yearBuilt: string;
-  isFullSpace: boolean;
+  isNegotiable: boolean;
 };
 
 export type IGeneralInfoFormError =
   | "storeys"
-  | "rentAmount"
+  | "price"
   | "yearBuilt"
   | ""
   | "propertySize"
@@ -23,15 +23,14 @@ export type IGeneralInfoFormError =
   | "type"
   | "location";
 
-export type ICommercialRentalFeaturesInfo = {
+export type ICommercialForSaleFeaturesInfo = {
   hasElectricity: boolean;
   hasWater: boolean;
   otherInteriorFeatures: string;
   otherExteriorFeatures: string;
 };
 
-export type ICommercialRentalOtherInfo = {
-  tenantRequirements: string;
+export type ICommercialForSaleOtherInfo = {
   marketingStatement: string;
   images: ImagePicker.ImagePickerAsset[];
 };

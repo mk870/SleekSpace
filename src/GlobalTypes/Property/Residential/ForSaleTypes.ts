@@ -18,7 +18,7 @@ export type IResidentialPropertyForSaleCreation = {
   bedrooms: number;
   bathrooms: number;
   yearBuilt: number;
-  stories: number;
+  storeys: number;
   hasSwimmingPool: boolean;
   hasElectricity: boolean;
   hasWater: boolean;
@@ -52,7 +52,7 @@ export type IResidentialPropertyForSale = {
   bedrooms: number;
   bathrooms: number;
   yearBuilt: number;
-  stories: number;
+  storeys: number;
   hasSwimmingPool: boolean;
   hasElectricity: boolean;
   hasWater: boolean;
@@ -88,7 +88,7 @@ export type IResidentialPropertyForSaleWithManager = {
   bedrooms: number;
   bathrooms: number;
   yearBuilt: number;
-  stories: number;
+  storeys: number;
   hasSwimmingPool: boolean;
   hasElectricity: boolean;
   hasWater: boolean;
@@ -124,7 +124,7 @@ export type IResidentialPropertyForSaleUpdate = {
   bedrooms: number;
   bathrooms: number;
   yearBuilt: number;
-  stories: number;
+  storeys: number;
   hasSwimmingPool: boolean;
   hasElectricity: boolean;
   hasWater: boolean;

@@ -1,27 +1,27 @@
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { IManagerAccount } from "@/src/GlobalTypes/Manager/ManagerTypes";
+import { ICommercialPropertyForSaleCreation } from "@/src/GlobalTypes/Property/Commercial/ForSaleTypes";
 import {
   convertImagePickerAssetsListToUploadableImages,
   removeBlankSpacesFromWordsInAnArray,
 } from "@/src/Utils/Funcs";
 import {
-  ICommercialRentalFeaturesInfo,
-  ICommercialRentalGeneralInfo,
-  ICommercialRentalOtherInfo,
+  ICommercialForSaleGeneralInfo,
   IGeneralInfoFormError,
+  ICommercialForSaleFeaturesInfo,
+  ICommercialForSaleOtherInfo,
 } from "../Types/FormTypes";
-import { ICommercialRentalPropertyCreation } from "@/src/GlobalTypes/Property/Commercial/RentalTypes";
 
 export const processGeneralPropertyDetails = (
-  generalPropertyDetails: ICommercialRentalGeneralInfo,
+  generalPropertyDetails: ICommercialForSaleGeneralInfo,
   setPageNumber: React.Dispatch<React.SetStateAction<number>>,
   setGeneralInfoFormError: React.Dispatch<
     React.SetStateAction<IGeneralInfoFormError>
   >,
   location: ISearchLocation
 ) => {
-  if (+generalPropertyDetails.rentAmount < 10) {
-    setGeneralInfoFormError("rentAmount");
+  if (+generalPropertyDetails.price < 10) {
+    setGeneralInfoFormError("price");
   } else if (+generalPropertyDetails.sizeNumber < 0) {
     setGeneralInfoFormError("propertySize");
   } else if (+generalPropertyDetails.numberOfRooms < 0) {
@@ -45,26 +45,26 @@ export const processGeneralPropertyDetails = (
 };
 
 export const createPropertyToBeSubmitted: (
-  propertyGeneralDetails: ICommercialRentalGeneralInfo,
-  propertyFeaturesInfo: ICommercialRentalFeaturesInfo,
-  otherPropertyInfo: ICommercialRentalOtherInfo,
+  propertyGeneralDetails: ICommercialForSaleGeneralInfo,
+  propertyFeaturesInfo: ICommercialForSaleFeaturesInfo,
+  otherPropertyInfo: ICommercialForSaleOtherInfo,
   manager: IManagerAccount,
   location: ISearchLocation
-) => ICommercialRentalPropertyCreation = ({} = (
-  propertyGeneralDetails: ICommercialRentalGeneralInfo,
-  propertyFeaturesInfo: ICommercialRentalFeaturesInfo,
-  otherPropertyInfo: ICommercialRentalOtherInfo,
+) => ICommercialPropertyForSaleCreation = ({} = (
+  propertyGeneralDetails: ICommercialForSaleGeneralInfo,
+  propertyFeaturesInfo: ICommercialForSaleFeaturesInfo,
+  otherPropertyInfo: ICommercialForSaleOtherInfo,
   manager: IManagerAccount,
   location: ISearchLocation
 ) => {
   return {
     managerId: manager.id,
     status: "on the Market" as IStatus,
-    isFullSpace: propertyGeneralDetails.isFullSpace,
+    isNegotiable: propertyGeneralDetails.isNegotiable,
     sizeDimensions: propertyGeneralDetails.sizeDimensions,
     sizeNumber: +propertyGeneralDetails.sizeNumber,
     storeys: +propertyGeneralDetails.storeys,
-    rentAmount: +propertyGeneralDetails.rentAmount,
+    price: +propertyGeneralDetails.price,
     currency: propertyGeneralDetails.currency,
     numberOfRooms: +propertyGeneralDetails.numberOfRooms,
     otherInteriorFeatures: propertyFeaturesInfo.otherInteriorFeatures
@@ -83,11 +83,6 @@ export const createPropertyToBeSubmitted: (
       otherPropertyInfo.images
     ),
     marketingStatement: otherPropertyInfo.marketingStatement,
-    tenantRequirements: otherPropertyInfo.tenantRequirements
-      ? removeBlankSpacesFromWordsInAnArray(
-          otherPropertyInfo.tenantRequirements.split(",")
-        )
-      : [],
     type:
       propertyGeneralDetails.type === "Other"
         ? propertyGeneralDetails.otherType
@@ -108,8 +103,8 @@ export const createPropertyToBeSubmitted: (
   };
 });
 
-export const generalPropertyInfoIntialState: ICommercialRentalGeneralInfo = {
-  rentAmount: "0",
+export const generalPropertyInfoIntialState: ICommercialForSaleGeneralInfo = {
+  price: "0",
   sizeNumber: "",
   numberOfRooms: "0",
   type: "Shop",
@@ -117,19 +112,19 @@ export const generalPropertyInfoIntialState: ICommercialRentalGeneralInfo = {
   yearBuilt: "",
   storeys: "1",
   currency: "US$",
-  isFullSpace: true,
+  isNegotiable: true,
   otherType: "",
 };
 
-export const propertyFeaturesInfoInitialState: ICommercialRentalFeaturesInfo = {
-  hasElectricity: false,
-  hasWater: false,
-  otherInteriorFeatures: "",
-  otherExteriorFeatures: "",
-};
+export const propertyFeaturesInfoInitialState: ICommercialForSaleFeaturesInfo =
+  {
+    hasElectricity: false,
+    hasWater: false,
+    otherInteriorFeatures: "",
+    otherExteriorFeatures: "",
+  };
 
-export const otherPropertyInfoInitialState: ICommercialRentalOtherInfo = {
-  tenantRequirements: "",
+export const otherPropertyInfoInitialState: ICommercialForSaleOtherInfo = {
   marketingStatement: "",
   images: [],
 };

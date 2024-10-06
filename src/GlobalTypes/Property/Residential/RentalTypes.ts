@@ -32,7 +32,7 @@ export type IResidentialRentalPropertyCreation = {
   bedrooms: number;
   status: string;
   yearBuilt: number;
-  stories: number;
+  storeys: number;
   type: string;
   sizeDimensions: string;
   otherInteriorFeatures: string[];
@@ -68,7 +68,7 @@ export type IResidentialRentalProperty = {
   status: string;
   isPainted: boolean;
   yearBuilt: number;
-  stories: number;
+  storeys: number;
   type: string;
   sizeDimensions: string;
   otherInteriorFeatures: string[];
@@ -105,7 +105,7 @@ export type IResidentialRentalPropertyWithManager = {
   bedrooms: number;
   status: string;
   yearBuilt: number;
-  stories: number;
+  storeys: number;
   isPainted: boolean;
   type: string;
   sizeDimensions: string;
@@ -131,7 +131,7 @@ export type IResidentialRentalPropertyUpdate = {
   bedrooms: number;
   numberOfRoomsToLet: number;
   yearBuilt: number;
-  stories: number;
+  storeys: number;
   hasElectricity: boolean;
   hasSwimmingPool: boolean;
   hasWater: boolean;

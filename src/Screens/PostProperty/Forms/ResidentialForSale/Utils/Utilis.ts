@@ -32,8 +32,8 @@ export const processGeneralPropertyDetails = (
     setGeneralInfoFormError("numberOfRooms");
   } else if (!location.lat) {
     setGeneralInfoFormError("location");
-  } else if (+generalPropertyDetails.stories < 1) {
-    setGeneralInfoFormError("stories");
+  } else if (+generalPropertyDetails.storeys < 1) {
+    setGeneralInfoFormError("storeys");
   } else if (
     generalPropertyDetails.yearBuilt &&
     (+generalPropertyDetails.yearBuilt > new Date().getFullYear() ||
@@ -100,7 +100,7 @@ export const createPropertyToBeSubmitted: (
     status: "on the market" as IStatus,
     sizeDimensions: propertyGeneralDetails.sizeDimensions,
     sizeNumber: +propertyGeneralDetails.sizeNumber,
-    stories: +propertyGeneralDetails.stories,
+    storeys: +propertyGeneralDetails.storeys,
     price: +propertyGeneralDetails.price,
     currency: propertyGeneralDetails.currency,
     numberOfRooms: +propertyGeneralDetails.numberOfRooms,
@@ -156,7 +156,7 @@ export const generalPropertyInfoIntialState: IResidentialForSaleGeneralInfo = {
   type: "Single family home",
   sizeDimensions: "Square meters",
   yearBuilt: "",
-  stories: "1",
+  storeys: "1",
   currency: "US$",
   isNegotiable: true,
 };
