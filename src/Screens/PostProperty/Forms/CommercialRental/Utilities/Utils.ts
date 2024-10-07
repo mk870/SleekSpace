@@ -117,7 +117,7 @@ export const generalPropertyInfoIntialState: ICommercialRentalGeneralInfo = {
   yearBuilt: "",
   storeys: "1",
   currency: "US$",
-  isFullSpace: true,
+  isFullSpace: false,
   otherType: "",
 };
 

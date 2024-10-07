@@ -63,6 +63,8 @@ export const zimbabweMapRegion: IMapRegion = {
   longitudeDelta: 0.1,
 };
 
+export const activeOpacityOfTouchableOpacity = 0.7
+
 export const searchPropertyLocationTutorialText =
   "long press and drag the map marker to your property's location, then press done when you are finished";
 

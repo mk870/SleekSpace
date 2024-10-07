@@ -10,6 +10,7 @@ import React from "react";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
 import { primary } from "@/src/Theme/Colors";
 import { family, medium } from "@/src/Theme/Font";
+import { activeOpacityOfTouchableOpacity } from "@/src/Utils/Constants";
 
 type Props = {
   title: string;
@@ -33,7 +34,7 @@ const OutlinedButton: React.FC<Props> = ({
       onPress={onPressFunc}
       style={[styles.container, { width: width ? width : "100%" }]}
       disabled={isDisabled ? isDisabled : false}
-      activeOpacity={0.7}
+      activeOpacity={activeOpacityOfTouchableOpacity}
     >
       <View style={styles.innerContainer}>
         {iconPosition === "left" && icon}

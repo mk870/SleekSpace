@@ -1,6 +1,7 @@
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useMutation } from "@tanstack/react-query";
 
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import {
@@ -24,7 +25,6 @@ import {
   BUTTON_SIZE_SCREEN_BREAK_POINT,
   emptyLocation,
 } from "@/src/Utils/Constants";
-import { useMutation } from "@tanstack/react-query";
 import { ICommercialRentalPropertyCreation } from "@/src/GlobalTypes/Property/Commercial/RentalTypes";
 import PropertyTypeScreenWrapper from "../Shared/PropertyTypeScreenWrapper";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";

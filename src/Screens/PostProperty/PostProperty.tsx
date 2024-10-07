@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
 
 import Screen from "@/src/Components/ScreenWrapper/Screen";
 import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
@@ -17,7 +18,6 @@ import ManagerSignUpBtns from "../Account/Screens/Preferences/ManagerAccount/Scr
 import HttpError from "@/src/Components/HttpError/HttpError";
 import LoadingSkeleton from "./Forms/Shared/LoadingSkeleton";
 import { noManagerError } from "@/src/Utils/Constants";
-import { useLocalSearchParams } from "expo-router";
 
 const PostProperty: INoPropsReactComponent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);

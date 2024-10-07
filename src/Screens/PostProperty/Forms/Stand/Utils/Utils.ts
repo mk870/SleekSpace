@@ -101,7 +101,7 @@ export const generalPropertyInfoIntialState: IStandGeneralInfo = {
   type: "Residential",
   sizeDimensions: "Square meters",
   currency: "US$",
-  isNegotiable: true,
+  isNegotiable: false,
   otherType: "",
   otherLevel: "",
 };

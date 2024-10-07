@@ -1,6 +1,7 @@
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import PropertyTypeScreenWrapper from "../Shared/PropertyTypeScreenWrapper";
@@ -41,7 +42,6 @@ import ExteriorInformation from "./Components/ExteriorInformation";
 import OtherInformation from "./Components/OtherInformation";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import { primary } from "@/src/Theme/Colors";
-import { MaterialIcons } from "@expo/vector-icons";
 
 const ResidentialForSale: INoPropsReactComponent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

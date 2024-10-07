@@ -12,7 +12,10 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import { dark, gray, primary, pureWhite } from "@/src/Theme/Colors";
 import { family, small } from "@/src/Theme/Font";
-import { imageBlurhash } from "@/src/Utils/Constants";
+import {
+  activeOpacityOfTouchableOpacity,
+  imageBlurhash,
+} from "@/src/Utils/Constants";
 
 type Props = {
   tintColor?: string;
@@ -43,12 +46,17 @@ const TabsRightHeader: React.FC<Props> = ({ handleOnPress }) => {
           onPress={handleOnPress}
           underlayColor={underLayColor}
           style={styles.dotsContainer}
+          activeOpacity={activeOpacityOfTouchableOpacity}
         >
           <MaterialCommunityIcons name="dots-vertical" size={24} color={gray} />
         </TouchableHighlight>
       )}
       {accessToken && (
-        <TouchableOpacity style={styles.subContainer} onPress={handleOnPress}>
+        <TouchableOpacity
+          style={styles.subContainer}
+          onPress={handleOnPress}
+          activeOpacity={activeOpacityOfTouchableOpacity}
+        >
           {profilePicture.uri ? (
             <Image
               source={{ uri: `${profilePicture.uri}?timestamp=${timeStamp}` }}
@@ -82,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
-    marginRight:5
+    marginRight: 5,
   },
   image: {
     height: 40,

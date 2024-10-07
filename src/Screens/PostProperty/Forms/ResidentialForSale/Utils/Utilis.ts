@@ -158,7 +158,7 @@ export const generalPropertyInfoIntialState: IResidentialForSaleGeneralInfo = {
   yearBuilt: "",
   storeys: "1",
   currency: "US$",
-  isNegotiable: true,
+  isNegotiable: false,
 };
 
 export const interiorPropertyInfoInitialState: IResidentialForSaleInteriorInfo =

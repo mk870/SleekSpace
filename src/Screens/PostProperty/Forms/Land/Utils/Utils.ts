@@ -1,19 +1,19 @@
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { IManagerAccount } from "@/src/GlobalTypes/Manager/ManagerTypes";
-import { ICommercialPropertyForSaleCreation } from "@/src/GlobalTypes/Property/Commercial/ForSaleTypes";
+import { ILandPropertyCreation } from "@/src/GlobalTypes/Property/Land/LandTypes";
 import {
-  convertImagePickerAssetsListToUploadableImages,
   removeBlankSpacesFromWordsInAnArray,
+  convertImagePickerAssetsListToUploadableImages,
 } from "@/src/Utils/Funcs";
 import {
-  ICommercialForSaleGeneralInfo,
   IGeneralInfoFormError,
-  ICommercialForSaleFeaturesInfo,
-  ICommercialForSaleOtherInfo,
+  ILandGeneralInfo,
+  ILandFeaturesInfo,
+  ILandOtherInfo,
 } from "../Types/FormTypes";
 
 export const processGeneralPropertyDetails = (
-  generalPropertyDetails: ICommercialForSaleGeneralInfo,
+  generalPropertyDetails: ILandGeneralInfo,
   setPageNumber: React.Dispatch<React.SetStateAction<number>>,
   setGeneralInfoFormError: React.Dispatch<
     React.SetStateAction<IGeneralInfoFormError>
@@ -24,8 +24,6 @@ export const processGeneralPropertyDetails = (
     setGeneralInfoFormError("price");
   } else if (+generalPropertyDetails.sizeNumber < 0) {
     setGeneralInfoFormError("propertySize");
-  } else if (+generalPropertyDetails.numberOfRooms < 0) {
-    setGeneralInfoFormError("numberOfRooms");
   } else if (
     generalPropertyDetails.type === "Other" &&
     !generalPropertyDetails.otherType
@@ -33,27 +31,19 @@ export const processGeneralPropertyDetails = (
     setGeneralInfoFormError("type");
   } else if (!location.lat) {
     setGeneralInfoFormError("location");
-  } else if (+generalPropertyDetails.storeys < 1) {
-    setGeneralInfoFormError("storeys");
-  } else if (
-    generalPropertyDetails.yearBuilt &&
-    (+generalPropertyDetails.yearBuilt > new Date().getFullYear() ||
-      +generalPropertyDetails.yearBuilt < 1920)
-  ) {
-    setGeneralInfoFormError("yearBuilt");
   } else setPageNumber((prev) => prev + 1);
 };
 
 export const createPropertyToBeSubmitted: (
-  propertyGeneralDetails: ICommercialForSaleGeneralInfo,
-  propertyFeaturesInfo: ICommercialForSaleFeaturesInfo,
-  otherPropertyInfo: ICommercialForSaleOtherInfo,
+  propertyGeneralDetails: ILandGeneralInfo,
+  propertyFeaturesInfo: ILandFeaturesInfo,
+  otherPropertyInfo: ILandOtherInfo,
   manager: IManagerAccount,
   location: ISearchLocation
-) => ICommercialPropertyForSaleCreation = ({} = (
-  propertyGeneralDetails: ICommercialForSaleGeneralInfo,
-  propertyFeaturesInfo: ICommercialForSaleFeaturesInfo,
-  otherPropertyInfo: ICommercialForSaleOtherInfo,
+) => ILandPropertyCreation = ({} = (
+  propertyGeneralDetails: ILandGeneralInfo,
+  propertyFeaturesInfo: ILandFeaturesInfo,
+  otherPropertyInfo: ILandOtherInfo,
   manager: IManagerAccount,
   location: ISearchLocation
 ) => {
@@ -63,21 +53,14 @@ export const createPropertyToBeSubmitted: (
     isNegotiable: propertyGeneralDetails.isNegotiable,
     sizeDimensions: propertyGeneralDetails.sizeDimensions,
     sizeNumber: +propertyGeneralDetails.sizeNumber,
-    storeys: +propertyGeneralDetails.storeys,
     price: +propertyGeneralDetails.price,
     currency: propertyGeneralDetails.currency,
-    numberOfRooms: +propertyGeneralDetails.numberOfRooms,
-    otherInteriorFeatures: propertyFeaturesInfo.otherInteriorFeatures
+    otherDetails: propertyFeaturesInfo.otherDetails
       ? removeBlankSpacesFromWordsInAnArray(
-          propertyFeaturesInfo.otherInteriorFeatures.split(",")
+          propertyFeaturesInfo.otherDetails.split(",")
         )
       : [],
-    otherExteriorFeatures: propertyFeaturesInfo.otherExteriorFeatures
-      ? removeBlankSpacesFromWordsInAnArray(
-          propertyFeaturesInfo.otherExteriorFeatures.split(",")
-        )
-      : [],
-    hasElectricity: propertyFeaturesInfo.hasElectricity,
+    areaHasElectricity: propertyFeaturesInfo.areaHasElectricity,
     hasWater: propertyFeaturesInfo.hasWater,
     media: convertImagePickerAssetsListToUploadableImages(
       otherPropertyInfo.images
@@ -87,7 +70,6 @@ export const createPropertyToBeSubmitted: (
       propertyGeneralDetails.type === "Other"
         ? propertyGeneralDetails.otherType.trim()
         : propertyGeneralDetails.type,
-    yearBuilt: +propertyGeneralDetails.yearBuilt,
     propertyLocation: {
       lat: location.lat,
       lon: location.lon,
@@ -103,28 +85,23 @@ export const createPropertyToBeSubmitted: (
   };
 });
 
-export const generalPropertyInfoIntialState: ICommercialForSaleGeneralInfo = {
+export const generalPropertyInfoIntialState: ILandGeneralInfo = {
   price: "0",
   sizeNumber: "",
-  numberOfRooms: "0",
-  type: "Shop",
+  type: "Residential",
   sizeDimensions: "Square meters",
-  yearBuilt: "",
-  storeys: "1",
   currency: "US$",
   isNegotiable: false,
   otherType: "",
 };
 
-export const propertyFeaturesInfoInitialState: ICommercialForSaleFeaturesInfo =
-  {
-    hasElectricity: false,
-    hasWater: false,
-    otherInteriorFeatures: "",
-    otherExteriorFeatures: "",
-  };
+export const propertyFeaturesInfoInitialState: ILandFeaturesInfo = {
+  areaHasElectricity: false,
+  hasWater: false,
+  otherDetails: "",
+};
 
-export const otherPropertyInfoInitialState: ICommercialForSaleOtherInfo = {
+export const otherPropertyInfoInitialState: ILandOtherInfo = {
   marketingStatement: "",
   images: [],
 };
