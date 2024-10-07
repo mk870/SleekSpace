@@ -1,5 +1,8 @@
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { MaterialIcons } from "@expo/vector-icons";
+
 import { useAppSelector, useAppDispatch } from "@/src/Redux/Hooks/Config";
 import {
   ICommercialForSaleFeaturesInfo,
@@ -21,7 +24,6 @@ import {
   BUTTON_SIZE_SCREEN_BREAK_POINT,
   emptyLocation,
 } from "@/src/Utils/Constants";
-import { useMutation } from "@tanstack/react-query";
 import { ICommercialPropertyForSaleCreation } from "@/src/GlobalTypes/Property/Commercial/ForSaleTypes";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
 import CustomButton from "@/src/Components/Buttons/Custom/CustomButton";
@@ -29,7 +31,6 @@ import OutlinedButton from "@/src/Components/Buttons/Outlined/OutlinedButton";
 import MessageModal from "@/src/Components/Modals/MessageModal";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
 import { primary } from "@/src/Theme/Colors";
-import { MaterialIcons } from "@expo/vector-icons";
 import PropertyTypeScreenWrapper from "../Shared/PropertyTypeScreenWrapper";
 import FeaturesInformation from "./Components/FeaturesInformation";
 import GeneralInformation from "./Components/GeneralInformation";
