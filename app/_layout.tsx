@@ -1,4 +1,3 @@
-import { store } from "@/src/Redux/Store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
@@ -7,6 +6,8 @@ import "react-native-reanimated";
 import { Provider } from "react-redux";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+import { store } from "@/src/Redux/Store";
 
 SplashScreen.preventAutoHideAsync();
 

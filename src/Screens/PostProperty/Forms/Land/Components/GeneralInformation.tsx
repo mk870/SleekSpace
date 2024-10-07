@@ -1,44 +1,51 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import { family } from "@/src/Theme/Font";
+import { red, gray } from "@/src/Theme/Colors";
+import CheckBoxField from "@/src/Components/CheckBox/CheckBoxField";
 import CustomPicker from "@/src/Components/CustomPicker/CustomPicker";
 import InputField from "@/src/Components/InputField/InputField";
+import PropertyLocationInput from "@/src/Components/PropertyLocationInput/PropertyLocationInput";
 import Row from "@/src/Components/Row/Row";
 import ThemedText from "@/src/Components/ThemedText/ThemedText";
-import { red, gray } from "@/src/Theme/Colors";
-import { family } from "@/src/Theme/Font";
-import {
-  IGeneralInfoFormError,
-  IResidentialRentalGeneralInfo,
-} from "../Types/FormTypes";
-import PropertyLocationInput from "@/src/Components/PropertyLocationInput/PropertyLocationInput";
-import { PropertyTypesEnum } from "@/src/Utils/Constants";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { PropertyTypesEnum } from "@/src/Utils/Constants";
+import { IGeneralInfoFormError, ILandGeneralInfo } from "../Types/FormTypes";
 
 type Props = {
   formError: IGeneralInfoFormError;
   setFormError: React.Dispatch<React.SetStateAction<IGeneralInfoFormError>>;
-  propertyDetails: IResidentialRentalGeneralInfo;
-  setPropertyDetails: React.Dispatch<
-    React.SetStateAction<IResidentialRentalGeneralInfo>
-  >;
+  propertyDetails: ILandGeneralInfo;
+  setPropertyDetails: React.Dispatch<React.SetStateAction<ILandGeneralInfo>>;
 };
 
 const GeneralInformation: React.FC<Props> = ({
-  propertyDetails,
-  setPropertyDetails,
   formError,
   setFormError,
+  setPropertyDetails,
+  propertyDetails,
 }) => {
-  const location = useAppSelector((state)=>state.mapLocation.value)
+  const location = useAppSelector((state) => state.mapLocation.value);
+  const [showOtherLandTypeInput, setShowOtherLandTypeInput] =
+    useState<boolean>(false);
+
   useEffect(() => {
     if (formError) {
       setFormError("");
     }
-    if(formError && !location.lat){
-      setFormError("")
+    if (formError && !location.lat) {
+      setFormError("");
     }
-  }, [propertyDetails,location]);
+  }, [propertyDetails, location]);
+
+  useEffect(() => {
+    if (propertyDetails.type === "Other") {
+      setShowOtherLandTypeInput(true);
+    } else {
+      setShowOtherLandTypeInput(false);
+    }
+  }, [propertyDetails.type]);
 
   return (
     <View style={styles.inputWrapper}>
@@ -76,124 +83,83 @@ const GeneralInformation: React.FC<Props> = ({
           />
           <View>
             <InputField
-              textValue={propertyDetails?.rentAmount}
+              textValue={propertyDetails.price}
               isRequired
               placeHolder=""
               width={120}
               handleOnChangeText={(e) =>
-                setPropertyDetails({ ...propertyDetails, rentAmount: e })
+                setPropertyDetails({ ...propertyDetails, price: e })
               }
               height={57}
               contentType="none"
               type="number"
-              label="Rent per month"
+              label="Price"
               backgroundColor="transparent"
-              borderColor={formError === "rentAmount" ? red : gray}
+              borderColor={formError === "price" ? red : gray}
             />
-            {formError === "rentAmount" && (
+            {formError === "price" && (
               <Text style={styles.errorText}>invalid amount</Text>
             )}
           </View>
         </Row>
         <CustomPicker
-          label="Property Type"
+          label="Land Type"
           initialValue={propertyDetails.type}
           setValue={(value) =>
             setPropertyDetails({ ...propertyDetails, type: value as string })
           }
           pickerList={[
             {
-              label: "Single family home",
-              value: "Single family home",
+              label: "Residential",
+              value: "Residential",
             },
             {
-              label: "Multi family complex",
-              value: "Multi family complex",
+              label: "Farm",
+              value: "Farm",
             },
             {
-              label: "Boys khaya/Cottage",
-              value: "Cottage",
+              label: "Mine",
+              value: "Mine",
             },
             {
-              label: "Apartment/Flat",
-              value: "Apartment",
-            },
-            {
-              label: "Duplex",
-              value: "Duplex",
-            },
-            {
-              label: "Triplex",
-              value: "Triplex",
+              label: "Other",
+              value: "Other",
             },
           ]}
         />
-        <CustomPicker
-          label="Number of rooms to Let"
-          initialValue={propertyDetails.numberOfRoomsToLet}
-          setValue={(value) =>
-            setPropertyDetails({
-              ...propertyDetails,
-              numberOfRoomsToLet: value as string,
-            })
-          }
-          pickerList={[
-            {
-              label: "One",
-              value: "1",
-            },
-            {
-              label: "Two",
-              value: "2",
-            },
-            {
-              label: "Three",
-              value: "3",
-            },
-            {
-              label: "Four",
-              value: "4",
-            },
-            {
-              label: "Five",
-              value: "5",
-            },
-            {
-              label: "Six",
-              value: "6",
-            },
-            {
-              label: "Full house",
-              value: "fullHouse",
-            },
-          ]}
-        />
+        {showOtherLandTypeInput && (
+          <View>
+            <InputField
+              textValue={propertyDetails.otherType}
+              placeHolder=""
+              width={"100%"}
+              handleOnChangeText={(e) =>
+                setPropertyDetails({
+                  ...propertyDetails,
+                  otherType: e,
+                })
+              }
+              height={57}
+              contentType="none"
+              type="default"
+              label="Other Land Type"
+              backgroundColor="transparent"
+              isRequired
+              borderColor={formError === "type" ? red : gray}
+            />
+            {formError === "type" && (
+              <Text style={styles.errorText}>invalid land type</Text>
+            )}
+          </View>
+        )}
 
-        <View>
-          <InputField
-            textValue={propertyDetails?.totalNumberOfRooms}
-            placeHolder=""
-            width={160}
-            handleOnChangeText={(e) =>
-              setPropertyDetails({
-                ...propertyDetails,
-                totalNumberOfRooms: e,
-              })
-            }
-            height={57}
-            contentType="none"
-            type="number"
-            label="Total number of rooms"
-            backgroundColor="transparent"
-            isRequired
-            borderColor={
-              formError === "totalNumberOfpropertyRooms" ? red : gray
-            }
-          />
-          {formError === "totalNumberOfpropertyRooms" && (
-            <Text style={styles.errorText}>invalid size</Text>
-          )}
-        </View>
+        <CheckBoxField
+          label="Is Negotiable"
+          value={propertyDetails.isNegotiable}
+          setChecked={(value: boolean) =>
+            setPropertyDetails({ ...propertyDetails, isNegotiable: value })
+          }
+        />
 
         <View>
           <PropertyLocationInput
@@ -216,7 +182,7 @@ const GeneralInformation: React.FC<Props> = ({
               height={57}
               contentType="none"
               type="number"
-              label="Property Size"
+              label="Land Size"
               backgroundColor="transparent"
               borderColor={formError === "propertySize" ? red : gray}
             />
@@ -249,47 +215,6 @@ const GeneralInformation: React.FC<Props> = ({
               },
             ]}
           />
-        </Row>
-        <Row style={styles.row}>
-          <View>
-            <InputField
-              textValue={propertyDetails?.storeys}
-              isRequired
-              placeHolder=""
-              width={100}
-              handleOnChangeText={(e) =>
-                setPropertyDetails({ ...propertyDetails, storeys: e })
-              }
-              height={57}
-              contentType="none"
-              type="number"
-              label="Storeys"
-              backgroundColor="transparent"
-              borderColor={formError === "storeys" ? red : gray}
-            />
-            {formError === "storeys" && (
-              <Text style={styles.errorText}>invalid size</Text>
-            )}
-          </View>
-          <View>
-            <InputField
-              textValue={propertyDetails?.yearBuilt}
-              placeHolder=""
-              width={100}
-              handleOnChangeText={(e) =>
-                setPropertyDetails({ ...propertyDetails, yearBuilt: e })
-              }
-              height={57}
-              contentType="none"
-              type="number"
-              label="Year built"
-              backgroundColor="transparent"
-              borderColor={formError === "yearBuilt" ? red : gray}
-            />
-            {formError === "yearBuilt" && (
-              <Text style={styles.errorText}>invalid year</Text>
-            )}
-          </View>
         </Row>
       </View>
     </View>

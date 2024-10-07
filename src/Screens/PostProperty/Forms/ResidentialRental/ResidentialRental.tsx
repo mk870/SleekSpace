@@ -112,8 +112,10 @@ const ResidentialRental: INoPropsReactComponent = () => {
       dispatch(addMapLocation(emptyLocation));
     },
     onError(error: any) {
-      if (error.response?.data?.error !== "") {
-        setSubmitError(error.response?.data?.error);
+      if (error.response?.data?.error) {
+        if (error.response?.data?.error !== "") {
+          setSubmitError(error.response?.data?.error);
+        } else setSubmitError("Something went wrong");
       } else setSubmitError("Something went wrong");
     },
     onSettled: () => {

@@ -273,3 +273,14 @@ export const convertImagePickerAssetsListToUploadableImages: (
   }
   return propertyImages;
 };
+
+export const removeBlankSpacesFromWordsInAnArray: (
+  array: string[]
+) => string[] = (array: string[]) => {
+  const resultArray: string[] = [];
+  for (let i = 0; i < array.length; i++) {
+    const result = array[i].trim();
+    resultArray.push(result);
+  }
+  return resultArray;
+};

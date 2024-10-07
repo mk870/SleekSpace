@@ -7,7 +7,7 @@ export const expoSecureValueKeyNames = {
 };
 
 //export const backEndUrl = "https://sleekspace-server.onrender.com";
-export const backEndUrl = "http://192.168.164.196:8080";
+export const backEndUrl = "http://192.168.217.196:8080";
 
 export const managerAccountUpdateMsg =
   "Remember, if you update your information, all your properties will also be updated, so make sure it is accurate.";
@@ -62,6 +62,8 @@ export const zimbabweMapRegion: IMapRegion = {
   longitude: 29.1528,
   longitudeDelta: 0.1,
 };
+
+export const activeOpacityOfTouchableOpacity = 0.7
 
 export const searchPropertyLocationTutorialText =
   "long press and drag the map marker to your property's location, then press done when you are finished";

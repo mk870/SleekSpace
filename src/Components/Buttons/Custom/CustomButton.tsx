@@ -4,6 +4,7 @@ import React from "react";
 import ButtonSpinner from "../../Spinners/ButtonSpinner";
 import { primary, white } from "@/src/Theme/Colors";
 import { family, medium } from "@/src/Theme/Font";
+import { activeOpacityOfTouchableOpacity } from "@/src/Utils/Constants";
 
 type Props = {
   onPressFunc: () => void;
@@ -35,7 +36,7 @@ const CustomButton: React.FC<Props> = ({
     <TouchableOpacity
       onPress={onPressFunc}
       disabled={isDisabled ? isDisabled : false}
-      activeOpacity={0.9}
+      activeOpacity={activeOpacityOfTouchableOpacity}
       style={[
         container,
         {

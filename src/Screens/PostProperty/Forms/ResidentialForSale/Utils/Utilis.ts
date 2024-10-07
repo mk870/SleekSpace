@@ -8,7 +8,10 @@ import {
   IResidentialForSaleInteriorInfo,
   IResidentialForSaleOtherInfo,
 } from "../Types/FormTypes";
-import { convertImagePickerAssetsListToUploadableImages } from "@/src/Utils/Funcs";
+import {
+  convertImagePickerAssetsListToUploadableImages,
+  removeBlankSpacesFromWordsInAnArray,
+} from "@/src/Utils/Funcs";
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
 import { IResidentialRentalPropertyCreation } from "@/src/GlobalTypes/Property/Residential/RentalTypes";
 import { IResidentialPropertyForSaleCreation } from "@/src/GlobalTypes/Property/Residential/ForSaleTypes";
@@ -25,12 +28,12 @@ export const processGeneralPropertyDetails = (
     setGeneralInfoFormError("price");
   } else if (+generalPropertyDetails.sizeNumber < 0) {
     setGeneralInfoFormError("propertySize");
-  } else if (+generalPropertyDetails.numberOfRooms < 2) {
+  } else if (+generalPropertyDetails.numberOfRooms < 1) {
     setGeneralInfoFormError("numberOfRooms");
   } else if (!location.lat) {
     setGeneralInfoFormError("location");
-  } else if (+generalPropertyDetails.stories < 1) {
-    setGeneralInfoFormError("stories");
+  } else if (+generalPropertyDetails.storeys < 1) {
+    setGeneralInfoFormError("storeys");
   } else if (
     generalPropertyDetails.yearBuilt &&
     (+generalPropertyDetails.yearBuilt > new Date().getFullYear() ||
@@ -50,14 +53,12 @@ export const processInteriorPropertyDetails = (
 ) => {
   if (
     +interiorPropertyDetails.bedrooms < 1 ||
-    +interiorPropertyDetails.bedrooms >=
-      +generalPropertyDetails.numberOfRooms
+    +interiorPropertyDetails.bedrooms >= +generalPropertyDetails.numberOfRooms
   ) {
     setInteriorInfoFormError("bedrooms");
   } else if (
     +interiorPropertyDetails.bathrooms < 1 ||
-    +interiorPropertyDetails.bathrooms >=
-      +generalPropertyDetails.numberOfRooms
+    +interiorPropertyDetails.bathrooms >= +generalPropertyDetails.numberOfRooms
   ) {
     setInteriorInfoFormError("bathrooms");
   } else setPageNumber((prev) => prev + 1);
@@ -99,7 +100,7 @@ export const createPropertyToBeSubmitted: (
     status: "on the market" as IStatus,
     sizeDimensions: propertyGeneralDetails.sizeDimensions,
     sizeNumber: +propertyGeneralDetails.sizeNumber,
-    stories: +propertyGeneralDetails.stories,
+    storeys: +propertyGeneralDetails.storeys,
     price: +propertyGeneralDetails.price,
     currency: propertyGeneralDetails.currency,
     numberOfRooms: +propertyGeneralDetails.numberOfRooms,
@@ -113,10 +114,14 @@ export const createPropertyToBeSubmitted: (
     hasBoreHole: propertyExteriorInfo.hasBoreHole,
     hasSwimmingPool: propertyExteriorInfo.hasSwimmingPool,
     otherInteriorFeatures: propertyInteriorInfo.otherInteriorFeatures
-      ? propertyInteriorInfo.otherInteriorFeatures.split(",")
+      ? removeBlankSpacesFromWordsInAnArray(
+          propertyInteriorInfo.otherInteriorFeatures.split(",")
+        )
       : [],
     otherExteriorFeatures: propertyExteriorInfo.otherExteriorFeatures
-      ? propertyExteriorInfo.otherExteriorFeatures.split(",")
+      ? removeBlankSpacesFromWordsInAnArray(
+          propertyExteriorInfo.otherExteriorFeatures.split(",")
+        )
       : [],
     hasCeiling: propertyInteriorInfo.hasCeiling,
     hasElectricity: propertyInteriorInfo.hasElectricity,
@@ -143,3 +148,43 @@ export const createPropertyToBeSubmitted: (
     },
   };
 });
+
+export const generalPropertyInfoIntialState: IResidentialForSaleGeneralInfo = {
+  price: "0",
+  sizeNumber: "",
+  numberOfRooms: "1",
+  type: "Single family home",
+  sizeDimensions: "Square meters",
+  yearBuilt: "",
+  storeys: "1",
+  currency: "US$",
+  isNegotiable: false,
+};
+
+export const interiorPropertyInfoInitialState: IResidentialForSaleInteriorInfo =
+  {
+    bathrooms: "1",
+    bedrooms: "1",
+    isTiled: false,
+    isPlustered: false,
+    isPainted: false,
+    hasCeiling: false,
+    hasElectricity: false,
+    hasWater: false,
+    otherInteriorFeatures: "",
+  };
+
+export const exteriorPropertyInfoInitialState: IResidentialForSaleExteriorInfo =
+  {
+    hasBoreHole: false,
+    hasSwimmingPool: false,
+    typeOfExteriorSecurity: "jiraWall",
+    isPaved: false,
+    numberOfGarages: "0",
+    otherExteriorFeatures: "",
+  };
+
+export const otherPropertyInfoInitialState: IResidentialForSaleOtherInfo = {
+  marketingStatement: "",
+  images: [],
+};
