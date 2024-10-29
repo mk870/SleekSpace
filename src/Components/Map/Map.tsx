@@ -1,7 +1,7 @@
 import {
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -22,6 +22,7 @@ import {
 } from "@/src/Theme/Colors";
 import { family, medium, small } from "@/src/Theme/Font";
 import {
+  activeOpacityOfTouchableOpacity,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
   SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
@@ -74,9 +75,13 @@ const Map: React.FC<Props> = ({
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={handleCloseMap} style={styles.closeMap}>
+      <TouchableOpacity
+        onPress={handleCloseMap}
+        style={styles.closeMap}
+        activeOpacity={activeOpacityOfTouchableOpacity}
+      >
         <MaterialCommunityIcons name="window-close" size={24} color="black" />
-      </Pressable>
+      </TouchableOpacity>
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.mapStyle}
@@ -107,29 +112,31 @@ const Map: React.FC<Props> = ({
           <Text style={[styles.textStyle, { color: dark.background }]}>
             {tutorialText}
           </Text>
-          <Pressable
+          <TouchableOpacity
             style={[
               styles.infoOverLayCloseBtn,
               { width: width > BUTTON_SIZE_SCREEN_BREAK_POINT ? 250 : "90%" },
             ]}
             onPress={() => setShowGetLocationTutorial(false)}
+            activeOpacity={activeOpacityOfTouchableOpacity}
           >
             <Text style={[styles.textStyle, { color: primary }]}>close</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       )}
       {type === "get_location" && (
-        <Pressable
+        <TouchableOpacity
           style={styles.btnOverLay}
           onPress={handleDoneFunc}
           disabled={doneBtnIsLoading}
+          activeOpacity={activeOpacityOfTouchableOpacity}
         >
           {doneBtnIsLoading ? (
             <ButtonSpinner backGroundColor={white} />
           ) : (
             <Text style={[styles.textStyle, { color: white }]}>done</Text>
           )}
-        </Pressable>
+        </TouchableOpacity>
       )}
     </View>
   );

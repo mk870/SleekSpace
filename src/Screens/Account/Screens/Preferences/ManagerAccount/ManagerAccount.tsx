@@ -20,6 +20,7 @@ const ManagerAccount: INoPropsReactComponent = () => {
   const dispatch = useAppDispatch();
 
   const fetchManager = () => {
+    setHttpError("")
     getManagerByUserId(user)
       .then((res) => {
         dispatch(addManagerAccount(res.data.response));

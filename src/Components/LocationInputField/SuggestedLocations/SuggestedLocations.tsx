@@ -8,6 +8,7 @@ import { family, medium, small } from "@/src/Theme/Font";
 import Row from "../../Row/Row";
 import { getLocation } from "@/src/Utils/Funcs";
 import { ISearchLocation } from "@/src/GlobalTypes/LocationIQ/LocationIQTypes";
+import { activeOpacityOfTouchableOpacity } from "@/src/Utils/Constants";
 
 type Props = {
   suggestions: ISearchLocation[] | null;
@@ -38,7 +39,10 @@ const SuggestedLocations: React.FC<Props> = ({
         <View>
           <Row style={styles.row}>
             <Text style={styles.locationHeader}>Please Choose location:</Text>
-            <TouchableOpacity onPress={() => setOpenSuggestions(false)}>
+            <TouchableOpacity
+              onPress={() => setOpenSuggestions(false)}
+              activeOpacity={activeOpacityOfTouchableOpacity}
+            >
               <Text style={styles.clearText}>clear</Text>
             </TouchableOpacity>
           </Row>
@@ -47,6 +51,7 @@ const SuggestedLocations: React.FC<Props> = ({
               key={index}
               style={styles.locationContainer}
               onPress={() => handleLocationPress(location)}
+              activeOpacity={activeOpacityOfTouchableOpacity}
             >
               <Text
                 style={[
@@ -77,11 +82,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
   },
-  clearText:{
-    color:red,
+  clearText: {
+    color: red,
     fontFamily: family,
     fontSize: small,
-    textDecorationLine:"underline"
+    textDecorationLine: "underline",
   },
   locationContainer: {
     justifyContent: "center",

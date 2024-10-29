@@ -17,6 +17,7 @@ import CustomButton from "../Buttons/Custom/CustomButton";
 import { primary } from "@/src/Theme/Colors";
 import { family, medium } from "@/src/Theme/Font";
 import {
+  activeOpacityOfTouchableOpacity,
   BUTTON_MAX_WIDTH,
   BUTTON_SIZE_SCREEN_BREAK_POINT,
 } from "@/src/Utils/Constants";
@@ -68,6 +69,7 @@ const SigninAndSignupBtn: React.FC<Props> = ({ screenType }) => {
         <TouchableOpacity
           style={styles.createAccountBtn}
           onPress={() => router.push("/register")}
+          activeOpacity={activeOpacityOfTouchableOpacity}
         >
           <Text style={styles.createAccountText}>create account</Text>
         </TouchableOpacity>

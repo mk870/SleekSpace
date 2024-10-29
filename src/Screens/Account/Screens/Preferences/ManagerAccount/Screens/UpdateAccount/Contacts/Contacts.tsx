@@ -35,7 +35,6 @@ const Contacts: INoPropsReactComponent = () => {
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState<boolean>(true);
   const [isWhatsAppNumberValid, setIsWhatsAppNumberValid] =
     useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
   const dispatch = useAppDispatch();
@@ -67,7 +66,7 @@ const Contacts: INoPropsReactComponent = () => {
   const router = useRouter();
   const { width } = useWindowDimensions();
 
-  const updateManagerContacts = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: UpdateManagerContactNumbers,
     onSuccess(res) {
       dispatch(addManagerAccount(res.data.response));
@@ -78,7 +77,6 @@ const Contacts: INoPropsReactComponent = () => {
         setUpdateError(error.response?.data?.error);
       } else setUpdateError("Something went wrong");
     },
-    onSettled: () => setIsLoading(false),
   });
 
   const getContactId = (type: "phone" | "whatsapp") => {
@@ -93,8 +91,7 @@ const Contacts: INoPropsReactComponent = () => {
       phoneNumberDetails.number &&
       whatsAppNumberDetails.number
     ) {
-      setIsLoading(true);
-      updateManagerContacts.mutate({
+      mutate({
         managerContacts: [
           {
             id: getContactId("phone"),
@@ -193,9 +190,9 @@ const Contacts: INoPropsReactComponent = () => {
             ]}
           >
             <CustomButton
-              title={isLoading ? "loading" : "update"}
+              title={isPending ? "loading" : "update"}
               onPressFunc={handleUpdate}
-              isDisabled={isLoading}
+              isDisabled={isPending}
             />
           </View>
           <MessageModal
