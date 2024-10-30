@@ -59,7 +59,7 @@ const EmailAndName: INoPropsReactComponent = () => {
     }
   }, [name]);
 
-  const updateManagerDetailsMutation = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: UpdateManager,
     onSuccess: (res) => {
       dispatch(addManagerAccount(res.data.response));
@@ -72,14 +72,12 @@ const EmailAndName: INoPropsReactComponent = () => {
         setUpdateError("Something went wrong");
       }
     },
-    onSettled: () => setIsLoading(false),
   });
 
   const handleUpdate = () => {
     setOmmissionError(false);
     if (!isEmailValidationError && !isNameValidationError && name) {
-      setIsLoading(true);
-      updateManagerDetailsMutation.mutate({
+      mutate({
         accessToken,
         managerId: manager.id,
         managerEmailAndNameUpdates: {
@@ -160,9 +158,9 @@ const EmailAndName: INoPropsReactComponent = () => {
             ]}
           >
             <CustomButton
-              title={isLoading ? "loading" : "update"}
+              title={isPending ? "loading" : "update"}
               onPressFunc={handleUpdate}
-              isDisabled={isLoading}
+              isDisabled={isPending}
             />
           </View>
           <MessageModal

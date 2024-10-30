@@ -19,6 +19,7 @@ import { family, large, medium } from "@/src/Theme/Font";
 import { dark, light, pureWhite, purple, red, white } from "@/src/Theme/Colors";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
+import { activeOpacityOfTouchableOpacity } from "@/src/Utils/Constants";
 
 type Props = {
   handleCancel: IVoidFunc;
@@ -110,6 +111,7 @@ const MessageModal: React.FC<Props> = ({
               <TouchableOpacity
                 style={[btn, { backgroundColor: color }]}
                 onPress={handleCancel}
+                activeOpacity={activeOpacityOfTouchableOpacity}
               >
                 <Text style={styles.regulartext}>
                   {type === "success" ? "continue" : "okay"}
@@ -122,12 +124,14 @@ const MessageModal: React.FC<Props> = ({
               <TouchableOpacity
                 style={[styles.confirmationBtn, { backgroundColor: color }]}
                 onPress={handleConfirm}
+                activeOpacity={activeOpacityOfTouchableOpacity}
               >
                 <Text style={styles.regulartext}>yes</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.confirmationBtn, { backgroundColor: "gray" }]}
                 onPress={handleCancel}
+                activeOpacity={activeOpacityOfTouchableOpacity}
               >
                 <Text style={styles.regulartext}>no</Text>
               </TouchableOpacity>

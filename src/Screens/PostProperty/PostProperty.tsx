@@ -27,6 +27,7 @@ const PostProperty: INoPropsReactComponent = () => {
   const { propertType } = useLocalSearchParams();
 
   const fetchManager = () => {
+    setHttpError("")
     getManagerByUserId(user)
       .then((res) => {
         dispatch(addManagerAccount(res.data.response));

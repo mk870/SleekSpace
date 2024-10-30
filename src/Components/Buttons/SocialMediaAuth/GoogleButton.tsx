@@ -1,14 +1,11 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
 
 import GoogleLogoSVG from "./Logos/GoogleLogoSVG";
 import ThemedText from "../../ThemedText/ThemedText";
 import { dark, light } from "@/src/Theme/Colors";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { activeOpacityOfTouchableOpacity } from "@/src/Utils/Constants";
 
 type Props = {
   type: "sign_in" | "sign_up";
@@ -16,13 +13,16 @@ type Props = {
 };
 
 const GoogleButton: React.FC<Props> = ({ type, disabled }) => {
-  const theme = useAppSelector((state)=>state.theme.value)
+  const theme = useAppSelector((state) => state.theme.value);
   return (
     <TouchableOpacity
       disabled={disabled}
+      activeOpacity={activeOpacityOfTouchableOpacity}
       style={[
         styles.container,
-        { backgroundColor: theme === "light" ? light.background : dark.darkGray },
+        {
+          backgroundColor: theme === "light" ? light.background : dark.darkGray,
+        },
       ]}
     >
       <GoogleLogoSVG />

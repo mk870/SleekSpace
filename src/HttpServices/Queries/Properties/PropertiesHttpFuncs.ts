@@ -10,135 +10,120 @@ import { propertyInsightsRoutes } from "@/src/BackendRoutes/Properties/Insights/
 import { propertyLocationRoutes } from "@/src/BackendRoutes/Properties/Location/PropertyLocationRoutes";
 import { propertyMediaRoutes } from "@/src/BackendRoutes/Properties/Media/PropertyMediaRoutes";
 import { reportRoutes } from "@/src/BackendRoutes/Properties/Report/ReportRoutes";
+import { IResidentialRentalProperty, IResidentialRentalPropertyWithManager } from "@/src/GlobalTypes/Property/Residential/RentalTypes";
+import { ICommercialPropertyForSale } from "@/src/GlobalTypes/Property/Commercial/ForSaleTypes";
+import { ICommercialRentalProperty } from "@/src/GlobalTypes/Property/Commercial/RentalTypes";
+import { IResidentialPropertyForSale } from "@/src/GlobalTypes/Property/Residential/ForSaleTypes";
+import { IStandProperty } from "@/src/GlobalTypes/Property/Stand/StandTypes";
+import { ILandProperty } from "@/src/GlobalTypes/Property/Land/LandTypes";
+
+const controller = new AbortController()
 
 export const getCommercialPropertyForSaleHttpFunc = (requestData: {
   propertyId: number;
-  accessToken: string;
 }) => {
-  return axios.get(
-    `${commercialPropertiesForSaleRoutes.getUpdateAndDeleteCommercialPropertyForSale}/${requestData.propertyId}`,
-    {
-      headers: { Authorization: `Bearer ${requestData.accessToken}` },
-    }
+  return axios.get<{ response: ICommercialPropertyForSale }>(
+    `${commercialPropertiesForSaleRoutes.getUpdateAndDeleteCommercialPropertyForSale}/${requestData.propertyId}`
   );
 };
 
 export const getAllCommercialPropertiesForSaleHttpFunc = (requestData: {
-  accessToken: string;
+  page: number;
 }) => {
-  return axios.get(
-    `${commercialPropertiesForSaleRoutes.getAllCommercialForSaleProperties}`,
-    {
-      headers: { Authorization: `Bearer ${requestData.accessToken}` },
-    }
+  return axios.get<{
+    properties: ICommercialPropertyForSale[];
+    totalPages: number;
+  }>(
+    `${commercialPropertiesForSaleRoutes.getAllCommercialForSaleProperties}?page=${requestData.page}`
   );
 };
 
 export const getCommercialRentalPropertyHttpFunc = (requestData: {
   propertyId: number;
-  accessToken: string;
 }) => {
-  return axios.get(
-    `${commercialRentalPropertiesRoutes.getUpdateAndDeleteCommercialRentalProperty}/${requestData.propertyId}`,
-    {
-      headers: { Authorization: `Bearer ${requestData.accessToken}` },
-    }
+  return axios.get<{
+    response: ICommercialRentalProperty;
+  }>(
+    `${commercialRentalPropertiesRoutes.getUpdateAndDeleteCommercialRentalProperty}/${requestData.propertyId}`
   );
 };
 
-export const getAllCommercialRentalPropertiesHttpFunc = (requestData: {
-  accessToken: string;
-}) => {
-  return axios.get(
-    `${commercialRentalPropertiesRoutes.getAllCommercialRentalProperties}`,
-    {
-      headers: { Authorization: `Bearer ${requestData.accessToken}` },
-    }
-  );
+export const getAllCommercialRentalPropertiesHttpFunc = () => {
+  return axios.get<{
+    properties: ICommercialRentalProperty[];
+    totalPages: number;
+  }>(`${commercialRentalPropertiesRoutes.getAllCommercialRentalProperties}`);
 };
 
 export const getResidentialRentalPropertyHttpFunc = (requestData: {
   propertyId: number;
-  accessToken: string;
 }) => {
-  return axios.get(
-    `${residentialRentalPropertiesRoutes.getUpdateAndDeleteResidentialRentalProperty}/${requestData.propertyId}`,
-    {
-      headers: { Authorization: `Bearer ${requestData.accessToken}` },
-    }
+  return axios.get<{ response: IResidentialRentalProperty }>(
+    `${residentialRentalPropertiesRoutes.getUpdateAndDeleteResidentialRentalProperty}/${requestData.propertyId}`
   );
 };
 
 export const getAllResidentialRentalPropertiesHttpFunc = (requestData: {
-  accessToken: string;
+  page: number;
 }) => {
-  return axios.get(
-    `${residentialRentalPropertiesRoutes.getAllResidentialRentalProperties}`,
+  return axios.get<{
+    properties: IResidentialRentalPropertyWithManager[];
+    totalPages: number;
+  }>(
+    `${residentialRentalPropertiesRoutes.getAllResidentialRentalProperties}?page=${requestData.page}`,
     {
-      headers: { Authorization: `Bearer ${requestData.accessToken}` },
+      signal: controller.signal,
     }
   );
 };
 
 export const getResidentialPropertyForSaleHttpFunc = (requestData: {
   propertyId: number;
-  accessToken: string;
 }) => {
-  return axios.get(
-    `${residentialPropertiesForSaleRoutes.getUpdateAndDeleteResidentialPropertyForSale}/${requestData.propertyId}`,
-    {
-      headers: { Authorization: `Bearer ${requestData.accessToken}` },
-    }
+  return axios.get<{
+    response: IResidentialPropertyForSale;
+  }>(
+    `${residentialPropertiesForSaleRoutes.getUpdateAndDeleteResidentialPropertyForSale}/${requestData.propertyId}`
   );
 };
 
-export const getAllResidentialPropertiesForSaleHttpFunc = (requestData: {
-  accessToken: string;
-}) => {
-  return axios.get(
-    `${residentialPropertiesForSaleRoutes.getAllResidentialForSaleProperties}`,
-    {
-      headers: { Authorization: `Bearer ${requestData.accessToken}` },
-    }
+export const getAllResidentialPropertiesForSaleHttpFunc = () => {
+  return axios.get<{
+    properties: IResidentialPropertyForSale[];
+    totalPages: number;
+  }>(
+    `${residentialPropertiesForSaleRoutes.getAllResidentialForSaleProperties}`
   );
 };
 
 export const getStandPropertyHttpFunc = (requestData: {
   propertyId: number;
-  accessToken: string;
 }) => {
-  return axios.get(
-    `${standRoutes.getAllGetOnePostDeleteAndUpdateStand}/${requestData.propertyId}`,
-    {
-      headers: { Authorization: `Bearer ${requestData.accessToken}` },
-    }
+  return axios.get<{ response: IStandProperty }>(
+    `${standRoutes.getAllGetOnePostDeleteAndUpdateStand}/${requestData.propertyId}`
   );
 };
 
-export const getAllStandsHttpFunc = (requestData: { accessToken: string }) => {
-  return axios.get(`${standRoutes.getAllGetOnePostDeleteAndUpdateStand}`, {
-    headers: { Authorization: `Bearer ${requestData.accessToken}` },
-  });
+export const getAllStandsHttpFunc = () => {
+  return axios.get<{
+    properties: IStandProperty[];
+    totalPages: number;
+  }>(`${standRoutes.getAllGetOnePostDeleteAndUpdateStand}`);
 };
 
 export const getLandPropertyHttpFunc = (requestData: {
   propertyId: number;
-  accessToken: string;
 }) => {
-  return axios.get(
-    `${landRoutes.getAllGetOnePostDeleteAndUpdateLand}/${requestData.propertyId}`,
-    {
-      headers: { Authorization: `Bearer ${requestData.accessToken}` },
-    }
+  return axios.get<{ response: ILandProperty }>(
+    `${landRoutes.getAllGetOnePostDeleteAndUpdateLand}/${requestData.propertyId}`
   );
 };
 
-export const getAllLandPropertiesHttpFunc = (requestData: {
-  accessToken: string;
-}) => {
-  return axios.get(`${landRoutes.getAllGetOnePostDeleteAndUpdateLand}`, {
-    headers: { Authorization: `Bearer ${requestData.accessToken}` },
-  });
+export const getAllLandPropertiesHttpFunc = () => {
+  return axios.get<{
+    properties: ICommercialPropertyForSale[];
+    totalPages: number;
+  }>(`${landRoutes.getAllGetOnePostDeleteAndUpdateLand}`);
 };
 
 export const getPropertyInsightsByPropertyIdHttpFunc = (requestData: {

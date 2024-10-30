@@ -23,6 +23,7 @@ const UpdateAccount: INoPropsReactComponent = () => {
   const iconSize = 18;
   const iconColor = gray;
   const { width } = useWindowDimensions();
+  
   return (
     <Screen>
       <StackScreen>

@@ -25,6 +25,7 @@ import MyCurrentLocation from "../../CurrentLocation/MyCurrentLocation";
 import Row from "../../Row/Row";
 import ThemedText from "../../ThemedText/ThemedText";
 import RegularText from "../../RegularText/RegularText";
+import { activeOpacityOfTouchableOpacity } from "@/src/Utils/Constants";
 
 type Props = {
   handleCancel: IVoidFunc;
@@ -76,6 +77,7 @@ const SearchLocationModal: React.FC<Props> = ({
           <Row style={styles.row}>
             <MyCurrentLocation isInModal closeModal={handleCancel} />
             <TouchableOpacity
+            activeOpacity={activeOpacityOfTouchableOpacity}
               onPress={() => {
                 handleCancel();
                 router.push({

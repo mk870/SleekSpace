@@ -6,6 +6,7 @@ export type IUser = {
     familyName: string;
     id: number;
     location: IUserLocation | null;
+    role:"user"|"admin"
     contactNumbers: IUserContactNumber[];
     favoriteResidentialRentalProperties: number[];
     favoriteResidentialForSaleProperties: number[];

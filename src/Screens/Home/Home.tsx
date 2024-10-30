@@ -1,27 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Screen from "@/src/Components/ScreenWrapper/Screen";
-import PropertiesScreenWrapper from "@/src/Components/PropertiesScreenWrapper/PropertiesScreenWrapper";
-import ResidentialRentals from "./Properties/ResidentialRentals";
-import ResidentialForSale from "./Properties/ResidentialForSale";
-import CommercialForSale from "./Properties/CommercialForSale";
-import CommercialRentals from "./Properties/CommercialRentals";
-import Stands from "./Properties/Stands";
-import Lands from "./Properties/Lands";
 import { INoPropsReactComponent } from "@/src/GlobalTypes/Types";
+import AnimatedListHeader from "./Components/AnimatedListHeader/AnimatedListHeader";
+import LoadingSkeleton from "./Components/LoadingSkeleton/LoadingSkeleton";
+import ResidentialRentals from "./Components/PropertyTypes/ResidentialRentals";
 
 
 const Home:INoPropsReactComponent = () => {
+  const [propertyType,setPropertyType] = useState<IPropertyType>("Residential Rentals")
   return (
     <Screen>
-      <PropertiesScreenWrapper>
-        <ResidentialRentals/>
-        <ResidentialForSale/>
-        <CommercialRentals/>
-        <CommercialForSale/>
-        <Stands/>
-        <Lands/>
-      </PropertiesScreenWrapper>
+      {/* <AnimatedListHeader setPropertyType={setPropertyType}/> */}
+      <ResidentialRentals/>
     </Screen>
   );
 };

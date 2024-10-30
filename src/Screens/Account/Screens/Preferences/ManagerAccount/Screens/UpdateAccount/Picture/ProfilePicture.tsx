@@ -21,7 +21,6 @@ import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/Manage
 const ProfilePictureUpdate: INoPropsReactComponent = () => {
   const [image, setImage] = useState<string>("");
   const [imageBase64, setImageBase64] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openSuccessModal, setOpenSuccessModal] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
   const [imageType, setImageType] = useState<string>("");
@@ -31,7 +30,7 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
   const { width } = useWindowDimensions();
   const dispatch = useAppDispatch();
 
-  const updateProfilePictureMutation = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: UpdateManagerProfilePicture,
     onSuccess: (res) => {
       dispatch(addManagerAccount(res.data.response));
@@ -44,15 +43,13 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
         setUpdateError("Something went wrong");
       }
     },
-    onSettled: () => setIsLoading(false),
   });
 
   const handleProfilePictureUpdate = () => {
     if (!manager.profilePicture.uri && !image) {
       setUpdateError("please choose a picture to upload!");
     } else if (!manager.profilePicture.uri && image) {
-      setIsLoading(true)
-      updateProfilePictureMutation.mutate({
+      mutate({
         accessToken,
         managerId: manager.id,
         managerProfilePicture: {
@@ -66,8 +63,7 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
         },
       });
     } else if (manager.profilePicture.uri && image) {
-      setIsLoading(true)
-      updateProfilePictureMutation.mutate({
+      mutate({
         accessToken,
         managerId: manager.id,
         managerProfilePicture: {
@@ -123,9 +119,9 @@ const ProfilePictureUpdate: INoPropsReactComponent = () => {
             ]}
           >
             <CustomButton
-              title={isLoading ? "loading" : "update"}
+              title={isPending ? "loading" : "update"}
               onPressFunc={handleProfilePictureUpdate}
-              isDisabled={isLoading}
+              isDisabled={isPending}
             />
           </View>
           <MessageModal

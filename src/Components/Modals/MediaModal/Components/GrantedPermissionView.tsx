@@ -29,6 +29,7 @@ import useUpdateUser from "@/src/Hooks/User/useUpdateUser";
 import { removeManagerProfilePicture } from "@/src/HttpServices/Mutations/Manager/ProfilePictureHttFuncs";
 import { addManagerAccount } from "@/src/Redux/Slices/ManagerAccountSlice/ManagerSlice";
 import MessageModal from "../../MessageModal";
+import { activeOpacityOfTouchableOpacity } from "@/src/Utils/Constants";
 
 type Props = {
   type: "profile-Photo" | "property-Photo";
@@ -147,6 +148,7 @@ const GrantedPermissionView: React.FC<Props> = ({
         <TouchableOpacity
           onPress={openCamera}
           disabled={isGalleryLoading || isRemoveImageLoading ? true : false}
+          activeOpacity={activeOpacityOfTouchableOpacity}
           style={[
             styles.mediaOption,
             {
@@ -163,6 +165,7 @@ const GrantedPermissionView: React.FC<Props> = ({
             type === "property-Photo" && setIsGalleryLoading(true);
             openGallery();
           }}
+          activeOpacity={activeOpacityOfTouchableOpacity}
           disabled={isGalleryLoading || isRemoveImageLoading ? true : false}
           style={[
             styles.mediaOption,

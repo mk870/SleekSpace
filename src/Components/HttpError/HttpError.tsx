@@ -31,7 +31,7 @@ const HttpError: React.FC<Props> = ({ retryFunc }) => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
-          <View>
+          <View style={{ flex: 1 }}>
             <LottieView
               source={error}
               autoPlay
@@ -57,6 +57,7 @@ const HttpError: React.FC<Props> = ({ retryFunc }) => {
               color={green}
               title="retry"
               onPressFunc={retryFunc}
+              iconPosition="left"
               icon={<Ionicons name="reload" size={20} color={white} />}
             />
           </View>

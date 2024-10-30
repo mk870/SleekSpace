@@ -21,6 +21,7 @@ import {
 } from "@/src/Theme/Colors";
 import { family, large, medium } from "@/src/Theme/Font";
 import { useAppSelector } from "@/src/Redux/Hooks/Config";
+import { activeOpacityOfTouchableOpacity } from "@/src/Utils/Constants";
 
 type Props = {
   handleCancel: IVoidFunc;
@@ -75,12 +76,14 @@ const DeniedPermissionView: React.FC<Props> = ({ handleCancel }) => {
         <TouchableOpacity
           style={[btn, { backgroundColor: primary }]}
           onPress={handleNavigateToSettings}
+          activeOpacity={activeOpacityOfTouchableOpacity}
         >
           <Text style={styles.regulartext}>go to settings</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[btn, { backgroundColor: color }]}
           onPress={handleCancel}
+          activeOpacity={activeOpacityOfTouchableOpacity}
         >
           <Text style={regulartext}>back</Text>
         </TouchableOpacity>

@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/src/Redux/Hooks/Config";
 import { family, small } from "@/src/Theme/Font";
 import { IVoidFunc } from "@/src/GlobalTypes/Types";
 import { addMapLocation } from "@/src/Redux/Slices/MapLocationSlice/MapLocationSlice";
+import { activeOpacityOfTouchableOpacity } from "@/src/Utils/Constants";
 
 type Props = {
   isInModal?: boolean;
@@ -114,6 +115,7 @@ const MyCurrentLocation: React.FC<Props> = ({
       {isInModal && (
         <TouchableOpacity
           onPress={() => setGetDeviceLocation(true)}
+          activeOpacity={activeOpacityOfTouchableOpacity}
           disabled={isLoading}
           style={[
             styles.mediaOption,
@@ -138,6 +140,7 @@ const MyCurrentLocation: React.FC<Props> = ({
           onPress={() => setGetDeviceLocation(true)}
           style={{ paddingLeft: isLoading ? 10 : 0 }}
           disabled={isLoading}
+          activeOpacity={activeOpacityOfTouchableOpacity}
         >
           {isLoading ? (
             <ButtonSpinner backGroundColor={primary} />
